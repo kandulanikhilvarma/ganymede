@@ -4,7 +4,7 @@ Strictly sequential. A phase starts only when the previous gate is green.
 
 | # | Phase | State | Gate | Result |
 |---|---|---|---|---|
-| 0 | Spike | **blocked** | measured gap distribution + latency budget | needs `ANTHROPIC_API_KEY` + sample audio + human stopwatch |
+| 0 | Spike | **VAD half done** | gap distribution + latency budget | budget=300ms measured (p25 of 328 gaps); human-stopwatch half still open |
 | 1 | Foundation | **done** | `pytest tests/test_experiment.py` + CI green + schema frozen | 21 tests pass; invariants OK; schema v1.0.0 |
 | 2 | Panel | **done** | `panel.py --verify` | 1.4M rows, 87.8k loans, 9 vintages, full roll curve; sample_weight recorded |
 | 3 | Risk models | **done** | `risk --backtest` per-model gate | L1 AUC 0.62 beats base Brier; L2 AUC 0.67; self-cure drift documented; L3 deferred (no contact data) |

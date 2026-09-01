@@ -15,3 +15,5 @@ reports/*.md
 node_modules/
 .next/
 data/processed/
+data/raw/*.wav
+data/raw/*.mp3

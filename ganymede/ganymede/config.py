@@ -18,8 +18,12 @@ REPORTS = ROOT / "reports"
 SCHEMA_TAG = "1.0.0"
 
 # --- Latency (I4) ---
-# Set from the Phase 0 gap distribution. None means "not yet measured".
-LATENCY_BUDGET_MS: int | None = None
+# MEASURED in Phase 0 from silero/energy-VAD over 10.3 min of real 2-way call
+# audio: 328 inter-turn gaps, median 479ms, p25 292ms, p10 239ms. The budget is
+# p25 -> a tier-1 (deterministic) hint rendering within 300ms catches at least
+# ~75% of turn boundaries. Tier-2 (LLM-composed) hints cannot meet this and are
+# demoted to the next pause by design — measured, not guessed.
+LATENCY_BUDGET_MS: int | None = 300
 
 
 def require_latency_budget() -> int:
