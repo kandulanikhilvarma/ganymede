@@ -17,3 +17,4 @@ node_modules/
 data/processed/
 data/raw/*.wav
 data/raw/*.mp3
+reports/eval-*.md

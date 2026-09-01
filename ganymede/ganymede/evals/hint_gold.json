@@ -1,0 +1,28 @@
+{
+  "cases": [
+    {"id": "h01", "context": "BORROWER: yes speaking. I can pay but I'll do it when I get round to it.",
+     "hint": "Offer to set the payment up right now on the call and get one confirmation.", "useful": 1},
+    {"id": "h02", "context": "BORROWER: I genuinely can't afford anything this month, I lost my job.",
+     "hint": "Push for a firm commitment to pay the full balance today.", "useful": 0},
+    {"id": "h03", "context": "BORROWER: I'll try to sort something next week maybe.",
+     "hint": "Pin the promise down: ask for an amount, a date, and a method.", "useful": 1},
+    {"id": "h04", "context": "AGENT: is that the account holder? BORROWER: who's asking?",
+     "hint": "Confirm you're speaking to the account holder before discussing the balance.", "useful": 1},
+    {"id": "h05", "context": "BORROWER: I dispute this whole thing, it's not my debt.",
+     "hint": "Acknowledge the dispute, then propose paying the undisputed portion now.", "useful": 1},
+    {"id": "h06", "context": "BORROWER: fine, I'll pay 200 on the 15th by direct debit.",
+     "hint": "Remind the borrower that interest accrues daily on all consumer loans.", "useful": 0},
+    {"id": "h07", "context": "BORROWER: I want to pay but money is really tight right now.",
+     "hint": "Walk through income and essential outgoings so the plan is one they can service.", "useful": 1},
+    {"id": "h08", "context": "BORROWER: yes speaking, sorry I completely forgot about this bill.",
+     "hint": "This is friction not inability - offer to take the payment right now.", "useful": 1},
+    {"id": "h09", "context": "BORROWER: I already told your colleague I can't do anything.",
+     "hint": "Great, keep up the good work and stay positive on the call.", "useful": 0},
+    {"id": "h10", "context": "BORROWER: I'll call you back later, I need to check with my wife.",
+     "hint": "A vague callback rarely converts - agree a specific short window before ending.", "useful": 1},
+    {"id": "h11", "context": "BORROWER: has money, refusing. I just don't think I should have to pay this.",
+     "hint": "State the next consequence plainly, then offer a clear way to avoid it today.", "useful": 1},
+    {"id": "h12", "context": "BORROWER: I can do 50 now and the rest at month end.",
+     "hint": "Reject the partial payment; only full settlement is acceptable.", "useful": 0}
+  ]
+}
