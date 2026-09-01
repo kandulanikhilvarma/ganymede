@@ -13,8 +13,8 @@ Strictly sequential. A phase starts only when the previous gate is green.
 | 6 | Conversations + extraction | **done** | `outcomes --verify` | PTP extractor 93.4% (bar 80%); generate->extract->resolve, no drops |
 | 7 | Coach Lens | **done** | `test_coach.py` | tier-1 0.04ms, tier-2 demotes at 4.5s; promise-quality + diagnostic + strategy hints |
 | 8 | Evals | **done** | `evals.report --report` | judge 91.7% agree, alpha under ceiling; drift monitors; pilot metrics honestly pending |
-| 9 | Agent Desk | **in progress** | deployed URL, replay works | — |
-| 10 | Case + roadmap | not started | three documents | — |
+| 9 | Agent Desk | **done** | deployed URL, replay works | published Artifact; real scored replay, hints fire, override, control arm |
+| 10 | Case + roadmap | **in progress** | three documents | — |
 
 ## Blocked on the user
 

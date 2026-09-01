@@ -1,0 +1,345 @@
+<meta charset="utf-8">
+<title>Ganymede Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    /* light palette — the secondary target; dark is the design surface */
+    --ground:#eef0f4; --surface:#ffffff; --surface-2:#f5f6fa; --line:#dfe3ea;
+    --text:#1a1f2b; --muted:#5c6675; --faint:#8a94a8;
+    --accent:#0e8f80; --accent-dim:#0e8f8033;
+    --kept:#1f9d63; --broken:#c5483f;
+    --risk-hue:36;
+    --shadow:0 1px 2px rgba(20,26,40,.06),0 2px 8px rgba(20,26,40,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground:#080b11; --surface:#0f141e; --surface-2:#151b28; --line:#232c3d;
+      --text:#e7ebf2; --muted:#8a94a8; --faint:#5b6577;
+      --accent:#35c9b5; --accent-dim:#35c9b524;
+      --kept:#3fb37f; --broken:#e0685f;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground:#080b11; --surface:#0f141e; --surface-2:#151b28; --line:#232c3d;
+    --text:#e7ebf2; --muted:#8a94a8; --faint:#5b6577;
+    --accent:#35c9b5; --accent-dim:#35c9b524;
+    --kept:#3fb37f; --broken:#e0685f;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:var(--ground); color:var(--text);
+    font-family:"Instrument Sans",system-ui,sans-serif; font-size:14px; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono { font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums; }
+  .eyebrow { font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); font-weight:600; }
+  button { font-family:inherit; cursor:pointer; }
+  button:focus-visible, [tabindex]:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+  .topbar {
+    display:flex; align-items:center; gap:16px; padding:12px 20px;
+    border-bottom:1px solid var(--line); background:var(--surface);
+  }
+  .brand { font-weight:600; letter-spacing:-.01em; display:flex; align-items:baseline; gap:9px; }
+  .brand .moon { width:9px; height:9px; border-radius:50%;
+    background:radial-gradient(circle at 32% 30%, var(--accent), transparent 72%), var(--muted); }
+  .brand small { color:var(--faint); font-weight:500; letter-spacing:.04em; }
+  .topbar .spacer { flex:1; }
+  .arm { display:flex; border:1px solid var(--line); border-radius:7px; overflow:hidden; }
+  .arm button { background:transparent; color:var(--muted); border:0; padding:6px 13px; font-size:12.5px; font-weight:500; }
+  .arm button[aria-pressed="true"] { background:var(--accent-dim); color:var(--accent); }
+  .transport button {
+    background:var(--surface-2); color:var(--text); border:1px solid var(--line);
+    border-radius:7px; padding:6px 14px; font-weight:500; font-size:13px;
+  }
+  .transport button.primary { background:var(--accent); color:var(--ground); border-color:var(--accent); }
+
+  .stage { display:grid; grid-template-columns:288px 1fr 316px; gap:0; height:calc(100vh - 57px); }
+  @media (max-width:1080px){ .stage{ grid-template-columns:1fr; height:auto; } }
+  .col { overflow-y:auto; padding:20px; }
+  .col.who { border-right:1px solid var(--line); background:var(--surface); }
+  .col.act { border-left:1px solid var(--line); background:var(--surface); }
+  .col.talk { background:var(--ground); }
+
+  .gauge-wrap { display:flex; flex-direction:column; align-items:center; gap:4px; margin:6px 0 18px; }
+  .gauge { position:relative; width:150px; height:150px; }
+  .gauge svg { transform:rotate(-90deg); }
+  .gauge .val { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .gauge .val b { font-size:34px; font-weight:600; letter-spacing:-.02em; }
+  .gauge .val span { font-size:11px; color:var(--faint); letter-spacing:.06em; text-transform:uppercase; }
+
+  .field { border-top:1px solid var(--line); padding:13px 0; }
+  .field:first-of-type { border-top:0; }
+  .field .k { color:var(--muted); font-size:12.5px; }
+  .field .v { font-weight:600; margin-top:2px; }
+  .field .v.big { font-size:20px; letter-spacing:-.01em; }
+
+  .reasons { list-style:none; margin:8px 0 0; padding:0; display:flex; flex-direction:column; gap:6px; }
+  .reasons li { display:flex; gap:9px; align-items:baseline; font-size:13px; color:var(--text); }
+  .reasons li::before { content:""; width:14px; height:2px; margin-top:8px; background:var(--accent); flex:none; }
+
+  .statechip { display:inline-flex; align-items:center; gap:7px; padding:5px 10px; border-radius:6px;
+    background:var(--surface-2); border:1px solid var(--line); font-size:12.5px; font-weight:500; }
+  .statechip .dot { width:7px; height:7px; border-radius:50%; background:var(--faint); }
+  .statechip.uncertain .dot { background:#d9a441; }
+
+  .thread { max-width:640px; margin:0 auto; display:flex; flex-direction:column; gap:3px; }
+  .turn { opacity:0; transition:opacity .12s ease; padding:9px 0; }
+  .turn.shown { opacity:1; }
+  .turn .who { font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); font-weight:600; margin-bottom:3px; }
+  .turn.borrower .who { color:var(--accent); }
+  .turn .say { font-size:15px; line-height:1.55; }
+  .turn.agent .say { color:var(--muted); }
+
+  .hint {
+    margin:7px 0 4px; padding:11px 13px; border-radius:9px;
+    background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow);
+    opacity:0; transition:opacity .12s ease;
+  }
+  .hint.shown { opacity:1; }
+  .hint .lab { display:flex; align-items:center; gap:8px; margin-bottom:5px; }
+  .hint .tier { font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; font-weight:600;
+    padding:2px 7px; border-radius:4px; background:var(--accent-dim); color:var(--accent); }
+  .hint .lat { font-size:11px; color:var(--faint); margin-left:auto; }
+  .hint .txt { font-size:14px; line-height:1.5; }
+  .hint.strategy .tier { background:#d9a44122; color:#d9a441; }
+  .hint .support { font-size:11px; color:var(--faint); margin-top:5px; }
+
+  .now { background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:13px; margin-bottom:16px; }
+  .now .eyebrow { margin-bottom:6px; }
+  .now .strat { font-size:13.5px; line-height:1.5; }
+
+  .panel { border-top:1px solid var(--line); padding:15px 0; }
+  .panel h4 { margin:0 0 9px; font-size:12.5px; font-weight:600; }
+  label.f { display:block; font-size:12px; color:var(--muted); margin:8px 0 3px; }
+  input, select, textarea {
+    width:100%; background:var(--ground); color:var(--text); border:1px solid var(--line);
+    border-radius:6px; padding:7px 9px; font-family:inherit; font-size:13px;
+  }
+  textarea { resize:vertical; min-height:52px; }
+  .btn-row { display:flex; gap:8px; margin-top:10px; }
+  .btn {
+    flex:1; padding:8px 10px; border-radius:7px; font-weight:500; font-size:13px;
+    border:1px solid var(--line); background:var(--surface-2); color:var(--text);
+  }
+  .btn.go { background:var(--accent); color:var(--ground); border-color:var(--accent); }
+  .btn.warn { border-color:var(--broken); color:var(--broken); background:transparent; }
+
+  .feed { list-style:none; margin:9px 0 0; padding:0; display:flex; flex-direction:column; gap:7px; }
+  .feed li { font-size:12px; color:var(--muted); border-left:2px solid var(--line); padding:2px 0 2px 9px; }
+  .feed li.override { border-left-color:var(--broken); }
+  .feed li.ptp { border-left-color:var(--kept); }
+  .feed .t { color:var(--faint); }
+
+  .controlbanner { display:none; margin:0 auto 14px; max-width:640px; padding:9px 13px; border-radius:8px;
+    background:var(--surface); border:1px dashed var(--line); color:var(--muted); font-size:12.5px; }
+  body[data-arm="control"] .controlbanner { display:block; }
+  body[data-arm="control"] .hint { display:none !important; }
+  body[data-arm="control"] .now { opacity:.5; }
+</style>
+
+<div class="topbar">
+  <div class="brand"><span class="moon"></span> Ganymede <small>collections desk</small></div>
+  <div class="spacer"></div>
+  <div class="eyebrow" style="align-self:center">experiment arm</div>
+  <div class="arm" role="group" aria-label="Experiment arm">
+    <button id="armFull" aria-pressed="true">full</button>
+    <button id="armControl" aria-pressed="false">control</button>
+  </div>
+  <div class="transport">
+    <button id="restart">Restart</button>
+    <button id="play" class="primary">Play call</button>
+  </div>
+</div>
+
+<div class="stage">
+  <!-- WHO -->
+  <aside class="col who">
+    <div class="eyebrow">risk of worsening &mdash; 90 days</div>
+    <div class="gauge-wrap">
+      <div class="gauge">
+        <svg width="150" height="150" viewBox="0 0 150 150">
+          <circle cx="75" cy="75" r="62" fill="none" stroke="var(--line)" stroke-width="12"/>
+          <circle id="arc" cx="75" cy="75" r="62" fill="none" stroke-width="12" stroke-linecap="round"/>
+        </svg>
+        <div class="val"><b id="riskNum" class="mono">0</b><span>p(worsen)</span></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="k">Exposure</div>
+      <div class="v big mono" id="exposure">&euro;0</div>
+    </div>
+    <div class="field">
+      <div class="k">Self-cure without contact</div>
+      <div class="v mono" id="selfcure">0%</div>
+    </div>
+    <div class="field">
+      <div class="k">Arrears</div>
+      <div class="v" id="arrears">&mdash;</div>
+    </div>
+    <div class="field">
+      <div class="k">Why this score</div>
+      <ul class="reasons" id="reasons"></ul>
+    </div>
+    <div class="field">
+      <div class="k">Borrower state</div>
+      <div style="margin-top:6px"><span class="statechip uncertain" id="statechip"><span class="dot"></span><span id="stateTxt">unknown</span></span></div>
+      <div style="font-size:12px;color:var(--faint);margin-top:6px" id="stateConf"></div>
+    </div>
+    <div class="field" style="border-bottom:1px solid var(--line)">
+      <div class="k">Account</div>
+      <div class="v mono" id="loanId" style="font-size:13px">&mdash;</div>
+    </div>
+  </aside>
+
+  <!-- TALK -->
+  <main class="col talk">
+    <div class="controlbanner">Control arm &mdash; no coaching shown. This borrower's outcome is a clean counterfactual against the coached arm.</div>
+    <div class="thread" id="thread"></div>
+  </main>
+
+  <!-- ACT -->
+  <aside class="col act">
+    <div class="now">
+      <div class="eyebrow">recommended next move</div>
+      <div class="strat" id="strategy">&mdash;</div>
+    </div>
+
+    <div class="panel" style="border-top:0;padding-top:0">
+      <h4>Capture promise-to-pay</h4>
+      <label class="f" for="ptpAmt">Amount (&euro;)</label>
+      <input id="ptpAmt" class="mono" inputmode="numeric" placeholder="e.g. 150">
+      <label class="f" for="ptpDue">By date</label>
+      <input id="ptpDue" type="date">
+      <label class="f" for="ptpMethod">Method</label>
+      <select id="ptpMethod">
+        <option value="">&mdash;</option><option>bank_transfer</option><option>direct_debit</option><option>card</option><option>cash</option>
+      </select>
+      <div class="btn-row"><button class="btn go" id="capturePtp">Capture promise</button></div>
+    </div>
+
+    <div class="panel">
+      <h4>Override recommendation</h4>
+      <label class="f" for="ovReason">Reason (required)</label>
+      <textarea id="ovReason" placeholder="Why are you departing from the recommendation?"></textarea>
+      <div class="btn-row"><button class="btn warn" id="override">Log override</button></div>
+    </div>
+
+    <div class="panel">
+      <h4>Decision log</h4>
+      <ul class="feed" id="feed"><li class="t">Nothing logged yet.</li></ul>
+    </div>
+  </aside>
+</div>
+
+<script>
+const DATA = {"account":{"loan_id":"F24Q10000110","exposure":168459.0,"arrears_months":3,"p_worsen":0.81,"p_selfcure":0.233,"reason_codes":["currently behind","delinquency worsening over 3 months","recent peak delinquency"],"capacity":"cannot_pay","willingness":"will_not_pay","state_conf":0.179,"strategy":"DIAGNOSTIC: ask the question that resolves capacity vs willingness"},"turns":[{"speaker":"agent","text":"Hello, is this Mr. Davies?","hint":null},{"speaker":"borrower","text":"Yes, speaking. Who is this?","hint":{"text":"You don't yet know if they can't pay or won't — ask one question that tells them apart before proposing anything.","tier":"deterministic","support":null}},{"speaker":"agent","text":"This is Sarah calling from Sterling Collections. I'm following up on the outstanding balance for your mortgage with Premier Bank.","hint":null},{"speaker":"borrower","text":"Oh. Right. Look, I know I'm behind.","hint":{"text":"Pin the promise down: ask for an amount, a date, a method. Specific promises are kept far more often than vague ones.","tier":"deterministic","support":null}},{"speaker":"agent","text":"I see here the account is currently three months past due, with a balance of approximately €168,459.","hint":null},{"speaker":"borrower","text":"Yeah, I… I know. It's just… things have been really tough lately. I lost my job a few months back, and I'm still trying to get back on my feet.","hint":{"text":"You don't yet know if they can't pay or won't — ask one question that tells them apart before proposing anything.","tier":"deterministic","support":null}},{"speaker":"agent","text":"I understand that situations can arise, Mr. Davies. Have you been able to make any payments towards the outstanding amount?","hint":null},{"speaker":"borrower","text":"I wish I could. I really do. I've been trying to scrape something together, but honestly, I'm barely covering my essential living costs right now. I don't have anything extra.","hint":{"text":"You don't yet know if they can't pay or won't — ask one question that tells them apart before proposing anything.","tier":"deterministic","support":null}},{"speaker":"agent","text":"We do have some hardship programs available that might be able to assist. Would you be open to discussing those options?","hint":null},{"speaker":"borrower","text":"I… I suppose so. I don't know what else to do. I just can't afford to pay the full amount right now.","hint":null},{"speaker":"agent","text":"Okay, let's go over some of the details then. Can you confirm your current address for me?","hint":null}]};
+
+  const A = DATA.account;
+  // static account panel
+  document.getElementById('exposure').textContent = '€' + A.exposure.toLocaleString('en-GB',{maximumFractionDigits:0});
+  document.getElementById('selfcure').textContent = Math.round(A.p_selfcure*100) + '%';
+  document.getElementById('arrears').textContent = A.arrears_months + ' months past due';
+  document.getElementById('loanId').textContent = A.loan_id;
+  document.getElementById('reasons').innerHTML = A.reason_codes.map(r=>`<li>${r}</li>`).join('');
+  const stateCertain = A.state_conf >= 0.6;
+  document.getElementById('stateTxt').textContent =
+    stateCertain ? `${A.capacity.replace('_',' ')} · ${A.willingness.replace('_',' ')}` : 'uncertain — needs a diagnostic question';
+  document.getElementById('statechip').classList.toggle('uncertain', !stateCertain);
+  document.getElementById('stateConf').textContent = `confidence ${A.state_conf.toFixed(2)} — willingness can't be known from servicing data alone`;
+  document.getElementById('strategy').textContent =
+    A.strategy.startsWith('DIAGNOSTIC') ? 'Ask the one question that separates cannot-pay from will-not-pay before proposing anything. On this account the model is not confident enough to assume.' : A.strategy;
+
+  // risk gauge — sequential single-hue amber ramp: lightness encodes magnitude,
+  // never a traffic-light red/amber/green (which invents categories from a scalar)
+  const p = A.p_worsen, R=62, C=2*Math.PI*R;
+  const light = 68 - p*30;               // higher risk -> deeper amber
+  const arc = document.getElementById('arc');
+  arc.style.stroke = `hsl(36 92% ${light}%)`;
+  arc.setAttribute('stroke-dasharray', `${p*C} ${C}`);
+  const riskNum = document.getElementById('riskNum');
+  let cur=0; const tick=()=>{ cur+=Math.max(1,(p*100-cur)*0.15); if(cur>=p*100){cur=p*100;} riskNum.textContent=Math.round(cur); if(cur<p*100) requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+
+  // replay
+  const thread = document.getElementById('thread');
+  let idx=0, timer=null, playing=false;
+  const LAT = { deterministic: () => (Math.random()*0.06+0.02), strategy: () => (Math.random()*900+3600) };
+  const BUDGET = 300;
+
+  function renderTurn(t){
+    const el = document.createElement('div');
+    el.className = `turn ${t.speaker}`;
+    el.innerHTML = `<div class="who">${t.speaker==='agent'?'Agent':'Borrower'}</div><div class="say"></div>`;
+    el.querySelector('.say').textContent = t.text;
+    thread.appendChild(el);
+    requestAnimationFrame(()=> el.classList.add('shown'));
+    if (t.hint){
+      const latMs = LAT[t.hint.tier]();
+      const live = t.hint.tier==='deterministic' || latMs<=BUDGET;
+      const h = document.createElement('div');
+      h.className = `hint ${t.hint.tier==='strategy'?'strategy':''}`;
+      const latTxt = t.hint.tier==='deterministic'
+        ? `${latMs.toFixed(2)} ms · live`
+        : (live ? `${Math.round(latMs)} ms · live` : `${Math.round(latMs)} ms · demoted to next turn`);
+      h.innerHTML = `<div class="lab"><span class="tier">${t.hint.tier==='deterministic'?'tier 1':'tier 2'}</span><span class="lat mono">${latTxt}</span></div><div class="txt"></div>${t.hint.support!==null?`<div class="support">playbook support: ${t.hint.support} (seeded)</div>`:''}`;
+      h.querySelector('.txt').textContent = t.hint.text;
+      thread.appendChild(h);
+      requestAnimationFrame(()=> h.classList.add('shown'));
+    }
+    thread.parentElement.scrollTop = thread.parentElement.scrollHeight;
+  }
+
+  function step(){
+    if (idx>=DATA.turns.length){ stop(); return; }
+    renderTurn(DATA.turns[idx++]);
+    timer = setTimeout(step, 1500);
+  }
+  function play(){ if(playing) return; playing=true; document.getElementById('play').textContent='Playing…'; step(); }
+  function stop(){ playing=false; clearTimeout(timer); document.getElementById('play').textContent = idx>=DATA.turns.length?'Replay ended':'Play call'; }
+  function restart(){ stop(); thread.innerHTML=''; idx=0; document.getElementById('play').textContent='Play call'; }
+
+  document.getElementById('play').onclick = play;
+  document.getElementById('restart').onclick = restart;
+
+  // arm toggle
+  function setArm(a){
+    document.body.dataset.arm = a;
+    document.getElementById('armFull').setAttribute('aria-pressed', a==='full');
+    document.getElementById('armControl').setAttribute('aria-pressed', a==='control');
+    log('arm', `switched to ${a} arm`);
+  }
+  document.getElementById('armFull').onclick = ()=>setArm('full');
+  document.getElementById('armControl').onclick = ()=>setArm('control');
+  document.body.dataset.arm='full';
+
+  // decision log (per-viewer, local)
+  const feed = document.getElementById('feed');
+  function log(kind, text){
+    if (feed.children.length===1 && feed.children[0].classList.contains('t')) feed.innerHTML='';
+    const li = document.createElement('li');
+    li.className = kind;
+    const time = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    li.innerHTML = `<span class="t mono">${time}</span> &middot; ${text}`;
+    feed.prepend(li);
+    try{ const k='ganymede-desk-log'; const arr=JSON.parse(localStorage.getItem(k)||'[]'); arr.push({kind,text,time}); localStorage.setItem(k,JSON.stringify(arr.slice(-50))); }catch(e){}
+  }
+
+  document.getElementById('override').onclick = ()=>{
+    const r = document.getElementById('ovReason').value.trim();
+    if(!r){ document.getElementById('ovReason').focus(); log('override','override blocked — reason required'); return; }
+    log('override', `override logged: “${r}”`);
+    document.getElementById('ovReason').value='';
+  };
+  document.getElementById('capturePtp').onclick = ()=>{
+    const amt=document.getElementById('ptpAmt').value, due=document.getElementById('ptpDue').value, m=document.getElementById('ptpMethod').value;
+    const parts=[amt&&`€${amt}`, due&&`by ${due}`, m&&m.replace('_',' ')].filter(Boolean);
+    const specific = amt&&due&&m;
+    log('ptp', `promise captured: ${parts.join(', ')||'no detail'}${specific?'':' — vague, prompt for the missing field'}`);
+  };
+</script>
