@@ -14,3 +14,4 @@ reports/*.md
 *.ckpt
 node_modules/
 .next/
+data/processed/

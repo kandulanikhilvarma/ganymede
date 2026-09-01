@@ -6,8 +6,8 @@ Strictly sequential. A phase starts only when the previous gate is green.
 |---|---|---|---|---|
 | 0 | Spike | **blocked** | measured gap distribution + latency budget | needs `ANTHROPIC_API_KEY` + sample audio + human stopwatch |
 | 1 | Foundation | **done** | `pytest tests/test_experiment.py` + CI green + schema frozen | 21 tests pass; invariants OK; schema v1.0.0 |
-| 2 | Panel | not started | `panel.py --verify` | needs Freddie Mac data |
-| 3 | Risk models | not started | `models --backtest` beats base rate | — |
+| 2 | Panel | **done** | `panel.py --verify` | 1.4M rows, 87.8k loans, 9 vintages, full roll curve; sample_weight recorded |
+| 3 | Risk models | **in progress** | `models --backtest` beats base rate | — |
 | 4 | Allocator | not started | `allocator --simulate` beats risk-ranking | — |
 | 5 | Borrower state | not started | `test_state.py` | — |
 | 6 | Conversations + extraction | not started | `outcomes --verify` | needs API key |
