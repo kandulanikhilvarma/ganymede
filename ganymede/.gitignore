@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+data/raw/*
+!data/raw/.gitkeep
+reports/*.md
+!reports/.gitkeep
+.env
+*.parquet
+*.ckpt
+node_modules/
+.next/

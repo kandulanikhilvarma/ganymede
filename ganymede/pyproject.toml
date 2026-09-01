@@ -1,0 +1,29 @@
+[project]
+name = "ganymede"
+version = "0.1.0"
+description = "Recovery Intelligence System — risk + coaching over one loop"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.6",
+    "polars>=0.20",
+    "lightgbm>=4.3",
+    "scikit-learn>=1.4",
+    "numpy>=1.26",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0"]
+audio = ["faster-whisper>=1.0", "silero-vad>=5.0"]
+llm = ["anthropic>=0.40"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
