@@ -14,7 +14,7 @@ Strictly sequential. A phase starts only when the previous gate is green.
 | 7 | Coach Lens | **done** | `test_coach.py` | tier-1 0.04ms, tier-2 demotes at 4.5s; promise-quality + diagnostic + strategy hints |
 | 8 | Evals | **done** | `evals.report --report` | judge 91.7% agree, alpha under ceiling; drift monitors; pilot metrics honestly pending |
 | 9 | Agent Desk | **done** | deployed URL, replay works | published Artifact; real scored replay, hints fire, override, control arm |
-| 10 | Case + roadmap | **in progress** | three documents | — |
+| 10 | Case + roadmap | **done** | three documents | docs/CASE.md + published case artifact; results, pilot design, gap analysis |
 
 ## Blocked on the user
 

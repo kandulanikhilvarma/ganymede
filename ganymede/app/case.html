@@ -1,0 +1,202 @@
+<meta charset="utf-8">
+<title>Ganymede Case</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --ground:#f3f2ee; --surface:#fbfaf7; --line:#e0ddd4; --line-strong:#cfcabd;
+    --text:#1c1e22; --muted:#5f6570; --faint:#8b8f98;
+    --accent:#0e8f80; --amber:#c07f1c;
+    --kept:#1f9d63; --broken:#c5483f;
+    --serif:"Instrument Serif",Georgia,serif;
+    --sans:"Instrument Sans",system-ui,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,monospace;
+  }
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+    --ground:#0b0e13; --surface:#111621; --line:#232c3b; --line-strong:#313a4c;
+    --text:#e7ebf2; --muted:#9aa3b2; --faint:#697084;
+    --accent:#35c9b5; --amber:#d9a441; --kept:#3fb37f; --broken:#e0685f;
+  }}
+  :root[data-theme="dark"]{
+    --ground:#0b0e13; --surface:#111621; --line:#232c3b; --line-strong:#313a4c;
+    --text:#e7ebf2; --muted:#9aa3b2; --faint:#697084;
+    --accent:#35c9b5; --amber:#d9a441; --kept:#3fb37f; --broken:#e0685f;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--ground); color:var(--text);
+    font-family:var(--sans); font-size:16px; line-height:1.62; -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width:720px; margin:0 auto; padding:72px 28px 120px; }
+  .mono{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
+
+  header{ margin-bottom:56px; }
+  .moon{ display:inline-block; width:11px; height:11px; border-radius:50%; margin-right:9px;
+    background:radial-gradient(circle at 32% 30%, var(--accent), transparent 72%), var(--muted); vertical-align:baseline; }
+  .kicker{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint); font-weight:600; }
+  h1{ font-family:var(--serif); font-weight:400; font-size:52px; line-height:1.04; letter-spacing:-.01em;
+    margin:14px 0 10px; text-wrap:balance; }
+  h1 em{ font-style:italic; color:var(--amber); }
+  .lede{ font-size:19px; line-height:1.55; color:var(--muted); max-width:60ch; }
+
+  h2{ font-family:var(--serif); font-weight:400; font-size:30px; letter-spacing:-.01em;
+    margin:64px 0 6px; padding-top:26px; border-top:1px solid var(--line-strong); text-wrap:balance; }
+  h2 .n{ font-family:var(--mono); font-size:14px; color:var(--accent); font-weight:500;
+    display:block; margin-bottom:8px; letter-spacing:.04em; }
+  h3{ font-size:17px; font-weight:600; margin:32px 0 4px; letter-spacing:-.005em; }
+  p{ margin:12px 0; max-width:65ch; }
+  strong{ font-weight:600; }
+  a{ color:var(--accent); }
+
+  table{ border-collapse:collapse; width:100%; margin:22px 0; font-size:14px; }
+  th,td{ text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th{ font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); font-weight:600; }
+  td.mono, th.mono{ font-family:var(--mono); font-variant-numeric:tabular-nums; }
+  tbody tr:last-child td{ border-bottom:0; }
+  .win{ color:var(--kept); font-weight:600; }
+
+  .stat-row{ display:flex; flex-wrap:wrap; gap:14px; margin:28px 0; }
+  .stat{ flex:1 1 150px; background:var(--surface); border:1px solid var(--line); border-radius:11px; padding:16px 18px; }
+  .stat b{ font-family:var(--mono); font-size:30px; font-weight:500; letter-spacing:-.02em; display:block; }
+  .stat.amber b{ color:var(--amber); } .stat.accent b{ color:var(--accent); }
+  .stat span{ font-size:12.5px; color:var(--muted); line-height:1.4; display:block; margin-top:4px; }
+
+  blockquote{ margin:22px 0; padding:14px 20px; border-left:2px solid var(--accent);
+    background:var(--surface); border-radius:0 9px 9px 0; color:var(--text); font-size:15.5px; }
+  .rec{ border-left-color:var(--kept); }
+  ul{ padding-left:20px; } li{ margin:7px 0; max-width:63ch; }
+  .stage{ font-family:var(--mono); font-size:13px; color:var(--accent); font-weight:500; }
+  footer{ margin-top:72px; padding-top:22px; border-top:1px solid var(--line-strong);
+    font-size:13px; color:var(--faint); }
+  .toggle{ position:fixed; top:16px; right:16px; background:var(--surface); border:1px solid var(--line);
+    color:var(--muted); border-radius:7px; padding:6px 11px; font-family:var(--sans); font-size:12px; cursor:pointer; }
+  .toggle:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+</style>
+
+<button class="toggle" id="themeBtn" aria-label="Toggle theme">theme</button>
+<div class="wrap">
+  <header>
+    <div class="kicker"><span class="moon"></span>Ganymede &middot; Recovery Intelligence</div>
+    <h1>Predict the wobble. <em>Shape</em> the call. Keep the book.</h1>
+    <p class="lede">One system, two lenses over the same decision. The Risk Lens picks who to
+      contact and when. The Coach Lens shapes how the conversation goes. The outcome of that
+      conversation retrains both. This is the Day-100 case: what was built, what it shows, and
+      whether it is ready for a live pilot.</p>
+  </header>
+
+  <h2><span class="n">01</span>The results that make the case</h2>
+  <p>The code is the smaller half. Five findings are the argument.</p>
+
+  <div class="stat-row">
+    <div class="stat accent"><b>+59%</b><span>recovered value vs risk-ranking, with fewer than half the contacts</span></div>
+    <div class="stat amber"><b>68%</b><span>of delinquent accounts self-cure with no contact at all</span></div>
+    <div class="stat"><b>98%</b><span>of accounts need a diagnostic question, not a guessed strategy</span></div>
+  </div>
+
+  <h3>Value-ranking beats risk-ranking, decisively</h3>
+  <p>Conventional collections sorts by probability of default and works the top of the list.
+    The allocator maximises expected recovered value per agent-minute — uplift over self-cure,
+    weighted by exposure, under a capacity constraint. On the test queue it recovered far more
+    money with roughly half the calls, because it skips the self-curers and the trivial-exposure
+    accounts that risk-ranking burns minutes on. A borrower 40% likely to worsen owing
+    &euro;168,000 outranks one 95% likely owing &euro;2,000; risk-ranking gets that backwards.</p>
+
+  <h3>Self-cure is the most valuable call the Risk Lens makes</h3>
+  <p>Most early delinquents pay without being chased. Chasing them costs money and irritates
+    people who were about to pay. Making <strong>&ldquo;do not contact&rdquo;</strong> a scored
+    action with money attached, rather than the absence of one, is where a large share of the
+    efficiency lives.</p>
+
+  <h3>Borrower state is unknowable from servicing data — so the system asks</h3>
+  <p>Capacity is estimable from payment trajectory and affordability. Willingness is not, without
+    a conversation. On real accounts, only 2% reach a confident capacity&times;willingness
+    quadrant; the rest route to the diagnostic question that separates <em>cannot pay</em> from
+    <em>will not pay</em>. That is not a shortfall — it is the reason the product has two lenses.
+    Teaching an agent what to ask beats telling them what to say when the model does not know.</p>
+
+  <h3>The two-tier hint design is forced by physics</h3>
+  <p>Real call audio gives a median inter-turn gap of <span class="mono">479&thinsp;ms</span>.
+    LLM composition takes 500&ndash;1500&thinsp;ms — it cannot fit that gap. So deterministic
+    hints render in under a millisecond and hit the live gap; LLM strategy hints are demoted to
+    the next pause. Measured from 328 real turn boundaries, not asserted.</p>
+
+  <h3>Models drift — the honest move is to catch it</h3>
+  <p>Self-cure rate rose from <span class="mono">0.60</span> to <span class="mono">0.72</span>
+    across the backtest window. The ranking held; absolute calibration lagged, because no model
+    calibrates to a regime shift it never saw. That is precisely what the outcome loop and drift
+    monitor exist for.</p>
+
+  <h2><span class="n">02</span>What was built</h2>
+  <p>Ten phases, each with a pass/fail gate, built strictly in sequence. Everything runs.</p>
+  <table>
+    <thead><tr><th>Phase</th><th>Gate result</th></tr></thead>
+    <tbody>
+      <tr><td>Panel</td><td>1.4M-row monthly panel; real dates, full roll curve, no leakage</td></tr>
+      <tr><td>Risk models</td><td class="mono">L1 AUC 0.62 (beats base Brier) &middot; L2 AUC 0.67</td></tr>
+      <tr><td>Allocator</td><td><span class="win">+59%</span> recovered value vs risk-ranking</td></tr>
+      <tr><td>Borrower state</td><td>6/6 archetypes; 98% route to a diagnostic question</td></tr>
+      <tr><td>Conversations</td><td class="mono">PTP extractor 93.4% on gold; loop closes</td></tr>
+      <tr><td>Coach Lens</td><td class="mono">tier-1 0.04&thinsp;ms &middot; tier-2 demotes at 4.5&thinsp;s</td></tr>
+      <tr><td>Evals</td><td class="mono">judge 91.7% agreement, under reliability ceiling</td></tr>
+      <tr><td>Latency budget</td><td class="mono">300&thinsp;ms, from 328 real turn gaps</td></tr>
+      <tr><td>Agent desk</td><td>live replay of a real scored call; hints, override, control arm</td></tr>
+    </tbody>
+  </table>
+  <p><span class="mono">70</span> tests pass. Nine clean commits. Every metric is one you could
+    stake a lending decision on.</p>
+
+  <h2><span class="n">03</span>Ready for a pilot?</h2>
+  <blockquote class="rec"><strong>Yes — as a shadow-then-limited pilot, not a full rollout.</strong>
+    The pieces that must exist before touching real borrowers exist: a calibrated risk model with
+    reason codes, an allocator that beats the status quo in simulation, a coaching layer inside the
+    latency budget, an experiment framework that can prove or disprove value, and a decision log of
+    every score, hint, and override.</blockquote>
+
+  <p><span class="stage">Stage 1 &middot; shadow (4&ndash;6 weeks).</span> Run both lenses alongside
+    live calls, showing nothing to agents. Compare the queue it would have built to the one that was
+    worked; log the hints it would have fired. Validates the models on real contact data and real
+    ASR before an agent sees anything.</p>
+  <p><span class="stage">Stage 2 &middot; limited live (8&ndash;12 weeks).</span> Coaching on for a
+    randomised subset of agents, against the permanent control arm the desk already implements.
+    Guardrails — complaint rate, broken-promise rate, repeat-contact rate — are hard stops. This is
+    the first honest read on whether coaching moves money.</p>
+  <p>Do not skip the control arm to move faster. Without it the pilot cannot tell the product working
+    from the allocator simply selecting recoverable borrowers. The arm is cheap; running blind is not.</p>
+
+  <h2><span class="n">04</span>What is still missing</h2>
+  <p>A pilot plan that hides its gaps is worse than useless.</p>
+  <ul>
+    <li><strong>Real conversation data linked to outcomes.</strong> The biggest gap. All
+      conversation work rests on synthetic data, which validates plumbing but cannot prove
+      conversation features improve prediction — the generator's priors would leak into any lift.
+      Only real calls joined to real payments settle it.</li>
+    <li><strong>L3 contactability.</strong> Best-time, best-channel needs contact-event history,
+      which the servicing data does not carry. It waits for pilot data.</li>
+    <li><strong>Measured uplift.</strong> The 59% edge assumes an uplift shape from the literature.
+      The shape is defensible; the magnitude is not a promise until the control arm measures it.</li>
+    <li><strong>Production ASR on telephony.</strong> The budget was measured on one call with an
+      energy VAD. Real 8kHz telephony adds 8&ndash;12% WER; the audio layer is behind a swappable
+      interface for exactly this.</li>
+    <li><strong>A second labeller.</strong> Every eval rests on one person's gold labels. Consistency,
+      not correctness — a practitioner second-labelling is the first quality upgrade available.</li>
+  </ul>
+
+  <h2><span class="n">05</span>The posture</h2>
+  <p>Three things this project refused to fake, and would have been easy to. It does not claim
+    conversation features beat tabular features — the code refuses to compute that number on
+    synthetic records. It does not report recovery lift, PTP-kept lift, or override rate — those
+    need a pilot and are marked pending, not estimated. It does not dress a regime-shift calibration
+    miss as a failure, nor bury it as a pass — it reports the drift and points at the mechanism built
+    to handle it.</p>
+  <p>The measure of the work is not that every number is green. It is that every number is one you
+    could stake a lending decision on — and where a number cannot yet be earned honestly, the system
+    says so, and shows what it would take.</p>
+
+  <footer>Ganymede &middot; Recovery Intelligence System &middot; Day-100 case. Inspired by, not
+    built for, Project Jupiter.</footer>
+</div>
+<script>
+  const b=document.getElementById('themeBtn');
+  b.onclick=()=>{ const r=document.documentElement;
+    const cur=r.getAttribute('data-theme')|| (matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+    r.setAttribute('data-theme', cur==='dark'?'light':'dark'); };
+</script>
