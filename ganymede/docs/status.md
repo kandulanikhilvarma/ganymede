@@ -11,8 +11,8 @@ Strictly sequential. A phase starts only when the previous gate is green.
 | 4 | Allocator | **done** | `allocator --simulate` | +59.1% recovered value vs risk-ranking, fewer contacts; uplift modelled not measured (I1) |
 | 5 | Borrower state | **done** | `test_state.py` | 6/6 archetypes; 98% route to diagnostic question (willingness needs conversation data) |
 | 6 | Conversations + extraction | **done** | `outcomes --verify` | PTP extractor 93.4% (bar 80%); generate->extract->resolve, no drops |
-| 7 | Coach Lens | **in progress** | `test_coach.py` in latency budget | budget=300ms ready |
-| 8 | Evals | not started | `evals --report` | — |
+| 7 | Coach Lens | **done** | `test_coach.py` | tier-1 0.04ms, tier-2 demotes at 4.5s; promise-quality + diagnostic + strategy hints |
+| 8 | Evals | **in progress** | `evals --report` | judge needs live key (have it) |
 | 9 | Agent Desk | not started | deployed URL, replay works | — |
 | 10 | Case + roadmap | not started | three documents | — |
 
