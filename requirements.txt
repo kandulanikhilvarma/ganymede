@@ -1,0 +1,19 @@
+# Core modelling + data
+pydantic>=2.6
+polars>=0.20
+lightgbm>=4.3
+scikit-learn>=1.4
+numpy>=1.26
+
+# LLM (OpenRouter via OpenAI-compatible client)
+openai>=1.40
+python-dotenv>=1.0
+
+# Evaluation
+krippendorff>=0.6
+
+# Charts (README figures)
+matplotlib>=3.8
+
+# Audio layer (optional — VAD gap measurement, ASR)
+imageio-ffmpeg>=0.5

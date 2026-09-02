@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you reference this work, please cite it as below."
+title: "Ganymede — Recovery Intelligence System"
+abstract: >-
+  A combined risk and coaching agent for lending and collections. The Risk Lens
+  predicts early default signals and allocates agent effort by expected recovered
+  value; the Coach Lens shapes recovery conversations in real time. One feedback
+  loop retrains both.
+authors:
+  - family-names: Kandula
+    given-names: Nikhilvarma
+    email: kandulanikhilvarma@gmail.com
+repository-code: "https://github.com/kandulanikhilvarma/ganymede"
+url: "https://github.com/kandulanikhilvarma/ganymede"
+license: MIT
+keywords:
+  - collections
+  - credit-risk
+  - uplift-modeling
+  - coaching-agent
+  - lending
+date-released: 2026-09-02
