@@ -12,11 +12,11 @@
 ![Python](https://img.shields.io/badge/python-3.11%2B-3572A5.svg)
 ![Tests](https://img.shields.io/badge/tests-70%20passing-1f9d63.svg)
 ![Invariants](https://img.shields.io/badge/design%20invariants-I1--I14%20enforced-c07f1c.svg)
-![Status](https://img.shields.io/badge/status-prototype%20%C2%B7%20pilot--ready-8a94a8.svg)
+![Gates](https://img.shields.io/badge/build%20gates-5%20green-0e8f80.svg)
+
+![Ganymede. Predict the wobble, shape the call, keep the book.](site/assets/img/og.png)
 
 </div>
-
-![The Ganymede agent desk — risk gauge, reason codes, live coaching hints firing at turn boundaries, and the action panel](docs/img/desk.png)
 
 ---
 
@@ -24,29 +24,29 @@
 
 One system, two lenses over the **same decision**.
 
-- **Risk Lens** — who to contact, when, and what to offer. It answers *where does an agent-minute earn the most*.
-- **Coach Lens** — what to say once the conversation starts. It answers *how does this call end in money*.
+- **Risk Lens.** Who to contact, when, and what to offer. It answers *where does an agent-minute earn the most*.
+- **Coach Lens.** What to say once the conversation starts. It answers *how does this call end in money*.
 
-They are one product because they close a single loop: Risk picks the conversation, Coach shapes it, and the outcome of that conversation is the label that retrains both. Split them and each half degrades — a queue nobody knows how to work, or advice with no idea who it is talking to.
+They are one product because they close a single loop. Risk picks the conversation, Coach shapes it, and the outcome of that conversation is the label that retrains both. Split them and each half degrades into something worse: a queue nobody knows how to work, or advice with no idea who it is talking to.
 
 ---
 
 ## The site
 
-Everything below is explorable, not just readable:
+Everything below is explorable rather than only readable.
 
 | | |
 |---|---|
 | [**Start here**](https://ganymede-kandula.vercel.app/) | The argument, and one borrower walked end to end |
 | [**How it works**](https://ganymede-kandula.vercel.app/system) | Architecture, data lineage, and all fourteen invariants |
-| [**Evidence**](https://ganymede-kandula.vercel.app/evidence) | Every chart with its method and a drag-the-budget latency histogram |
+| [**Evidence**](https://ganymede-kandula.vercel.app/evidence) | Every chart with its method, and a drag-the-budget latency histogram |
 | [**Allocator studio**](https://ganymede-kandula.vercel.app/queue) | Move the capacity slider; both queues re-rank on real runs |
 | [**Agent desk**](https://ganymede-kandula.vercel.app/desk) | Work a real scored queue: hints, promise capture, override, control arm |
-| [**The case**](https://ganymede-kandula.vercel.app/case) | The written Day-100 argument and the pilot recommendation |
+| [**The argument**](https://ganymede-kandula.vercel.app/case) | Why it recovers more per agent-minute, and how it reaches the floor |
 | [**Glossary**](https://ganymede-kandula.vercel.app/glossary) | Arrears, self-cure, PTP, roll curve, uplift, defined where they are used |
 | [**About**](https://ganymede-kandula.vercel.app/about) | Who built it, and why it is called Ganymede |
 
-**No number on that site is typed by hand.** `scripts/build_site_data.py` regenerates `site/data/*.json` by calling the pipeline directly, and every value ships with the kind of evidence behind it — `measured`, `backtested`, `simulated`, `seeded`, or `pending`. A figure with no provenance cannot render at all, and CI fails if the committed JSON drifts from what the code now produces.
+**No number on that site is typed by hand.** `scripts/build_site_data.py` regenerates `site/data/*.json` by calling the pipeline directly, and every value ships with the kind of evidence behind it: `measured`, `backtested`, `simulated`, `seeded`, or `pending`. A figure with no provenance cannot render at all, and CI fails if the committed JSON drifts from what the code now produces.
 
 ---
 
@@ -56,27 +56,27 @@ Backtested, simulated, or measured. No invented numbers.
 
 ### Value-ranking beats risk-ranking, and most where it matters
 
-The allocator maximises **expected recovered value per agent-minute** — uplift over self-cure, weighted by exposure, under a capacity constraint. At 15% of full-coverage capacity it recovers **+59%** more than risk-ranking using roughly half the contacts. At 2% capacity the edge is **+193%**; at 60% it converges to **+2.4%**, because with enough agents to call everybody the ordering stops mattering.
+The allocator maximises **expected recovered value per agent-minute**: uplift over self-cure, weighted by exposure, under a capacity constraint. At 15% of full-coverage capacity it recovers **+59%** more than risk-ranking using roughly half the contacts. At 2% capacity the edge is **+193%**. At 60% it converges to **+2.4%**, because with enough agents to call everybody the ordering stops mattering.
 
-![Allocator vs risk-ranking: +59% recovered value with half the contacts](docs/img/allocator.png)
+![Allocator against risk-ranking: 59% more recovered value with half the contacts](docs/img/allocator.png)
 
-Two real rows carry the argument on their own: a €1.93M account at 18% probability that risk-ranking never reaches anywhere in the sweep, and a €1,289 account at 83% that it funds at 5% capacity while the allocator never does. [Move the slider yourself.](https://ganymede-kandula.vercel.app/queue)
+Two real rows carry the argument on their own. A €1.93M account at 18% probability that risk-ranking never reaches anywhere in the sweep, and a €1,289 account at 83% that it funds at 5% capacity while the allocator never does. [Move the slider yourself.](https://ganymede-kandula.vercel.app/queue)
 
-### The risk score is calibrated — the number means what it says
+### The risk score is calibrated, so the number means what it says
 
-L1 predicts whether an account worsens over the next 90 days. A collections agent reads that number and acts on its face value, so calibration is the gate, not AUC.
+L1 predicts whether an account worsens over the next 90 days. A collections agent reads that number and acts on its face value, so calibration is the gate rather than AUC.
 
 ![L1 reliability curve, closely tracking the diagonal](docs/img/reliability.png)
 
 ### The two-tier hint design is forced by physics
 
-Measured from **328 real inter-turn gaps** in a 10-minute call: the median gap is 479 ms and the enforced budget is 300 ms (the p25, 292 ms, rounded up). **75%** of real turn boundaries are wide enough for a hint at that budget; only **48%** could fit a 500 ms model call. So deterministic hints render in under a millisecond and hit the live gap, and LLM strategy hints are demoted to the next pause rather than raced.
+Measured from **328 real inter-turn gaps** in a 10-minute call. The median gap is 479 ms and the enforced budget is 300 ms, which is the p25 of 292 ms rounded up. **75%** of real turn boundaries are wide enough for a hint at that budget, against only **48%** for a 500 ms model call. So deterministic hints render in under a millisecond and land live, while model-composed strategy hints wait for the next pause rather than racing the budget.
 
 ![Inter-turn gap histogram with the 300ms tier-1 budget and 479ms median marked](docs/img/gap_hist.png)
 
-### Models drift — and the monitor exists to catch it
+### Models drift, and the monitor exists to catch it
 
-Self-cure rate rose from 0.60 to 0.72 across the backtest window. The ranking held; absolute calibration lagged, because no model calibrates to a regime shift it never saw. That is exactly what the outcome loop and drift monitor are for.
+Self-cure rate rose from 0.60 to 0.72 across the backtest window. The ranking held. Absolute calibration lagged, because no model calibrates to a regime shift it never saw. That is exactly what the outcome loop and drift monitor are for.
 
 ![Self-cure rate drift from 0.60 to 0.72 across the time split](docs/img/selfcure_drift.png)
 
@@ -84,7 +84,7 @@ Self-cure rate rose from 0.60 to 0.72 across the backtest window. The ranking he
 
 ## Architecture
 
-**Where Ganymede acts.** Conventional collections enters at `Delinquent`. Ganymede enters one state earlier — and `Drifting → Current` with no contact is the transition most systems never notice they are being paid for.
+**Where Ganymede acts.** Conventional collections enters at `Delinquent`. Ganymede enters one state earlier, and `Drifting → Current` with no contact is the transition most systems never notice they are being paid for.
 
 ```mermaid
 stateDiagram-v2
@@ -101,7 +101,7 @@ stateDiagram-v2
     ChargedOff --> [*]
 ```
 
-**System flow.** Servicing panel and contact events feed the models; the allocator turns scores into an assignment; the desk surfaces hints; every decision is logged and resolved back into training.
+**System flow.** Servicing panel and contact events feed the models, the allocator turns scores into an assignment, the desk surfaces hints, and every decision is logged and resolved back into training.
 
 ```mermaid
 flowchart TB
@@ -130,17 +130,28 @@ flowchart TB
 
 ## Design invariants
 
-Fourteen failures found in review were converted from a postmortem list into **invariants enforced in code** — a defect is closed when something automated fails if it comes back, never before. A few:
+Fourteen failures found in review were converted from a postmortem list into **invariants enforced in code**. A defect is closed when something automated fails if it comes back, never before. A few:
 
 | # | Invariant | Enforced by |
 |---|---|---|
 | I1 | Synthetic data never supports a predictive-lift claim | `evals/metrics.py` refuses lift on synthetic records |
-| I2/I3 | Every decision carries an experiment arm and a propensity | non-optional in `schema.py`; retrain aborts if missing |
+| I2/I3 | Every decision carries an experiment arm and a propensity | non-optional in `schema.py`, retrain aborts if missing |
 | I9 | Accounts ranked by expected value, never by probability | `allocator.py` is the only queue producer |
-| I10 | "Do not contact" is a first-class scored action | in the `Action` enum; self-cure precision tracked |
+| I10 | "Do not contact" is a first-class scored action | in the `Action` enum, self-cure precision tracked |
 | I13 | No timing feature from a source without calendar dates | `features.py` raises on a source tagged false |
 
 [All fourteen, with what each one caught →](https://ganymede-kandula.vercel.app/system)
+
+---
+
+## The interface is generated too
+
+The same discipline runs through the front end, because a design system and a headline figure are both places a known defect can quietly return.
+
+- **Colour is semantic, not decorative.** Ice is the system's own signal, ember carries the magnitude of a *prediction*, and green and red are spent only on realised outcomes. A probability never gets three colours, because that invents category boundaries the model never produced.
+- **The ramps are generated in OKLCH** by `scripts/gen_palette.py`, which fails the build if any of fourteen named contrast pairs drops below its floor, or if the risk ramp stops darkening monotonically and therefore stops encoding magnitude.
+- **The artwork is drawn from the data.** The hero backdrop is real borrower trajectories out of the panel. The moon is procedural, seeded, and coloured from tokens. There are no stock images and the site makes no third-party request at all.
+- **Three typefaces, vendored.** Fraunces for the argument, Geist and Geist Mono for the readout, self-hosted by `scripts/fetch_fonts.py`, which also writes the preload tags so they cannot go stale when a family changes.
 
 ---
 
@@ -162,13 +173,15 @@ ganymede/            the Python package
   coach/             playbook, hint composer, checklist, PTP extractor
   evals/             LLM judge, Krippendorff alpha, metric table
   monitors/          drift (PSI + rate)
-site/                the deployed site
-  *.html             eight pages, no framework, no build step
-  assets/            generated tokens, shared CSS, chart + figure modules, the mark
-  data/              generated from the pipeline — never hand-edited
+site/                the deployed site: no framework, no bundler, no build step
+  *.html             nine pages and a 404
+  assets/            generated tokens, shared CSS, vendored fonts, the mark
+  assets/js/         charts, provenance-resolved figures, procedural artwork
+  data/              generated from the pipeline, never hand-edited
 scripts/
   build_site_data.py pipeline -> site/data/*.json, with provenance
   gen_palette.py     OKLCH ramps -> tokens.css, with contrast gates
+  fetch_fonts.py     vendors the typefaces and rewrites the preload tags
   make_og.py         the social card, drawn from real trajectories
   make_charts.py     the README figures
 docs/                per-phase results, the written case, figures
@@ -181,46 +194,48 @@ tests/               invariant + component tests (70 passing)
 
 ```bash
 pip install -r requirements.txt
-
-# gates — each passes or fails
-python -m ganymede.invariants     --check     # I1-I14
-python -m pytest -q
-python -m ganymede.panel          --verify    # data pipeline
-python -m ganymede.risk           --backtest  # calibration beats base rate
-python -m ganymede.allocator      --simulate  # value-ranking beats risk-ranking
-python scripts/gen_palette.py     --check     # colour contrast + ramp monotonicity
-python scripts/build_site_data.py --check     # site figures vs the pipeline
 ```
 
-Serve the site locally with `python -m http.server 4173 --directory site`. It is static — no build step, no framework, no bundler.
+Five gates, each passes or fails:
+
+```bash
+python -m ganymede.invariants     --check     # I1-I14
+python -m pytest -q                           # 70 tests
+python scripts/gen_palette.py     --check     # contrast pairs + ramp monotonicity
+python scripts/fetch_fonts.py     --check     # vendored faces + preload freshness
+python scripts/build_site_data.py --check     # site figures against the pipeline
+```
+
+And the pipeline itself, which needs the source data present:
+
+```bash
+python -m ganymede.panel     --verify    # data pipeline
+python -m ganymede.risk      --backtest  # calibration beats base rate
+python -m ganymede.allocator --simulate  # value-ranking beats risk-ranking
+```
+
+Serve the site locally with `python -m http.server 4173 --directory site`.
 
 LLM-dependent paths (generation, coaching, judging) need an `OPENROUTER_API_KEY` in a local `.env`. The audio, modelling, and site paths run without it.
 
 ---
 
-## The case, in one page
+## The argument, in short
 
-<div align="center">
+**Shadow first, then a randomised slice, then the floor.** Everything needed before the system touches a real borrower already exists: a calibrated risk model with reason codes, an allocator that beats the status quo, a coaching layer inside the latency budget, an experiment framework that can prove or disprove value, and a decision log of every score, hint and override. The full write-up is at [`/case`](https://ganymede-kandula.vercel.app/case) and in [`docs/CASE.md`](docs/CASE.md).
 
-[![The Ganymede case — Predict the wobble, Shape the call, Keep the book](docs/img/case.png)](https://ganymede-kandula.vercel.app/case)
-
-</div>
-
-**Recommendation: ready for a shadow-then-limited pilot, not a full rollout.** The full write-up — results, pilot stages, and an honest list of what is still missing — is at [`/case`](https://ganymede-kandula.vercel.app/case) and in [`docs/CASE.md`](docs/CASE.md).
-
-Three things this project refused to fake: it does not claim conversation features beat tabular features (that needs real data; the code refuses to compute the number on synthetic records); it does not report recovery or override metrics (those need a pilot, marked pending); it does not dress a regime-shift calibration miss as a pass.
+Three things this project refuses to fake, all of which would have been easy. It does not claim conversation features beat tabular features, because the code will not compute that number on synthetic records. It does not report recovery lift, promise-kept lift or override rate, because those need live data and carry a pending badge rather than an estimate. It does not dress a regime-shift calibration miss as a pass, and it does not bury it either.
 
 ---
 
 ## Data and attribution
 
-Code is **MIT** (see [LICENSE](LICENSE)). Data is **not redistributed** here — the
-repository references public datasets under their own terms:
+Code is **MIT** (see [LICENSE](LICENSE)). Data is **not redistributed** here. The repository references public datasets under their own terms:
 
-- **Freddie Mac Single-Family Loan-Level** — the trajectory backbone (real dates, real delinquency transitions), used under Freddie Mac's data terms.
-- **Home Credit Default Risk** — feature enrichment, under the dataset's Kaggle terms.
+- **Freddie Mac Single-Family Loan-Level**, the trajectory backbone with real dates and real delinquency transitions, used under Freddie Mac's data terms.
+- **Home Credit Default Risk**, feature enrichment, under the dataset's Kaggle terms.
 
-Model outputs are advisory and every decision is logged with its experiment arm and propensity, which is what makes the system auditable after the fact.
+Model outputs are advisory, and every decision is logged with its experiment arm and propensity, which is what makes the system auditable after the fact.
 
 ---
 
@@ -230,6 +245,6 @@ Model outputs are advisory and every decision is logged with its experiment arm 
 
 [LinkedIn](https://www.linkedin.com/in/nikhilvarmakandula) ·
 [Email](mailto:kandulanikhilvarma@gmail.com) ·
-[Portfolio](https://kandula.studio)
+[kandula.studio](https://kandula.studio)
 
 </div>
