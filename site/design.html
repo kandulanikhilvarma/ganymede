@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en" data-depth="2">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Design system · Ganymede</title>
+<meta name="description" content="The Ganymede design language: a semantic colour system where every family carries one decision meaning, and every number on the site wears its evidence.">
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/components.css">
+<script>
+  // Pre-paint, so the page never flashes the wrong theme or depth.
+  try {
+    var t = localStorage.getItem('gm-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var d = localStorage.getItem('gm-depth');
+    if (d) document.documentElement.setAttribute('data-depth', d);
+  } catch (e) {}
+</script>
+<style>
+  .spec { max-width: 1080px; margin: 0 auto; padding: 0 var(--s-6) var(--s-12); }
+
+  .spec-hero { padding: var(--s-11) 0 var(--s-9); }
+  .spec-hero h1 { font-size: clamp(2.5rem, 6vw, var(--fs-7)); margin: var(--s-4) 0 var(--s-5); }
+
+  section.sec { padding-top: var(--s-9); margin-top: var(--s-9); border-top: 1px solid var(--line-strong); }
+  section.sec > h2 {
+    font-family: var(--font-display); font-weight: 400; font-size: var(--fs-4);
+    letter-spacing: var(--tracking-tight); margin-bottom: var(--s-3);
+  }
+  section.sec > h2 .n {
+    display: block; font-family: var(--font-mono); font-size: var(--fs--1);
+    color: var(--signal); letter-spacing: .04em; margin-bottom: var(--s-2);
+  }
+  h3.sub { font-size: var(--fs-0); font-weight: 600; margin: var(--s-8) 0 var(--s-3); }
+
+  /* ramp strips */
+  .ramp { display: flex; border-radius: var(--r-2); overflow: hidden; border: 1px solid var(--line); }
+  .ramp div { flex: 1; height: 56px; position: relative; }
+  .ramp div span {
+    position: absolute; inset: auto 0 4px; text-align: center;
+    font-family: var(--font-mono); font-size: 9px; opacity: .75;
+  }
+  .ramp-label { display: flex; justify-content: space-between; align-items: baseline; margin: var(--s-6) 0 var(--s-2); }
+  .ramp-label b { font-size: var(--fs-0); font-weight: 600; }
+  .ramp-label em { font-style: normal; color: var(--muted); font-size: var(--fs--1); max-width: 62ch; text-align: right; }
+  @media (max-width: 700px) { .ramp-label { flex-direction: column; gap: 4px; } .ramp-label em { text-align: left; } }
+
+  .swatchgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: var(--s-3); }
+  .sw { border: 1px solid var(--line); border-radius: var(--r-2); overflow: hidden; }
+  .sw i { display: block; height: 44px; }
+  .sw p { margin: 0; padding: var(--s-2) var(--s-3); font-size: var(--fs--2); }
+  .sw code { font-family: var(--font-mono); color: var(--faint); display: block; }
+
+  /* risk demo */
+  .riskdemo { display: grid; grid-template-columns: 1fr 190px; gap: var(--s-6); align-items: center; }
+  @media (max-width: 700px) { .riskdemo { grid-template-columns: 1fr; } }
+  .riskdemo input[type=range] { width: 100%; accent-color: var(--signal); }
+  .riskchip {
+    border-radius: var(--r-3); padding: var(--s-5); text-align: center;
+    border: 1px solid var(--line);
+  }
+  .riskchip b { font-family: var(--font-mono); font-size: var(--fs-5); font-weight: 500; display: block; line-height: 1; }
+  .riskchip span { font-size: var(--fs--2); letter-spacing: var(--tracking-wide); text-transform: uppercase; }
+
+  .wrong { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-5); margin-top: var(--s-5); }
+  @media (max-width: 700px) { .wrong { grid-template-columns: 1fr; } }
+  .wrong figure { margin: 0; }
+  .wrong figcaption { font-size: var(--fs--1); color: var(--muted); margin-top: var(--s-2); }
+  .tl { display: flex; border-radius: var(--r-2); overflow: hidden; border: 1px solid var(--line); }
+  .tl div { flex: 1; height: 40px; }
+
+  .typerow { display: flex; align-items: baseline; gap: var(--s-5); padding: var(--s-3) 0; border-bottom: 1px solid var(--line); }
+  .typerow code { font-family: var(--font-mono); font-size: var(--fs--2); color: var(--faint); width: 76px; flex: none; }
+  .typerow .samp { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+  .scalebar { display: flex; align-items: flex-end; gap: var(--s-2); flex-wrap: wrap; }
+  .scalebar div { background: var(--signal-quiet); border: 1px solid var(--signal); border-radius: 2px; }
+  .scalebar p { margin: 0; font-family: var(--font-mono); font-size: 9px; color: var(--faint); text-align: center; }
+
+  .demo { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-3); padding: var(--s-6); }
+  .demo + .demo { margin-top: var(--s-4); }
+  .demo .row { flex-wrap: wrap; }
+
+  .marks { display: flex; align-items: flex-end; gap: var(--s-7); flex-wrap: wrap; color: var(--signal); }
+  .marks figure { margin: 0; text-align: center; }
+  .marks figcaption { font-family: var(--font-mono); font-size: var(--fs--2); color: var(--faint); margin-top: var(--s-2); }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="topnav">
+  <a class="brand" href="index.html">
+    <svg viewBox="0 0 32 32" aria-hidden="true" style="color:var(--signal)">
+      <defs><clipPath id="nav-d"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+      <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+      <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#nav-d)" fill="currentColor"/>
+    </svg>
+    Ganymede
+  </a>
+  <div class="navlinks">
+    <a href="index.html">Start</a>
+    <a href="system.html">How it works</a>
+    <a href="evidence.html">Evidence</a>
+    <a href="queue.html">Allocator</a>
+    <a href="desk.html">Desk</a>
+    <a href="case.html">The case</a>
+    <a href="glossary.html">Glossary</a>
+    <a href="design.html">Design</a>
+  </div>
+  <span class="spacer"></span>
+  <button class="themebtn" data-theme-btn aria-label="Toggle theme">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>
+    </svg>
+  </button>
+</nav>
+
+<main id="main" class="spec">
+  <header class="spec-hero">
+    <p class="eyebrow">Ganymede · design language</p>
+    <h1 class="display">Colour that <em>means</em> something.</h1>
+    <p class="lede">This product's claim is epistemic honesty about numbers. So the palette is
+      semantic, not decorative: every colour family carries exactly one decision meaning, and
+      every figure on the site wears the kind of evidence standing behind it. A visitor absorbs
+      the thesis from the system before reading a sentence.</p>
+  </header>
+
+  <!-- ================= 01 MARK ================= -->
+  <section class="sec">
+    <h2><span class="n">01</span>The mark</h2>
+    <p>A moon in phase, where the day–night boundary is not a clean arc but a bent trajectory.
+      Ganymede is the moon; the wobble is the thing the Risk Lens is built to see. It reduces to
+      a filled disc with a wave through it, which is what survives 16&nbsp;px.</p>
+    <div class="marks">
+      <figure>
+        <svg width="128" height="128" viewBox="0 0 32 32" aria-label="Ganymede mark, large">
+          <defs><clipPath id="m1"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+          <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+          <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#m1)" fill="currentColor"/>
+          <path d="M16 2C8.4 8.6 23.6 21.4 16 30" clip-path="url(#m1)" fill="none"
+                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+        </svg>
+        <figcaption>128px</figcaption>
+      </figure>
+      <figure>
+        <svg width="40" height="40" viewBox="0 0 32 32" aria-hidden="true">
+          <defs><clipPath id="m2"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+          <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+          <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#m2)" fill="currentColor"/>
+        </svg>
+        <figcaption>40px</figcaption>
+      </figure>
+      <figure>
+        <svg width="16" height="16" viewBox="0 0 32 32" aria-hidden="true">
+          <defs><clipPath id="m3"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+          <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+          <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#m3)" fill="currentColor"/>
+        </svg>
+        <figcaption>16px</figcaption>
+      </figure>
+      <figure style="color:var(--text)">
+        <svg width="40" height="40" viewBox="0 0 32 32" aria-hidden="true">
+          <defs><clipPath id="m4"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+          <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+          <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#m4)" fill="currentColor"/>
+        </svg>
+        <figcaption>monochrome</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ================= 02 COLOUR ================= -->
+  <section class="sec">
+    <h2><span class="n">02</span>Four families, four jobs</h2>
+    <p>Ramps are generated in OKLCH by <code class="mono">scripts/gen_palette.py</code> so the
+      steps are perceptually even, then contrast-verified against fourteen named pairs on every
+      build. Nothing in the site's CSS references a raw step — only the semantic names below —
+      which is what keeps the meanings enforceable rather than aspirational.</p>
+
+    <div class="ramp-label"><b>Ice</b><em>The system's own signal: model voice, links, controls, the Risk Lens.</em></div>
+    <div class="ramp" id="ramp-ice"></div>
+
+    <div class="ramp-label"><b>Ember</b><em>Magnitude of a <strong>prediction</strong>. One hue family, rotating amber&rarr;rust as it darkens.</em></div>
+    <div class="ramp" id="ramp-ember"></div>
+
+    <div class="ramp-label"><b>Kept &amp; broken</b><em>The only categorical pair in the system, and it is reserved for things that <strong>actually happened</strong>.</em></div>
+    <div class="ramp" id="ramp-kept"></div>
+    <div class="ramp" id="ramp-broken" style="margin-top:var(--s-2)"></div>
+
+    <div class="ramp-label"><b>Slate</b><em>All structure. Warm paper at the light end, cool ink at the dark end.</em></div>
+    <div class="ramp" id="ramp-slate"></div>
+
+    <h3 class="sub">The rule that does the work</h3>
+    <div class="callout">
+      <p style="margin:0"><strong>A probability is never coloured red, amber and green.</strong>
+      Three colours over a scalar invent category boundaries the model never produced, and an
+      agent reads those boundaries as the system's opinion. Probabilities get the Ember ramp,
+      where lightness alone encodes magnitude. Green and red are spent only on realised
+      outcomes — a promise kept, a promise broken.</p>
+      <p style="margin:var(--s-3) 0 0;color:var(--muted)">Ember means we predict.
+      Green means it occurred. That distinction is the product's epistemology, in colour.</p>
+    </div>
+
+    <div class="riskdemo demo">
+      <div>
+        <p class="eyebrow" style="margin-bottom:var(--s-2)">p(worsen) — drag it</p>
+        <input type="range" id="riskRange" min="0" max="100" value="81" step="1"
+               aria-label="Probability of worsening">
+        <p style="color:var(--muted);font-size:var(--fs--1);margin:var(--s-3) 0 0">
+          Lightness is monotonic across all eleven stops, so the ramp keeps encoding magnitude in
+          greyscale and under deuteranopia. Verified on generation — if a stop ever breaks
+          monotonicity the build fails.</p>
+      </div>
+      <div class="riskchip" id="riskChip">
+        <b id="riskVal">81</b><span>p(worsen)</span>
+      </div>
+    </div>
+
+    <div class="wrong">
+      <figure>
+        <div class="tl" id="tl-good"></div>
+        <figcaption><strong>Right.</strong> One family, lightness carries magnitude. No boundary is asserted.</figcaption>
+      </figure>
+      <figure>
+        <div class="tl">
+          <div style="flex:3;background:#1f9d63"></div>
+          <div style="flex:4;background:#d9a441"></div>
+          <div style="flex:3;background:#c5483f"></div>
+        </div>
+        <figcaption><strong>Wrong.</strong> Three colours over a scalar. Where exactly did amber become red, and who decided?</figcaption>
+      </figure>
+    </div>
+
+    <h3 class="sub">Semantic names</h3>
+    <p>Pages use these. They flip with the theme; the ramps do not.</p>
+    <div class="swatchgrid" id="semantic"></div>
+  </section>
+
+  <!-- ================= 03 PROVENANCE ================= -->
+  <section class="sec">
+    <h2><span class="n">03</span>Provenance badges</h2>
+    <p>The component that makes the site self-explaining. Every number carries the kind of
+      evidence behind it, mapped onto distinctions the codebase already enforces — invariant I1,
+      the playbook's <code class="mono">is_provisional</code> flag, and the phase gates. Shape
+      differs as well as colour, so the distinction survives greyscale.</p>
+    <div class="demo">
+      <table>
+        <thead><tr><th>Badge</th><th>Means</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-measured">measured</span></td>
+              <td>Observed directly from real data</td>
+              <td class="mono">479 ms median inter-turn gap</td></tr>
+          <tr><td><span class="badge badge-backtested">backtested</span></td>
+              <td>Real data, held-out split</td>
+              <td class="mono">L1 AUC 0.62</td></tr>
+          <tr><td><span class="badge badge-simulated">simulated</span></td>
+              <td>Real data plus a modelled assumption</td>
+              <td class="mono">recovered-value lift</td></tr>
+          <tr><td><span class="badge badge-seeded">seeded</span></td>
+              <td>Practice-derived, zero outcome support</td>
+              <td class="mono">every playbook strategy</td></tr>
+          <tr><td><span class="badge badge-pending">pending</span></td>
+              <td>Needs a pilot; deliberately not estimated</td>
+              <td class="mono">override rate</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--muted);margin-top:var(--s-4)">A figure rendered without a badge is a
+      bug, not a style choice. The site's data files carry the provenance field alongside the
+      value so a chart cannot draw one without the other.</p>
+  </section>
+
+  <!-- ================= 04 TYPE ================= -->
+  <section class="sec">
+    <h2><span class="n">04</span>Type</h2>
+    <p>Three faces, three jobs. <strong>Newsreader</strong> for display — an editorial serif
+      signals argument rather than dashboard. <strong>Hanken Grotesk</strong> for interface and
+      body. <strong>IBM Plex Mono</strong> for every number, always with
+      <code class="mono">tabular-nums</code> so digits do not jitter as values animate.</p>
+    <div class="demo">
+      <div class="typerow"><code>--fs-7</code><div class="samp display">Predict the wobble</div></div>
+      <div class="typerow"><code>--fs-5</code><div class="samp display">Shape the call</div></div>
+      <div class="typerow"><code>--fs-4</code><div class="samp display">Keep the book</div></div>
+      <div class="typerow"><code>--fs-1</code><div class="samp lede" style="max-width:none">Lede — one system, two lenses over the same decision.</div></div>
+      <div class="typerow"><code>--fs-0</code><div class="samp">Body. A collections agent reads the risk number and acts on its face value.</div></div>
+      <div class="typerow"><code>--fs--1</code><div class="samp" style="color:var(--muted)">Secondary — captions, table cells, control labels.</div></div>
+      <div class="typerow"><code>--fs--2</code><div class="samp eyebrow">Eyebrow · uppercase · tracked</div></div>
+      <div class="typerow" style="border:0"><code>mono</code><div class="samp mono">0.62 · 479 ms · €168,459 · 93.4%</div></div>
+    </div>
+  </section>
+
+  <!-- ================= 05 SPACE, FORM, MOTION ================= -->
+  <section class="sec">
+    <h2><span class="n">05</span>Space, form, motion</h2>
+    <h3 class="sub">Spacing — 4pt base</h3>
+    <div class="scalebar" id="spacebar"></div>
+
+    <h3 class="sub">Radius and elevation</h3>
+    <div class="row" style="flex-wrap:wrap;gap:var(--s-4)">
+      <div class="card" style="border-radius:var(--r-1);box-shadow:var(--shadow-1);padding:var(--s-4)"><code class="mono">r-1 / shadow-1</code></div>
+      <div class="card" style="border-radius:var(--r-2);box-shadow:var(--shadow-2);padding:var(--s-4)"><code class="mono">r-2 / shadow-2</code></div>
+      <div class="card" style="border-radius:var(--r-3);box-shadow:var(--shadow-3);padding:var(--s-4)"><code class="mono">r-3 / shadow-3</code></div>
+    </div>
+
+    <h3 class="sub">Motion</h3>
+    <p>Three durations and two easings, and every one of them is switched off under
+      <code class="mono">prefers-reduced-motion</code>. On the desk this is not decoration:
+      a hint that animates in slowly is a hint that missed its 300&nbsp;ms window.</p>
+    <div class="demo row" style="gap:var(--s-5)">
+      <span class="mono" style="font-size:var(--fs--1)">--dur-fast 120ms</span>
+      <span class="mono" style="font-size:var(--fs--1)">--dur 220ms</span>
+      <span class="mono" style="font-size:var(--fs--1)">--dur-slow 420ms</span>
+    </div>
+  </section>
+
+  <!-- ================= 06 COMPONENTS ================= -->
+  <section class="sec">
+    <h2><span class="n">06</span>Components</h2>
+
+    <h3 class="sub">Figures</h3>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+      <div class="stat signal"><b>0.62</b><span class="cap">L1 AUC on the held-out split <span class="badge badge-backtested">backtested</span></span></div>
+      <div class="stat predict"><b>479<small style="font-size:var(--fs-0)"> ms</small></b><span class="cap">median inter-turn gap <span class="badge badge-measured">measured</span></span></div>
+      <div class="stat"><b>—</b><span class="cap">recovery lift <span class="badge badge-pending">pending</span></span></div>
+    </div>
+
+    <h3 class="sub">Controls</h3>
+    <div class="demo row" style="gap:var(--s-4)">
+      <button class="btn btn-primary">Play call</button>
+      <button class="btn">Restart</button>
+      <button class="btn btn-danger">Log override</button>
+      <div class="seg" role="group" aria-label="Example segmented control">
+        <button aria-pressed="true">full</button><button aria-pressed="false">control</button>
+      </div>
+    </div>
+
+    <h3 class="sub">Glossary terms</h3>
+    <p>Any domain word gets a definition where it is used, from one JSON file shared with the
+      glossary page — so the tooltip and the page can never disagree. Hover or focus:
+      <span data-term="self-cure">self-cure</span>,
+      <span data-term="ptp">promise to pay</span>,
+      <span data-term="uplift">uplift</span>,
+      <span data-term="calibration">calibration</span>.</p>
+
+    <h3 class="sub">Reading depth</h3>
+    <p>One control, three densities. Detail tiers are additive and live in the markup as
+      <code class="mono">data-tier</code>, so there is no second copy of the content to keep in sync.</p>
+    <div class="demo">
+      <div class="seg" role="group" aria-label="Reading depth">
+        <button data-depth-btn="1" aria-pressed="false">2 min</button>
+        <button data-depth-btn="2" aria-pressed="true">12 min</button>
+        <button data-depth-btn="3" aria-pressed="false">Everything</button>
+      </div>
+      <p data-tier="1" style="margin-top:var(--s-4)"><strong>Tier 1.</strong> Always visible — the claim.</p>
+      <p data-tier="2" style="margin:0"><strong>Tier 2.</strong> The reasoning behind the claim.</p>
+      <p data-tier="3" style="margin:0"><strong>Tier 3.</strong> The method, the caveat, the number's provenance.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div style="max-width:1080px;margin:0 auto">
+    Ganymede · design language · generated tokens in
+    <code class="mono">site/assets/tokens.css</code>, regenerate with
+    <code class="mono">python scripts/gen_palette.py</code>
+  </div>
+</footer>
+
+<script type="module" src="assets/js/site.js"></script>
+<script>
+  const STEPS = [50,100,200,300,400,500,600,700,800,900,950];
+  const css = getComputedStyle(document.documentElement);
+  const tok = n => css.getPropertyValue(n).trim();
+
+  function paintRamp(id, family) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = STEPS.map(s => {
+      const c = tok(`--${family}-${s}`);
+      const dark = s >= 500;
+      return `<div style="background:${c}"><span style="color:${dark ? '#fff' : '#000'}">${s}</span></div>`;
+    }).join('');
+  }
+  ['ice','ember','kept','broken','slate'].forEach(f => paintRamp('ramp-' + f, f));
+
+  // the risk ramp, shown as the continuous thing it is
+  document.getElementById('tl-good').innerHTML =
+    Array.from({length: 11}, (_, i) => `<div style="background:${tok('--risk-' + i * 10)}"></div>`).join('');
+
+  // live risk chip: bucket to the nearest decile stop, exactly as the desk gauge does
+  const range = document.getElementById('riskRange');
+  const chip = document.getElementById('riskChip');
+  const val = document.getElementById('riskVal');
+  function paintRisk() {
+    const p = +range.value;
+    const stop = Math.round(p / 10) * 10;
+    chip.style.background = tok('--risk-' + stop);
+    chip.style.color = stop >= 50 ? '#fff' : '#1a1508';
+    chip.style.borderColor = 'transparent';
+    val.textContent = p;
+  }
+  range.addEventListener('input', paintRisk);
+  paintRisk();
+
+  // semantic swatches
+  const SEM = ['ground','surface','surface-2','line','line-strong','text','muted','faint',
+               'signal','signal-strong','signal-quiet','predict','predict-quiet',
+               'kept','kept-quiet','broken','broken-quiet','focus'];
+  document.getElementById('semantic').innerHTML = SEM.map(n =>
+    `<div class="sw"><i style="background:${tok('--' + n)}"></i>
+       <p>--${n}<code>${tok('--' + n)}</code></p></div>`).join('');
+
+  // spacing scale
+  const SP = [1,2,3,4,5,6,7,8,9,10,11,12];
+  document.getElementById('spacebar').innerHTML = SP.map(i => {
+    const v = tok('--s-' + i);
+    return `<div style="width:${v};height:${v}"></div>`;
+  }).join('') + `<p style="width:100%;text-align:left;margin-top:var(--s-2)">4 → 128px</p>`;
+</script>
+</body>
+</html>

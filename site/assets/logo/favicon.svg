@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <clipPath id="c"><circle cx="16" cy="16" r="11"/></clipPath>
+    <style>
+      .bg{fill:#f8f7f4} .dim{fill:#006e60;opacity:.2} .lit{fill:#006e60}
+      @media (prefers-color-scheme:dark){
+        .bg{fill:#0b111a} .dim{fill:#7cd2c5;opacity:.22} .lit{fill:#7cd2c5}
+      }
+    </style>
+  </defs>
+  <rect class="bg" width="32" height="32" rx="7"/>
+  <circle class="dim" cx="16" cy="16" r="11"/>
+  <path class="lit" d="M16 5C10 10.2 22 21.8 16 27L28 27L28 5Z" clip-path="url(#c)"/>
+</svg>

@@ -1,0 +1,152 @@
+{
+  "arrears": {
+    "term": "Arrears",
+    "short": "Money that is past due. Three months in arrears means three scheduled payments have been missed.",
+    "long": "The unpaid, overdue portion of a loan. Distinct from exposure: a borrower can owe €168,000 in total while being only €1,400 in arrears. Collections works arrears; the balance sheet cares about exposure. Ganymede scores on both, which is why it will call a large-exposure borrower who is only mildly behind before a small-exposure one who is badly behind."
+  },
+  "exposure": {
+    "term": "Exposure",
+    "short": "The total unpaid balance at risk on an account — not the overdue part, the whole outstanding principal.",
+    "long": "Unpaid principal balance (UPB). It is the amount the lender stands to lose in the worst case, and it is the weight in the allocator's expected-value calculation. A 40% chance of worsening on €168,000 is worth far more attention than a 95% chance on €2,000; ranking by probability alone gets that backwards."
+  },
+  "delinquency-bucket": {
+    "term": "Delinquency bucket",
+    "short": "The standard servicing grade for how far behind an account is: current, 30, 60, 90, 120+ days past due.",
+    "long": "Servicers classify accounts into 30-day buckets. Movement between buckets over time is the roll curve. Ganymede's panel reconstructs the full bucket sequence per loan per month from Freddie Mac servicing records, which is what makes the trajectory features possible."
+  },
+  "roll-curve": {
+    "term": "Roll curve",
+    "short": "The rates at which accounts move between delinquency buckets month to month — the shape of how a book deteriorates or recovers.",
+    "long": "A transition matrix over delinquency buckets. It is the collections industry's core diagnostic: what fraction of 30-day accounts roll to 60, what fraction cure back to current. Ganymede's panel verification checks the roll curve is complete, because a broken roll curve means the panel has silently dropped months."
+  },
+  "self-cure": {
+    "term": "Self-cure",
+    "short": "A delinquent account that returns to current with no contact at all. Chasing these costs money and irritates people who were already going to pay.",
+    "long": "The single most valuable prediction in collections, and the one conventional risk-ranking cannot make. Roughly two-thirds of early delinquents self-cure. Ganymede's L2 model scores it explicitly, and do-not-contact is a first-class scored action with money attached rather than the absence of an action — enforced as invariant I10."
+  },
+  "ptp": {
+    "term": "PTP — promise to pay",
+    "short": "A commitment captured on a call: an amount, by a date, via a method. Specific promises are kept far more often than vague ones.",
+    "long": "The primary conversion event in collections. Ganymede extracts PTPs from call transcripts (93.4% on the gold set) and resolves them against subsequent payments, which closes the loop: the promise becomes a label that retrains both lenses. Promise quality — whether all three of amount, date and method were pinned down — is itself a coached behaviour."
+  },
+  "broken-promise": {
+    "term": "Broken promise",
+    "short": "A PTP that was captured but not honoured by its due date.",
+    "long": "A guardrail metric as much as an outcome. A coaching system that raises PTP capture while raising broken promises has moved a number without moving money, so broken-promise rate is a hard stop in the pilot design, not a secondary report."
+  },
+  "charge-off": {
+    "term": "Charge-off",
+    "short": "The point at which the lender writes the debt off as a loss. The terminal state collections exists to prevent.",
+    "long": "Accounting recognition that a debt is unlikely to be recovered, typically after a set number of days delinquent. Everything upstream — contact, hardship arrangements, payment plans — is an attempt to avoid this absorbing state."
+  },
+  "capacity-willingness": {
+    "term": "Capacity × willingness",
+    "short": "The two-axis read on a borrower: can they pay, and will they. Four quadrants, four completely different conversations.",
+    "long": "Capacity is estimable from payment trajectory and affordability signals. Willingness is not — not without a conversation. On real accounts only a small minority reach a confident quadrant from servicing data alone; the rest route to a diagnostic question. That is not a modelling shortfall, it is the reason the product has a Coach Lens at all."
+  },
+  "diagnostic-question": {
+    "term": "Diagnostic question",
+    "short": "The one question that separates cannot-pay from will-not-pay, asked before proposing anything.",
+    "long": "When the borrower-state classifier is not confident, the correct coaching output is not a strategy — it is the question that resolves the uncertainty. Teaching an agent what to ask beats telling them what to say when the model does not know."
+  },
+  "allocator": {
+    "term": "Allocator",
+    "short": "The component that turns model scores into an actual work queue under a fixed agent-capacity constraint.",
+    "long": "It maximises expected recovered value per agent-minute: uplift over self-cure, weighted by exposure, subject to available minutes. It is the only queue producer in the system (invariant I9), so no path exists that ranks accounts by probability instead of value."
+  },
+  "uplift": {
+    "term": "Uplift",
+    "short": "The difference contacting someone makes, versus leaving them alone. Not the same as their risk.",
+    "long": "The causal quantity collections actually needs, and the hardest to measure without an experiment. Ganymede's allocator assumes an uplift shape drawn from published practice; the magnitude is explicitly not claimed as measured until a control arm produces it. This is why the recovered-value figure is badged simulated rather than backtested."
+  },
+  "calibration": {
+    "term": "Calibration",
+    "short": "Whether a predicted 30% actually happens about 30% of the time. Separate from, and more important than, ranking accuracy.",
+    "long": "A collections agent reads the risk number and acts on its face value, so calibration is the gate, not AUC. A model can rank perfectly and still be badly calibrated — which is exactly what happens under regime shift, and what Ganymede's drift monitor is built to catch."
+  },
+  "auc": {
+    "term": "AUC",
+    "short": "Ranking quality: the chance the model scores a randomly chosen positive above a randomly chosen negative. 0.5 is a coin flip.",
+    "long": "Useful for comparing models, insufficient for deploying one. AUC is invariant to any monotone rescaling of the scores, so it says nothing about whether the printed number means what it says. Ganymede reports it alongside Brier score and a reliability curve for that reason."
+  },
+  "brier": {
+    "term": "Brier score",
+    "short": "Mean squared error of a probability forecast. Lower is better; it punishes confident wrong answers hard.",
+    "long": "Unlike AUC, Brier is sensitive to calibration as well as ranking, which makes it the honest headline for a score an agent will read. Ganymede's L1 gate is beating the base-rate Brier, not hitting an AUC threshold."
+  },
+  "reason-code": {
+    "term": "Reason code",
+    "short": "A short human-readable explanation of why an account scored the way it did.",
+    "long": "Regulatory and practical necessity: an agent who cannot explain the score will not trust it, and in most jurisdictions an adverse decision must be explicable. Ganymede emits reason codes from the trajectory features directly rather than post-hoc, so they cannot drift from the model that produced the score."
+  },
+  "drift": {
+    "term": "Drift",
+    "short": "The world changing out from under a model, so yesterday's calibration stops holding.",
+    "long": "Ganymede's backtest shows the self-cure rate rising sharply across the window. The ranking held; absolute calibration lagged, because no model calibrates to a regime shift it never saw. The drift monitor and the outcome loop exist precisely for this, and reporting it plainly is the point."
+  },
+  "psi": {
+    "term": "PSI — population stability index",
+    "short": "A number for how far a feature distribution has moved since training. Above roughly 0.25 is usually treated as a material shift.",
+    "long": "One of two drift signals Ganymede monitors, the other being outcome-rate change. PSI catches input drift before it shows up as degraded predictions, which buys time to retrain rather than discovering the problem from missed recoveries."
+  },
+  "experiment-arm": {
+    "term": "Experiment arm",
+    "short": "Which version of the system a given decision was made under — coached, or control.",
+    "long": "Every decision Ganymede logs carries its arm and its propensity, non-optionally (invariants I2 and I3); retrain aborts if either is missing. Without them there is no way to tell the product working from the allocator simply selecting more recoverable borrowers."
+  },
+  "control-arm": {
+    "term": "Control arm",
+    "short": "The randomised slice that gets no coaching, kept running permanently so the comparison never goes stale.",
+    "long": "The cheapest and most frequently skipped part of a pilot. Skipping it makes the pilot unable to distinguish coaching effect from selection effect, which means the whole exercise proves nothing. The agent desk implements the control arm as a first-class mode, not a report filter."
+  },
+  "propensity": {
+    "term": "Propensity",
+    "short": "The probability that a given decision would have been taken, recorded at the time it was taken.",
+    "long": "Needed to reweight logged decisions when training on them; without it, models trained on the system's own output learn the allocator's preferences rather than borrower behaviour. Recorded on every decision as a schema requirement."
+  },
+  "vad": {
+    "term": "VAD — voice activity detection",
+    "short": "Detecting where speech starts and stops in audio, which is how turn boundaries in a live call are found.",
+    "long": "Ganymede's Phase 0 used an energy VAD over real call audio to measure 328 inter-turn gaps. The resulting distribution is what set the latency budget — the coaching design is derived from measured physics rather than asserted."
+  },
+  "turn-boundary": {
+    "term": "Turn boundary",
+    "short": "The pause where one speaker stops and the other starts — the only moment a live hint can appear without talking over someone.",
+    "long": "A hint is only surfaced at a pause long enough to be a real hand-off (at least 200 ms), never at a within-speech micro-pause. The measured median gap on real call audio is 479 ms."
+  },
+  "latency-budget": {
+    "term": "Latency budget",
+    "short": "300 ms — the time a hint has to render if it is going to land inside a real conversational gap.",
+    "long": "Derived from the 25th percentile of 328 measured gaps, not chosen. Anything slower arrives after the moment it addressed has passed, which is worse than nothing because it pulls the agent's attention away mid-sentence."
+  },
+  "two-tier-hint": {
+    "term": "Two-tier hint",
+    "short": "Deterministic hints render in under a millisecond and hit the live gap; LLM-composed hints take 500–1500 ms and are demoted to the next pause.",
+    "long": "The design is forced by the latency measurement rather than chosen for elegance. An LLM cannot compose inside a 479 ms median gap, so the system does not pretend it can — it splits the work and is explicit about which tier fired and when."
+  },
+  "playbook-support": {
+    "term": "Strategy support",
+    "short": "How many real outcomes back a coaching strategy. Seeded strategies start at zero and say so.",
+    "long": "Cold start: on day one nothing has been measured, so the strategy index is seeded from collections practice and every entry is marked provisional until the outcome loop promotes it above the support threshold. Thin evidence is shown as thin rather than hidden."
+  },
+  "panel": {
+    "term": "Panel",
+    "short": "The month-by-month record of every loan's state — the backbone every trajectory feature is computed from.",
+    "long": "Built from Freddie Mac single-family servicing data across nine vintages. Real calendar dates matter: a timing feature derived from a source without them is refused outright (invariant I13)."
+  },
+  "leakage": {
+    "term": "Leakage",
+    "short": "Letting information from the future into a model's training data, which makes backtests look wonderful and deployments fail.",
+    "long": "The commonest way a credit model lies. Ganymede's panel builder enforces a strict as-of cut per row and the invariant checks fail the build rather than warn, because a leakage warning that can be ignored will be."
+  },
+  "shadow-pilot": {
+    "term": "Shadow pilot",
+    "short": "Running the system alongside live operations while showing nothing to anyone, to validate it on real data before it touches a borrower.",
+    "long": "Stage 1 of the recommended rollout, 4–6 weeks. It compares the queue the system would have built against the one actually worked, and logs the hints it would have fired. Cheap, reversible, and the only honest way to meet real contact data and real ASR for the first time."
+  },
+  "asr": {
+    "term": "ASR — automatic speech recognition",
+    "short": "Turning call audio into text. Telephony audio is 8 kHz and noisy, which costs accuracy.",
+    "long": "Ganymede's latency work was measured on clean 16 kHz audio; real telephony adds an estimated 8–12% word error rate. The audio layer sits behind a swappable interface for exactly this reason, and the gap is listed as open rather than hand-waved."
+  }
+}
