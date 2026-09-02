@@ -19,9 +19,11 @@
 <meta name="twitter:title" content="Ganymede — evidence">
 <meta name="twitter:description" content="Every Ganymede figure with its method and its provenance: calibration, the latency budget from real call audio, self-cure drift, the roll curve, and the capacity frontier.">
 <meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="preload" as="font" type="font/woff2" crossorigin
+      href="assets/fonts/hanken-grotesk-latin-e9201edd.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin
+      href="assets/fonts/newsreader-latin-62981321.woff2">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/base.css">
 <link rel="stylesheet" href="assets/components.css">
@@ -62,7 +64,7 @@
   .controls { display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap; margin-bottom: var(--s-4); font-size: var(--fs--1); color: var(--muted); }
   .controls input[type=range] { accent-color: var(--predict); width: 200px; }
 
-  .matrix { display: grid; gap: 3px; font-family: var(--font-mono); font-size: 11px; }
+  .matrix { display: grid; gap: 3px; font-family: var(--font-mono); font-size: 11px; min-width: 460px; }
   .matrix .h { color: var(--faint); font-size: 10px; text-align: center; padding-bottom: 2px; }
   .matrix .rh { color: var(--muted); text-align: right; padding-right: var(--s-2); align-self: center; }
   .matrix .cell {
@@ -71,6 +73,7 @@
   }
   .matrix .cell.zero { background: var(--surface-2); color: var(--faint); }
 
+  table.metrics { min-width: 620px; }
   table.metrics td.lab { max-width: 34ch; }
   .filterbar { display: flex; gap: var(--s-2); flex-wrap: wrap; margin-bottom: var(--s-4); }
   .filterbar button {
@@ -228,7 +231,7 @@
       of accounts one month behind cure on their own; one month later that has collapsed and the
       dominant move is deeper delinquency. The month when a conversation is cheap and effective is
       the month before most systems are looking.</p>
-    <div class="plot"><div class="matrix" id="rollMatrix"></div></div>
+    <div class="plot scroll-x"><div class="matrix" id="rollMatrix"></div></div>
     <figcaption>
       Every month-to-month transition across
       <span class="mono" data-fig="panel:rows" data-fig-format="n">—</span> panel rows over

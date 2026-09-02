@@ -19,9 +19,11 @@
 <meta name="twitter:title" content="The Ganymede case">
 <meta name="twitter:description" content="The Day-100 case for Ganymede: what was built, what the evidence shows, whether it is ready for a pilot, and an honest list of what is still missing.">
 <meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="preload" as="font" type="font/woff2" crossorigin
+      href="assets/fonts/hanken-grotesk-latin-e9201edd.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin
+      href="assets/fonts/newsreader-latin-62981321.woff2">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/base.css">
 <link rel="stylesheet" href="assets/components.css">
@@ -36,7 +38,7 @@
 <style>
   .doc { max-width: 1100px; margin: 0 auto; padding: 0 var(--s-6) var(--s-12);
          display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: var(--s-9); }
-  @media (max-width: 940px) { .doc { grid-template-columns: 1fr; gap: var(--s-6); } }
+  @media (max-width: 940px) { .doc { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); } }
 
   .toc { position: sticky; top: 84px; align-self: start; font-size: var(--fs--1); }
   @media (max-width: 940px) { .toc { position: static; border-bottom: 1px solid var(--line); padding-bottom: var(--s-4); } }

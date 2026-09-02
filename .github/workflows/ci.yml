@@ -25,6 +25,10 @@ jobs:
         # below its floor, if the risk ramp stops darkening, or if the committed
         # tokens.css no longer matches what the generator produces.
         run: python scripts/gen_palette.py --check
+      - name: fonts
+        # The three typefaces are vendored rather than pulled from a third party
+        # on every page load; this fails if fonts.css references a missing file.
+        run: python scripts/fetch_fonts.py --check
       - name: site data
         # The site's numbers must come from the pipeline. Stages whose inputs are
         # absent here (the panel and the call audio are not redistributed) skip

@@ -19,9 +19,11 @@
 <meta name="twitter:title" content="Ganymede — design system">
 <meta name="twitter:description" content="The Ganymede design language: a semantic colour system where every family carries one decision meaning, and every number on the site wears its evidence.">
 <meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="preload" as="font" type="font/woff2" crossorigin
+      href="assets/fonts/hanken-grotesk-latin-e9201edd.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin
+      href="assets/fonts/newsreader-latin-62981321.woff2">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/base.css">
 <link rel="stylesheet" href="assets/components.css">
@@ -246,6 +248,8 @@
         <figcaption><strong>Right.</strong> One family, lightness carries magnitude. No boundary is asserted.</figcaption>
       </figure>
       <figure>
+        <!-- Hardcoded on purpose: this is the anti-example, and it has to look
+             the same in both themes for the comparison to make its point. -->
         <div class="tl">
           <div style="flex:3;background:#1f9d63"></div>
           <div style="flex:4;background:#d9a441"></div>
@@ -267,8 +271,8 @@
       evidence behind it, mapped onto distinctions the codebase already enforces — invariant I1,
       the playbook's <code class="mono">is_provisional</code> flag, and the phase gates. Shape
       differs as well as colour, so the distinction survives greyscale.</p>
-    <div class="demo">
-      <table>
+    <div class="demo scroll-x">
+      <table style="min-width:520px">
         <thead><tr><th>Badge</th><th>Means</th><th>Example</th></tr></thead>
         <tbody>
           <tr><td><span class="badge badge-measured">measured</span></td>
