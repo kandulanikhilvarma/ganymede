@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en" data-depth="2">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Evidence · Ganymede</title>
+<meta name="description" content="Every Ganymede figure with its method and its provenance: calibration, the latency budget from real call audio, self-cure drift, the roll curve, and the capacity frontier.">
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/components.css">
+<script>
+  try {
+    var t = localStorage.getItem('gm-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var d = localStorage.getItem('gm-depth');
+    if (d) document.documentElement.setAttribute('data-depth', d);
+  } catch (e) {}
+</script>
+<style>
+  .shell { max-width: 1080px; margin: 0 auto; padding: 0 var(--s-6) var(--s-12); }
+  header.top { padding: var(--s-10) 0 var(--s-7); }
+  header.top h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); margin: var(--s-4) 0 var(--s-4); max-width: 16ch; }
+
+  .legendbox {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(184px, 1fr)); gap: var(--s-4);
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-3);
+    padding: var(--s-5); margin-bottom: var(--s-9);
+  }
+  .legendbox div p { margin: var(--s-2) 0 0; font-size: var(--fs--1); color: var(--muted); }
+
+  figure.ev { margin: 0 0 var(--s-11); scroll-margin-top: 76px; }
+  figure.ev > header { display: flex; align-items: baseline; gap: var(--s-3); flex-wrap: wrap; margin-bottom: var(--s-3); }
+  figure.ev h2 {
+    font-family: var(--font-display); font-weight: 400; font-size: clamp(1.5rem, 2.8vw, 1.9rem);
+    letter-spacing: var(--tracking-tight);
+  }
+  figure.ev .anchor { font-family: var(--font-mono); font-size: var(--fs--2); color: var(--faint); text-decoration: none; }
+  figure.ev .anchor:hover { color: var(--signal); }
+  figure.ev .lead { color: var(--muted); max-width: 72ch; margin-bottom: var(--s-5); }
+  .plot { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-3); padding: var(--s-5); }
+  figcaption { font-size: var(--fs--1); color: var(--muted); margin-top: var(--s-4); max-width: 74ch; }
+  figcaption .method { display: block; margin-top: var(--s-3); color: var(--faint); }
+  figcaption code { font-family: var(--font-mono); }
+
+  .controls { display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap; margin-bottom: var(--s-4); font-size: var(--fs--1); color: var(--muted); }
+  .controls input[type=range] { accent-color: var(--predict); width: 200px; }
+
+  .matrix { display: grid; gap: 3px; font-family: var(--font-mono); font-size: 11px; }
+  .matrix .h { color: var(--faint); font-size: 10px; text-align: center; padding-bottom: 2px; }
+  .matrix .rh { color: var(--muted); text-align: right; padding-right: var(--s-2); align-self: center; }
+  .matrix .cell {
+    aspect-ratio: 1.9; border-radius: var(--r-1); display: flex; align-items: center;
+    justify-content: center; color: #fff; font-size: 10.5px;
+  }
+  .matrix .cell.zero { background: var(--surface-2); color: var(--faint); }
+
+  table.metrics td.lab { max-width: 34ch; }
+  .filterbar { display: flex; gap: var(--s-2); flex-wrap: wrap; margin-bottom: var(--s-4); }
+  .filterbar button {
+    border: 1px solid var(--line); background: transparent; border-radius: var(--r-full);
+    padding: 3px 11px; font-size: var(--fs--1); color: var(--muted);
+  }
+  .filterbar button[aria-pressed="true"] { border-color: var(--signal); color: var(--signal); background: var(--signal-quiet); }
+  tr.hide { display: none; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="topnav">
+  <a class="brand" href="index.html">
+    <svg viewBox="0 0 32 32" aria-hidden="true" style="color:var(--signal)">
+      <defs><clipPath id="nav-d"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+      <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+      <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#nav-d)" fill="currentColor"/>
+    </svg>
+    Ganymede
+  </a>
+  <div class="navlinks">
+    <a href="index.html">Start</a>
+    <a href="system.html">How it works</a>
+    <a href="evidence.html">Evidence</a>
+    <a href="queue.html">Allocator</a>
+    <a href="desk.html">Desk</a>
+    <a href="case.html">The case</a>
+    <a href="glossary.html">Glossary</a>
+    <a href="design.html">Design</a>
+  </div>
+  <span class="spacer"></span>
+  <button class="themebtn" data-theme-btn aria-label="Toggle theme">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>
+    </svg>
+  </button>
+  <button class="themebtn navtoggle" data-nav-toggle aria-expanded="false" aria-label="Open menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16"/>
+    </svg>
+  </button>
+</nav>
+
+<main id="main" class="shell">
+  <header class="top">
+    <p class="eyebrow">Evidence</p>
+    <h1 class="display">Every number, and what it rests on.</h1>
+    <p class="lede">These charts are drawn from JSON the pipeline regenerates, not from images
+      exported once and forgotten. Each figure carries the kind of evidence behind it, because
+      &ldquo;measured&rdquo; and &ldquo;simulated&rdquo; are not the same claim and a results page
+      that blurs them is doing something dishonest.</p>
+  </header>
+
+  <div class="legendbox" id="legend"></div>
+
+  <!-- ============ calibration ============ -->
+  <figure class="ev" id="calibration">
+    <header>
+      <h2>The score means what it says</h2>
+      <a class="anchor" href="#calibration">#calibration</a>
+      <span style="margin-left:auto" data-badge-slot></span>
+    </header>
+    <p class="lead">A collections agent reads the risk number and acts on its face value, so
+      <span data-term="calibration">calibration</span> is the gate, not
+      <span data-term="auc">AUC</span>. A model can rank perfectly and still be badly calibrated.
+      Points on the diagonal mean a predicted 30% happened about 30% of the time.</p>
+    <div class="plot"><div id="relPlot"></div></div>
+    <figcaption>
+      L1 <span class="mono" data-fig="risk:models.L1_trajectory.brier">—</span>
+      <span data-term="brier">Brier</span> against a base rate of
+      <span class="mono" data-fig="risk:models.L1_trajectory.brier_base" data-fig-badge="off">—</span>;
+      AUC <span class="mono" data-fig="risk:models.L1_trajectory.auc" data-fig-badge="off">—</span>.
+      L2 AUC <span class="mono" data-fig="risk:models.L2_selfcure.auc" data-fig-badge="off">—</span>.
+      Hover a point for its bin count.
+      <span class="method" data-tier="2">Method: time split at
+        <span class="mono" id="cutoff">—</span>, never random — a random split leaks the future
+        into the past on a panel. Metrics are unweighted on the delinquency-enriched sample, which
+        is the frame the Risk Lens actually ranks in.
+        Reproduce with <code>python -m ganymede.risk --backtest</code>.</span>
+    </figcaption>
+  </figure>
+
+  <!-- ============ latency ============ -->
+  <figure class="ev" id="latency">
+    <header>
+      <h2>The latency budget was measured, not chosen</h2>
+      <a class="anchor" href="#latency">#latency</a>
+      <span style="margin-left:auto" data-badge-slot></span>
+    </header>
+    <p class="lead">Every <span data-term="turn-boundary">inter-turn gap</span> in a real ten-minute
+      call. Drag the budget line: bars to its left are boundaries too narrow for a hint arriving at
+      that latency — the hint lands after the moment it addressed has passed.</p>
+    <div class="plot">
+      <div class="controls">
+        <label for="budgetRange">hint latency</label>
+        <input type="range" id="budgetRange" min="50" max="1500" step="10" value="300">
+        <b class="mono" id="budgetVal">300 ms</b>
+        <span>&rarr; <b class="mono" id="budgetShare">—</b> of real boundaries are wide enough</span>
+      </div>
+      <div id="gapPlot"></div>
+    </div>
+    <figcaption>
+      <span class="mono" data-fig="audio:n_gaps">—</span> gaps ·
+      median <span class="mono" data-fig="audio:gap_p50_ms" data-fig-format="ms" data-fig-badge="off">—</span> ·
+      p25 <span class="mono" data-fig="audio:gap_p25_ms" data-fig-format="ms" data-fig-badge="off">—</span> ·
+      p10 <span class="mono" data-fig="audio:gap_p10_ms" data-fig-format="ms" data-fig-badge="off">—</span>.
+      The enforced budget is <span class="mono" data-fig="audio:budget_ms" data-fig-format="ms" data-fig-badge="off">—</span>,
+      the p25 rounded up.
+      <span class="method" data-tier="2">Method: energy <span data-term="vad">VAD</span> over 16 kHz
+        mono audio; a silence shorter than
+        <span class="mono" data-fig="coach:min_turn_gap_ms" data-fig-badge="off">200</span> ms is
+        treated as a within-speech micro-pause, not a hand-off. Real 8 kHz telephony would shift
+        this — that gap is listed as open, not corrected for.
+        Reproduce with <code>python -m ganymede.audio.vad</code>.</span>
+    </figcaption>
+  </figure>
+
+  <!-- ============ drift ============ -->
+  <figure class="ev" id="drift">
+    <header>
+      <h2>The world moved, and the monitor saw it</h2>
+      <a class="anchor" href="#drift">#drift</a>
+      <span style="margin-left:auto" data-badge-slot></span>
+    </header>
+    <p class="lead">Monthly <span data-term="self-cure">self-cure</span> rate among delinquent
+      accounts. The training window sits left of the split; the test window right of it. No model
+      calibrates to a regime shift it never saw, which is the point of having a
+      <span data-term="drift">drift monitor</span> rather than an annual review.</p>
+    <div class="plot"><div id="driftPlot"></div></div>
+    <figcaption>
+      Train <span class="mono" data-fig="risk:drift.self_cure_train">—</span> &rarr;
+      test <span class="mono" data-fig="risk:drift.self_cure_test" data-fig-badge="off">—</span>,
+      against a rate-change alert threshold of
+      <span class="mono" id="rateAlert">—</span>.
+      <span class="mono" data-term="psi">PSI</span> on the delinquency bucket:
+      <span class="mono" data-fig="risk:drift.psi_p_worsen_feature" data-fig-badge="off">—</span>
+      (alert at <span class="mono" id="psiAlert">—</span>).
+      <span class="method" data-tier="2">The L2 evaluation deliberately mirrors production: the
+        booster trains once, then calibration is refit on the earlier half of the test window and
+        scored on the later half — which is what the outcome loop does as new outcomes land. The
+        booster never sees the evaluation rows.</span>
+    </figcaption>
+  </figure>
+
+  <!-- ============ roll curve ============ -->
+  <figure class="ev" id="roll">
+    <header>
+      <h2>How a book actually deteriorates</h2>
+      <a class="anchor" href="#roll">#roll</a>
+      <span style="margin-left:auto" data-badge-slot></span>
+    </header>
+    <p class="lead">Where an account sits next month, given where it sits today. Read a row: half
+      of accounts one month behind cure on their own; one month later that has collapsed and the
+      dominant move is deeper delinquency. The month when a conversation is cheap and effective is
+      the month before most systems are looking.</p>
+    <div class="plot"><div class="matrix" id="rollMatrix"></div></div>
+    <figcaption>
+      Every month-to-month transition across
+      <span class="mono" data-fig="panel:rows" data-fig-format="n">—</span> panel rows over
+      <span class="mono" data-fig="panel:loans" data-fig-format="n" data-fig-badge="off">—</span>
+      loans, <span class="mono" id="periodRange">—</span>.
+      Cells shade by rate; hover for the underlying count.
+      <span class="method" data-tier="2">Method: Freddie Mac single-family servicing records,
+        joined to origination facts, one row per loan per month with real calendar dates. The panel
+        gate fails the build if the reporting period ever runs backwards within a loan.
+        Reproduce with <code>python -m ganymede.panel --verify</code>.</span>
+    </figcaption>
+  </figure>
+
+  <!-- ============ frontier ============ -->
+  <figure class="ev" id="frontier">
+    <header>
+      <h2>The allocator's edge, across every capacity</h2>
+      <a class="anchor" href="#frontier">#frontier</a>
+      <span style="margin-left:auto" data-badge-slot></span>
+    </header>
+    <p class="lead">Not one number: the whole curve. The advantage over risk-ranking is largest
+      when capacity is scarce and converges toward zero as capacity approaches full coverage,
+      because with enough agents to call everybody the ordering stops mattering.</p>
+    <div class="plot"><div id="frontierPlot"></div></div>
+    <figcaption>
+      At the default 15% capacity the edge is
+      <span class="mono" data-fig="allocator:headline.lift_pct" data-fig-format="signed">—</span>,
+      using <span class="mono" data-fig="allocator:headline.allocator_contacts" data-fig-format="n" data-fig-badge="off">—</span>
+      contacts against
+      <span class="mono" data-fig="allocator:headline.risk_contacts" data-fig-format="n" data-fig-badge="off">—</span>.
+      <a href="queue.html">Move the capacity slider yourself &rarr;</a>
+      <span class="method" data-tier="2">Honest boundary: the servicing data carries no treatment
+        history, so <span data-term="uplift">uplift</span> cannot be measured here. It is modelled
+        from published practice — largest in the persuadable middle, near zero at both ends. This
+        demonstrates the allocator's <em>logic</em> beating risk-ranking under a defensible shape.
+        The magnitude is not a claim about real lift, which is why the badge says
+        <span class="badge badge-simulated">simulated</span>.
+        Reproduce with <code>python -m ganymede.allocator --simulate</code>.</span>
+    </figcaption>
+  </figure>
+
+  <!-- ============ table ============ -->
+  <figure class="ev" id="table">
+    <header>
+      <h2>Every headline figure</h2>
+      <a class="anchor" href="#table">#table</a>
+    </header>
+    <p class="lead">Including the four this project deliberately refuses to estimate. Filter by the
+      kind of evidence.</p>
+    <div class="filterbar" id="filters"></div>
+    <div class="plot scroll-x">
+      <table class="metrics">
+        <thead><tr><th>Figure</th><th class="num">Value</th><th>Evidence</th><th>Source</th></tr></thead>
+        <tbody id="metricRows"></tbody>
+      </table>
+    </div>
+    <figcaption data-tier="2">Regenerate the whole table with
+      <code>python scripts/build_site_data.py</code>. CI runs it in <code>--check</code> mode, so a
+      figure that drifts from what the pipeline now produces fails the build rather than sitting
+      stale on this page.</figcaption>
+  </figure>
+</main>
+
+<footer class="site">
+  <div class="shell" style="padding-bottom:0">
+    <a href="case.html">The written case &rarr;</a> ·
+    <a href="queue.html">Allocator studio &rarr;</a> ·
+    <a href="desk.html">Agent desk &rarr;</a>
+  </div>
+</footer>
+
+<script type="module" src="assets/js/site.js"></script>
+<script type="module">
+import { resolveFigures, loadFile, badgeFor } from './assets/js/figures.js';
+import { lineChart, barChart, loadData, el } from './assets/js/charts.js';
+
+resolveFigures();
+const $ = id => document.getElementById(id);
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+/* ---- provenance legend, straight from the build script's own wording ---- */
+loadFile('metrics').then(m => {
+  $('legend').replaceChildren(...Object.entries(m.provenance_legend).map(([k, v]) => {
+    const d = document.createElement('div');
+    d.innerHTML = `<span class="badge badge-${k}">${k}</span><p>${v}</p>`;
+    return d;
+  }));
+
+  // table + filters
+  const rows = m.rows;
+  const body = $('metricRows');
+  body.replaceChildren(...rows.map(r => {
+    const tr = document.createElement('tr');
+    tr.dataset.prov = r.provenance;
+    tr.innerHTML = `<td class="lab"></td><td class="num"></td><td></td><td style="color:var(--faint);font-size:var(--fs--2)"></td>`;
+    tr.children[0].textContent = r.label;
+    tr.children[1].textContent = r.value === null
+      ? 'not yet earned'
+      : r.value + (r.unit ? ' ' + r.unit : '');
+    if (r.value === null) tr.children[1].style.color = 'var(--faint)';
+    tr.children[2].appendChild(badgeFor(r));
+    tr.children[3].textContent = r.note ? `${r.source} — ${r.note}` : r.source;
+    return tr;
+  }));
+
+  const kinds = ['all', ...Object.keys(m.provenance_legend)];
+  $('filters').replaceChildren(...kinds.map(k => {
+    const b = document.createElement('button');
+    b.textContent = k;
+    b.setAttribute('aria-pressed', String(k === 'all'));
+    b.addEventListener('click', () => {
+      $('filters').querySelectorAll('button').forEach(o => o.setAttribute('aria-pressed', String(o === b)));
+      body.querySelectorAll('tr').forEach(tr =>
+        tr.classList.toggle('hide', k !== 'all' && tr.dataset.prov !== k));
+    });
+    return b;
+  }));
+}).catch(() => {});
+
+/* ---- calibration ---- */
+loadData('risk').then(r => {
+  $('cutoff').textContent = r.split_cutoff;
+  $('rateAlert').textContent = r.drift.rate_alert_threshold;
+  $('psiAlert').textContent = r.drift.psi_alert_threshold;
+
+  const draw = () => {
+    const l1 = r.models.L1_trajectory.reliability;
+    const l2 = r.models.L2_selfcure.reliability;
+    const { svg, x, y } = lineChart($('relPlot'), {
+      w: 860, h: 380, pad: { t: 18, r: 20, b: 44, l: 56 },
+      series: [
+        { points: l1.map(b => [b.predicted, b.observed]), stroke: 'var(--signal)', dots: true },
+        { points: l2.map(b => [b.predicted, b.observed]), stroke: 'var(--predict)', dashed: true, dots: true },
+      ],
+      xDomain: [0, 1], yDomain: [0, 1], diagonal: true,
+      xTicks: [0, .25, .5, .75, 1].map(v => ({ v, label: v.toFixed(2) })),
+      yTicks: [0, .25, .5, .75, 1].map(v => ({ v, label: v.toFixed(2) })),
+      xLabel: 'predicted probability', yLabel: 'observed rate',
+      title: 'Reliability curves for L1 and L2',
+    });
+    // bin counts on hover
+    [[l1, 'L1 trajectory', 'var(--signal)'], [l2, 'L2 self-cure', 'var(--predict)']].forEach(([bins, name, col]) => {
+      bins.forEach(b => {
+        const c = el('circle', { cx: x(b.predicted), cy: y(b.observed), r: 9, fill: 'transparent' });
+        c.appendChild(el('title', {}, `${name} · bin ${b.bin_lo}–${b.bin_hi}\npredicted ${b.predicted} · observed ${b.observed}\n${b.n.toLocaleString('en-GB')} accounts`));
+        svg.appendChild(c);
+      });
+    });
+    svg.appendChild(el('text', {
+      x: 640, y: 40, fill: 'var(--signal)', 'font-size': 11, 'font-family': 'var(--font-mono)',
+    }, 'L1 trajectory'));
+    svg.appendChild(el('text', {
+      x: 640, y: 56, fill: 'var(--predict)', 'font-size': 11, 'font-family': 'var(--font-mono)',
+    }, 'L2 self-cure'));
+  };
+  draw();
+
+  /* ---- drift ---- */
+  const m = r.drift.monthly_self_cure;
+  const drawDrift = () => {
+    const { svg, x, y } = lineChart($('driftPlot'), {
+      w: 860, h: 320, pad: { t: 18, r: 20, b: 44, l: 56 },
+      series: [{ points: m.map((d, i) => [i, d.rate]), stroke: 'var(--predict)', dots: true, fill: 'var(--predict)' }],
+      xDomain: [0, m.length - 1], yDomain: [0.3, 1],
+      xTicks: m.map((d, i) => ({ v: i, label: d.month })).filter((_, i) => i % 4 === 0),
+      yTicks: [0.4, 0.6, 0.8, 1].map(v => ({ v, label: v.toFixed(1) })),
+      xLabel: 'month', yLabel: 'self-cure rate',
+      title: 'Monthly self-cure rate across the backtest window',
+    });
+    const cut = m.findIndex(d => d.month >= r.split_cutoff.slice(0, 7));
+    if (cut > 0) {
+      svg.appendChild(el('line', {
+        x1: x(cut), y1: 18, x2: x(cut), y2: 320 - 44,
+        stroke: 'var(--signal)', 'stroke-width': 1.6, 'stroke-dasharray': '5 4',
+      }));
+      svg.appendChild(el('text', {
+        x: x(cut) + 6, y: 32, fill: 'var(--signal)', 'font-size': 10, 'font-family': 'var(--font-mono)',
+      }, 'train / test split'));
+    }
+    m.forEach((d, i) => {
+      const c = el('circle', { cx: x(i), cy: y(d.rate), r: 8, fill: 'transparent' });
+      c.appendChild(el('title', {}, `${d.month}: ${(d.rate * 100).toFixed(1)}% of ${d.n.toLocaleString('en-GB')} delinquent accounts`));
+      svg.appendChild(c);
+    });
+  };
+  drawDrift();
+  addEventListener('resize', () => { draw(); drawDrift(); }, { passive: true });
+}).catch(() => {});
+
+/* ---- gap histogram with a draggable budget ---- */
+loadData('audio').then(a => {
+  const bars = a.histogram.filter(b => b.hi !== null);
+  const gaps = a.gaps_ms;
+  const range = $('budgetRange');
+
+  function drawGaps() {
+    const budget = +range.value;
+    const share = gaps.filter(g => g >= budget).length / gaps.length;
+    $('budgetVal').textContent = budget + ' ms';
+    $('budgetShare').textContent = Math.round(share * 100) + '%';
+    const idx = bars.findIndex(b => budget >= b.lo && budget < b.hi);
+    barChart($('gapPlot'), {
+      w: 860, h: 320, pad: { t: 22, r: 20, b: 44, l: 56 },
+      bars: bars.map(b => ({
+        v: b.n, label: `${b.lo}–${b.hi} ms: ${b.n} gaps`,
+        colour: b.hi <= budget ? 'var(--broken)' : 'var(--signal)',
+      })),
+      yTicks: [0, 40, 80, 120].map(v => ({ v, label: String(v) })),
+      xTicks: [0, 5, 10, 15, 19].map(i => ({ i, label: String(i * 100) })),
+      markers: [{ i: idx < 0 ? 0 : idx, label: `${budget} ms` }],
+      xLabel: 'inter-turn gap, milliseconds', yLabel: 'boundaries',
+      title: 'Distribution of real inter-turn gaps',
+    });
+  }
+  range.addEventListener('input', drawGaps);
+  range.value = String(a.budget_ms.value);
+  drawGaps();
+  addEventListener('resize', drawGaps, { passive: true });
+}).catch(() => {});
+
+/* ---- roll matrix ---- */
+loadData('panel').then(p => {
+  $('periodRange').textContent = `${p.period_from} to ${p.period_to}`;
+  const order = p.buckets;
+  const byPair = new Map(p.roll_curve.map(t => [`${t.from}|${t.to}`, t]));
+  const node = $('rollMatrix');
+  node.style.gridTemplateColumns = `78px repeat(${order.length}, 1fr)`;
+
+  const cells = [el('div', {}), ...order.map(b => {
+    const d = document.createElement('div');
+    d.className = 'h'; d.textContent = 'to ' + b;
+    return d;
+  })];
+  for (const from of order) {
+    const rh = document.createElement('div');
+    rh.className = 'rh'; rh.textContent = from;
+    cells.push(rh);
+    for (const to of order) {
+      const t = byPair.get(`${from}|${to}`);
+      const d = document.createElement('div');
+      d.className = 'cell' + (t ? '' : ' zero');
+      if (t) {
+        const stop = Math.min(100, Math.round(t.rate * 10) * 10);
+        d.style.background = cssVar('--risk-' + stop);
+        d.style.color = stop >= 50 ? '#fff' : '#1a1508';
+        d.textContent = (t.rate * 100).toFixed(t.rate < 0.01 ? 2 : 0) + '%';
+        d.title = `${from} → ${to}: ${(t.rate * 100).toFixed(2)}% (${t.n.toLocaleString('en-GB')} account-months)`;
+      } else {
+        d.textContent = '·';
+      }
+      cells.push(d);
+    }
+  }
+  node.replaceChildren(...cells.map(c => c instanceof Node ? c : c));
+}).catch(() => {});
+
+/* ---- frontier ---- */
+loadData('allocator').then(a => {
+  const f = a.frontier;
+  const maxV = Math.max(...f.map(p => Math.max(p.allocator_value, p.risk_ranking_value)));
+  const compact = v => Intl.NumberFormat('en-GB', { notation: 'compact', maximumFractionDigits: 1 }).format(v);
+  const draw = () => {
+    const { svg, x, y } = lineChart($('frontierPlot'), {
+      w: 860, h: 340, pad: { t: 18, r: 20, b: 44, l: 62 },
+      series: [
+        { points: f.map(p => [p.capacity_frac * 100, p.allocator_value]), stroke: 'var(--signal)', width: 2.2 },
+        { points: f.map(p => [p.capacity_frac * 100, p.risk_ranking_value]), stroke: 'var(--faint)', dashed: true },
+      ],
+      xDomain: [2, 60], yDomain: [0, maxV],
+      xTicks: [2, 15, 30, 45, 60].map(v => ({ v, label: v + '%' })),
+      yTicks: [0, maxV / 2, maxV].map(v => ({ v, label: compact(v) })),
+      xLabel: 'agent capacity, as a share of full coverage', yLabel: 'recovered value',
+      title: 'Recovered value by capacity',
+    });
+    f.forEach(p => {
+      const c = el('circle', { cx: x(p.capacity_frac * 100), cy: y(p.allocator_value), r: 7, fill: 'transparent' });
+      c.appendChild(el('title', {}, `${Math.round(p.capacity_frac * 100)}% capacity\nallocator ${compact(p.allocator_value)} · risk-ranking ${compact(p.risk_ranking_value)}\nedge ${p.lift_pct > 0 ? '+' : ''}${p.lift_pct}%`));
+      svg.appendChild(c);
+    });
+    svg.appendChild(el('text', { x: 690, y: 36, fill: 'var(--signal)', 'font-size': 11, 'font-family': 'var(--font-mono)' }, 'allocator'));
+    svg.appendChild(el('text', { x: 690, y: 52, fill: 'var(--muted)', 'font-size': 11, 'font-family': 'var(--font-mono)' }, 'risk-ranking'));
+  };
+  draw();
+  addEventListener('resize', draw, { passive: true });
+}).catch(() => {});
+</script>
+</body>
+</html>

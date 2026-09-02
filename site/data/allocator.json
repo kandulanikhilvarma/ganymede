@@ -7,6 +7,8 @@
   },
   "lambda_harm": 1.0,
   "default_capacity_frac": 0.15,
+  "sweep_from": 0.02,
+  "sweep_to": 0.6,
   "accounts_in_queue": {
     "value": 58931,
     "provenance": "measured",
@@ -15,8 +17,8 @@
   "frontier": [
     {
       "capacity_frac": 0.02,
-      "accounts": 58931,
       "capacity_minutes": 14143,
+      "accounts": 58931,
       "allocator_value": 153923322.5,
       "risk_ranking_value": 52516328.5,
       "lift_pct": 193.1,
@@ -25,8 +27,8 @@
     },
     {
       "capacity_frac": 0.03,
-      "accounts": 58931,
       "capacity_minutes": 21215,
+      "accounts": 58931,
       "allocator_value": 220423063.9,
       "risk_ranking_value": 83602464.1,
       "lift_pct": 163.7,
@@ -35,8 +37,8 @@
     },
     {
       "capacity_frac": 0.04,
-      "accounts": 58931,
       "capacity_minutes": 28286,
+      "accounts": 58931,
       "allocator_value": 283655616.4,
       "risk_ranking_value": 116530074.5,
       "lift_pct": 143.4,
@@ -45,8 +47,8 @@
     },
     {
       "capacity_frac": 0.05,
-      "accounts": 58931,
       "capacity_minutes": 35358,
+      "accounts": 58931,
       "allocator_value": 344411176.0,
       "risk_ranking_value": 150581883.5,
       "lift_pct": 128.7,
@@ -55,8 +57,8 @@
     },
     {
       "capacity_frac": 0.06,
-      "accounts": 58931,
       "capacity_minutes": 42430,
+      "accounts": 58931,
       "allocator_value": 403042007.6,
       "risk_ranking_value": 182821124.8,
       "lift_pct": 120.5,
@@ -65,8 +67,8 @@
     },
     {
       "capacity_frac": 0.07,
-      "accounts": 58931,
       "capacity_minutes": 49502,
+      "accounts": 58931,
       "allocator_value": 459826087.0,
       "risk_ranking_value": 217283126.4,
       "lift_pct": 111.6,
@@ -75,8 +77,8 @@
     },
     {
       "capacity_frac": 0.08,
-      "accounts": 58931,
       "capacity_minutes": 56573,
+      "accounts": 58931,
       "allocator_value": 514808835.0,
       "risk_ranking_value": 252606405.1,
       "lift_pct": 103.8,
@@ -85,8 +87,8 @@
     },
     {
       "capacity_frac": 0.09,
-      "accounts": 58931,
       "capacity_minutes": 63645,
+      "accounts": 58931,
       "allocator_value": 568483769.3,
       "risk_ranking_value": 289218909.0,
       "lift_pct": 96.6,
@@ -95,8 +97,8 @@
     },
     {
       "capacity_frac": 0.1,
-      "accounts": 58931,
       "capacity_minutes": 70717,
+      "accounts": 58931,
       "allocator_value": 620748336.0,
       "risk_ranking_value": 328519598.9,
       "lift_pct": 89.0,
@@ -105,8 +107,8 @@
     },
     {
       "capacity_frac": 0.11,
-      "accounts": 58931,
       "capacity_minutes": 77788,
+      "accounts": 58931,
       "allocator_value": 671689674.6,
       "risk_ranking_value": 369830457.5,
       "lift_pct": 81.6,
@@ -115,8 +117,8 @@
     },
     {
       "capacity_frac": 0.12,
-      "accounts": 58931,
       "capacity_minutes": 84860,
+      "accounts": 58931,
       "allocator_value": 721552803.3,
       "risk_ranking_value": 413368654.1,
       "lift_pct": 74.6,
@@ -125,8 +127,8 @@
     },
     {
       "capacity_frac": 0.13,
-      "accounts": 58931,
       "capacity_minutes": 91932,
+      "accounts": 58931,
       "allocator_value": 770406405.0,
       "risk_ranking_value": 460324701.0,
       "lift_pct": 67.4,
@@ -135,8 +137,8 @@
     },
     {
       "capacity_frac": 0.14,
-      "accounts": 58931,
       "capacity_minutes": 99004,
+      "accounts": 58931,
       "allocator_value": 818207948.8,
       "risk_ranking_value": 503514029.8,
       "lift_pct": 62.5,
@@ -145,8 +147,8 @@
     },
     {
       "capacity_frac": 0.15,
-      "accounts": 58931,
       "capacity_minutes": 106075,
+      "accounts": 58931,
       "allocator_value": 865138287.2,
       "risk_ranking_value": 543632774.4,
       "lift_pct": 59.1,
@@ -155,8 +157,8 @@
     },
     {
       "capacity_frac": 0.16,
-      "accounts": 58931,
       "capacity_minutes": 113147,
+      "accounts": 58931,
       "allocator_value": 911026120.3,
       "risk_ranking_value": 583218311.0,
       "lift_pct": 56.2,
@@ -165,8 +167,8 @@
     },
     {
       "capacity_frac": 0.17,
-      "accounts": 58931,
       "capacity_minutes": 120219,
+      "accounts": 58931,
       "allocator_value": 956241684.7,
       "risk_ranking_value": 624626542.3,
       "lift_pct": 53.1,
@@ -175,8 +177,8 @@
     },
     {
       "capacity_frac": 0.18,
-      "accounts": 58931,
       "capacity_minutes": 127290,
+      "accounts": 58931,
       "allocator_value": 1000694694.4,
       "risk_ranking_value": 663960819.9,
       "lift_pct": 50.7,
@@ -185,8 +187,8 @@
     },
     {
       "capacity_frac": 0.19,
-      "accounts": 58931,
       "capacity_minutes": 134362,
+      "accounts": 58931,
       "allocator_value": 1044321896.5,
       "risk_ranking_value": 706560329.8,
       "lift_pct": 47.8,
@@ -195,8 +197,8 @@
     },
     {
       "capacity_frac": 0.2,
-      "accounts": 58931,
       "capacity_minutes": 141434,
+      "accounts": 58931,
       "allocator_value": 1087108305.7,
       "risk_ranking_value": 745155060.4,
       "lift_pct": 45.9,
@@ -205,8 +207,8 @@
     },
     {
       "capacity_frac": 0.21,
-      "accounts": 58931,
       "capacity_minutes": 148506,
+      "accounts": 58931,
       "allocator_value": 1129165013.6,
       "risk_ranking_value": 782086292.8,
       "lift_pct": 44.4,
@@ -215,8 +217,8 @@
     },
     {
       "capacity_frac": 0.22,
-      "accounts": 58931,
       "capacity_minutes": 155577,
+      "accounts": 58931,
       "allocator_value": 1170465285.8,
       "risk_ranking_value": 820647986.7,
       "lift_pct": 42.6,
@@ -225,8 +227,8 @@
     },
     {
       "capacity_frac": 0.23,
-      "accounts": 58931,
       "capacity_minutes": 162649,
+      "accounts": 58931,
       "allocator_value": 1210933164.0,
       "risk_ranking_value": 855137254.9,
       "lift_pct": 41.6,
@@ -235,8 +237,8 @@
     },
     {
       "capacity_frac": 0.24,
-      "accounts": 58931,
       "capacity_minutes": 169721,
+      "accounts": 58931,
       "allocator_value": 1250919699.5,
       "risk_ranking_value": 889535465.5,
       "lift_pct": 40.6,
@@ -245,8 +247,8 @@
     },
     {
       "capacity_frac": 0.25,
-      "accounts": 58931,
       "capacity_minutes": 176793,
+      "accounts": 58931,
       "allocator_value": 1290343455.0,
       "risk_ranking_value": 923952848.3,
       "lift_pct": 39.7,
@@ -255,8 +257,8 @@
     },
     {
       "capacity_frac": 0.26,
-      "accounts": 58931,
       "capacity_minutes": 183864,
+      "accounts": 58931,
       "allocator_value": 1329135414.4,
       "risk_ranking_value": 961183642.1,
       "lift_pct": 38.3,
@@ -265,8 +267,8 @@
     },
     {
       "capacity_frac": 0.27,
-      "accounts": 58931,
       "capacity_minutes": 190936,
+      "accounts": 58931,
       "allocator_value": 1367357869.6,
       "risk_ranking_value": 999251735.5,
       "lift_pct": 36.8,
@@ -275,8 +277,8 @@
     },
     {
       "capacity_frac": 0.28,
-      "accounts": 58931,
       "capacity_minutes": 198008,
+      "accounts": 58931,
       "allocator_value": 1405045009.5,
       "risk_ranking_value": 1034446235.0,
       "lift_pct": 35.8,
@@ -285,8 +287,8 @@
     },
     {
       "capacity_frac": 0.29,
-      "accounts": 58931,
       "capacity_minutes": 205079,
+      "accounts": 58931,
       "allocator_value": 1442215744.3,
       "risk_ranking_value": 1072299592.9,
       "lift_pct": 34.5,
@@ -295,8 +297,8 @@
     },
     {
       "capacity_frac": 0.3,
-      "accounts": 58931,
       "capacity_minutes": 212151,
+      "accounts": 58931,
       "allocator_value": 1478815819.8,
       "risk_ranking_value": 1109028085.6,
       "lift_pct": 33.3,
@@ -305,8 +307,8 @@
     },
     {
       "capacity_frac": 0.31,
-      "accounts": 58931,
       "capacity_minutes": 219223,
+      "accounts": 58931,
       "allocator_value": 1514752195.9,
       "risk_ranking_value": 1149373720.4,
       "lift_pct": 31.8,
@@ -315,8 +317,8 @@
     },
     {
       "capacity_frac": 0.32,
-      "accounts": 58931,
       "capacity_minutes": 226295,
+      "accounts": 58931,
       "allocator_value": 1550329199.2,
       "risk_ranking_value": 1186726529.1,
       "lift_pct": 30.6,
@@ -325,8 +327,8 @@
     },
     {
       "capacity_frac": 0.33,
-      "accounts": 58931,
       "capacity_minutes": 233366,
+      "accounts": 58931,
       "allocator_value": 1585402420.5,
       "risk_ranking_value": 1228300088.2,
       "lift_pct": 29.1,
@@ -335,8 +337,8 @@
     },
     {
       "capacity_frac": 0.34,
-      "accounts": 58931,
       "capacity_minutes": 240438,
+      "accounts": 58931,
       "allocator_value": 1619985120.5,
       "risk_ranking_value": 1269722376.8,
       "lift_pct": 27.6,
@@ -345,8 +347,8 @@
     },
     {
       "capacity_frac": 0.35,
-      "accounts": 58931,
       "capacity_minutes": 247510,
+      "accounts": 58931,
       "allocator_value": 1654108543.8,
       "risk_ranking_value": 1315526814.7,
       "lift_pct": 25.7,
@@ -355,8 +357,8 @@
     },
     {
       "capacity_frac": 0.36,
-      "accounts": 58931,
       "capacity_minutes": 254581,
+      "accounts": 58931,
       "allocator_value": 1687784197.4,
       "risk_ranking_value": 1357043113.2,
       "lift_pct": 24.4,
@@ -365,8 +367,8 @@
     },
     {
       "capacity_frac": 0.37,
-      "accounts": 58931,
       "capacity_minutes": 261653,
+      "accounts": 58931,
       "allocator_value": 1721034546.6,
       "risk_ranking_value": 1401579817.1,
       "lift_pct": 22.8,
@@ -375,8 +377,8 @@
     },
     {
       "capacity_frac": 0.38,
-      "accounts": 58931,
       "capacity_minutes": 268725,
+      "accounts": 58931,
       "allocator_value": 1753883298.6,
       "risk_ranking_value": 1449417167.0,
       "lift_pct": 21.0,
@@ -385,8 +387,8 @@
     },
     {
       "capacity_frac": 0.39,
-      "accounts": 58931,
       "capacity_minutes": 275797,
+      "accounts": 58931,
       "allocator_value": 1786222755.6,
       "risk_ranking_value": 1495824391.2,
       "lift_pct": 19.4,
@@ -395,8 +397,8 @@
     },
     {
       "capacity_frac": 0.4,
-      "accounts": 58931,
       "capacity_minutes": 282868,
+      "accounts": 58931,
       "allocator_value": 1818280355.7,
       "risk_ranking_value": 1539492184.6,
       "lift_pct": 18.1,
@@ -405,8 +407,8 @@
     },
     {
       "capacity_frac": 0.41,
-      "accounts": 58931,
       "capacity_minutes": 289940,
+      "accounts": 58931,
       "allocator_value": 1849938594.8,
       "risk_ranking_value": 1581426354.5,
       "lift_pct": 17.0,
@@ -415,8 +417,8 @@
     },
     {
       "capacity_frac": 0.42,
-      "accounts": 58931,
       "capacity_minutes": 297012,
+      "accounts": 58931,
       "allocator_value": 1881246318.4,
       "risk_ranking_value": 1627463844.6,
       "lift_pct": 15.6,
@@ -425,8 +427,8 @@
     },
     {
       "capacity_frac": 0.43,
-      "accounts": 58931,
       "capacity_minutes": 304083,
+      "accounts": 58931,
       "allocator_value": 1912193577.5,
       "risk_ranking_value": 1669000457.7,
       "lift_pct": 14.6,
@@ -435,8 +437,8 @@
     },
     {
       "capacity_frac": 0.44,
-      "accounts": 58931,
       "capacity_minutes": 311155,
+      "accounts": 58931,
       "allocator_value": 1942776198.8,
       "risk_ranking_value": 1709600403.4,
       "lift_pct": 13.6,
@@ -445,8 +447,8 @@
     },
     {
       "capacity_frac": 0.45,
-      "accounts": 58931,
       "capacity_minutes": 318227,
+      "accounts": 58931,
       "allocator_value": 1973022184.8,
       "risk_ranking_value": 1751515732.3,
       "lift_pct": 12.6,
@@ -455,8 +457,8 @@
     },
     {
       "capacity_frac": 0.46,
-      "accounts": 58931,
       "capacity_minutes": 325299,
+      "accounts": 58931,
       "allocator_value": 2002828016.2,
       "risk_ranking_value": 1791061220.7,
       "lift_pct": 11.8,
@@ -465,8 +467,8 @@
     },
     {
       "capacity_frac": 0.47,
-      "accounts": 58931,
       "capacity_minutes": 332370,
+      "accounts": 58931,
       "allocator_value": 2032408345.7,
       "risk_ranking_value": 1830702782.8,
       "lift_pct": 11.0,
@@ -475,8 +477,8 @@
     },
     {
       "capacity_frac": 0.48,
-      "accounts": 58931,
       "capacity_minutes": 339442,
+      "accounts": 58931,
       "allocator_value": 2061657185.4,
       "risk_ranking_value": 1870786989.5,
       "lift_pct": 10.2,
@@ -485,8 +487,8 @@
     },
     {
       "capacity_frac": 0.49,
-      "accounts": 58931,
       "capacity_minutes": 346514,
+      "accounts": 58931,
       "allocator_value": 2090617022.5,
       "risk_ranking_value": 1912182983.4,
       "lift_pct": 9.3,
@@ -495,8 +497,8 @@
     },
     {
       "capacity_frac": 0.5,
-      "accounts": 58931,
       "capacity_minutes": 353586,
+      "accounts": 58931,
       "allocator_value": 2119280037.6,
       "risk_ranking_value": 1952975009.7,
       "lift_pct": 8.5,
@@ -505,8 +507,8 @@
     },
     {
       "capacity_frac": 0.51,
-      "accounts": 58931,
       "capacity_minutes": 360657,
+      "accounts": 58931,
       "allocator_value": 2147649091.5,
       "risk_ranking_value": 1992177053.3,
       "lift_pct": 7.8,
@@ -515,8 +517,8 @@
     },
     {
       "capacity_frac": 0.52,
-      "accounts": 58931,
       "capacity_minutes": 367729,
+      "accounts": 58931,
       "allocator_value": 2175735152.6,
       "risk_ranking_value": 2031454225.0,
       "lift_pct": 7.1,
@@ -525,8 +527,8 @@
     },
     {
       "capacity_frac": 0.53,
-      "accounts": 58931,
       "capacity_minutes": 374801,
+      "accounts": 58931,
       "allocator_value": 2203553896.5,
       "risk_ranking_value": 2072630778.0,
       "lift_pct": 6.3,
@@ -535,8 +537,8 @@
     },
     {
       "capacity_frac": 0.54,
-      "accounts": 58931,
       "capacity_minutes": 381872,
+      "accounts": 58931,
       "allocator_value": 2230985717.8,
       "risk_ranking_value": 2110351846.5,
       "lift_pct": 5.7,
@@ -545,8 +547,8 @@
     },
     {
       "capacity_frac": 0.55,
-      "accounts": 58931,
       "capacity_minutes": 388944,
+      "accounts": 58931,
       "allocator_value": 2258239422.3,
       "risk_ranking_value": 2150063308.1,
       "lift_pct": 5.0,
@@ -555,8 +557,8 @@
     },
     {
       "capacity_frac": 0.56,
-      "accounts": 58931,
       "capacity_minutes": 396016,
+      "accounts": 58931,
       "allocator_value": 2285216014.7,
       "risk_ranking_value": 2189426513.3,
       "lift_pct": 4.4,
@@ -565,8 +567,8 @@
     },
     {
       "capacity_frac": 0.57,
-      "accounts": 58931,
       "capacity_minutes": 403088,
+      "accounts": 58931,
       "allocator_value": 2311915130.7,
       "risk_ranking_value": 2231424775.2,
       "lift_pct": 3.6,
@@ -575,8 +577,8 @@
     },
     {
       "capacity_frac": 0.58,
-      "accounts": 58931,
       "capacity_minutes": 410159,
+      "accounts": 58931,
       "allocator_value": 2338335202.2,
       "risk_ranking_value": 2267527936.1,
       "lift_pct": 3.1,
@@ -585,8 +587,8 @@
     },
     {
       "capacity_frac": 0.59,
-      "accounts": 58931,
       "capacity_minutes": 417231,
+      "accounts": 58931,
       "allocator_value": 2364496790.6,
       "risk_ranking_value": 2302211346.0,
       "lift_pct": 2.7,
@@ -595,8 +597,8 @@
     },
     {
       "capacity_frac": 0.6,
-      "accounts": 58931,
       "capacity_minutes": 424303,
+      "accounts": 58931,
       "allocator_value": 2390405420.7,
       "risk_ranking_value": 2334908541.8,
       "lift_pct": 2.4,
@@ -629,540 +631,572 @@
       "exposure": 1929000.0,
       "p_worsen": 0.1834,
       "p_selfcure": 0.9148,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 195322.26,
+      "minutes": 25,
+      "enters_allocator_at": 0.08,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F24Q20053175",
       "exposure": 1757268.66,
       "p_worsen": 0.8265,
       "p_selfcure": 0.2273,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "plan_offer",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 401123.91,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": 0.05
     },
     {
       "loan_id": "F24Q10174189",
       "exposure": 1441954.33,
       "p_worsen": 0.2487,
       "p_selfcure": 0.7366,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 363606.84,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q10186444",
       "exposure": 1422188.08,
       "p_worsen": 0.6693,
       "p_selfcure": 0.2328,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 330177.87,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": 0.19
     },
     {
       "loan_id": "F25Q30045724",
       "exposure": 1418000.0,
       "p_worsen": 0.0878,
       "p_selfcure": 0.9916,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
+      "best_action": null,
+      "value": 15298.71,
+      "minutes": 25,
+      "enters_allocator_at": null,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F24Q20233019",
       "exposure": 1412778.79,
       "p_worsen": 0.2846,
       "p_selfcure": 0.7077,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 379867.09,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F24Q40088987",
       "exposure": 1392265.61,
       "p_worsen": 0.8885,
       "p_selfcure": 0.1184,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "plan_offer",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 188863.5,
+      "minutes": 25,
+      "enters_allocator_at": 0.09,
+      "enters_risk_at": 0.03
     },
     {
       "loan_id": "F24Q10174466",
       "exposure": 1368410.67,
       "p_worsen": 0.1834,
       "p_selfcure": 0.8255,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 256175.93,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q20240178",
       "exposure": 1350000.0,
       "p_worsen": 0.0902,
       "p_selfcure": 0.9621,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
+      "best_action": null,
+      "value": 63983.84,
+      "minutes": 25,
+      "enters_allocator_at": null,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F24Q40161098",
       "exposure": 1349494.5,
       "p_worsen": 0.2459,
       "p_selfcure": 0.7869,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 294137.69,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F24Q40084100",
       "exposure": 1310599.41,
       "p_worsen": 0.8102,
       "p_selfcure": 0.2733,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "plan_offer",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 338349.34,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": 0.1
     },
     {
       "loan_id": "F25Q30171107",
       "exposure": 1288000.0,
       "p_worsen": 0.2205,
       "p_selfcure": 0.8257,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 240966.26,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q30009168",
       "exposure": 1273000.0,
       "p_worsen": 0.1895,
       "p_selfcure": 0.8417,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 220412.51,
+      "minutes": 25,
+      "enters_allocator_at": 0.04,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F24Q20232691",
       "exposure": 1261281.09,
       "p_worsen": 0.1847,
       "p_selfcure": 0.8255,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 236118.58,
+      "minutes": 25,
+      "enters_allocator_at": 0.03,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q40210905",
       "exposure": 1227000.0,
       "p_worsen": 0.2743,
       "p_selfcure": 0.7865,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 267773.3,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F24Q30287830",
       "exposure": 1218756.78,
       "p_worsen": 0.2459,
       "p_selfcure": 0.7625,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 286830.54,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q30246254",
       "exposure": 1209000.0,
       "p_worsen": 0.8102,
       "p_selfcure": 0.2372,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "plan_offer",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 284303.98,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": 0.11
     },
     {
       "loan_id": "F25Q30250342",
       "exposure": 1209000.0,
       "p_worsen": 0.8102,
       "p_selfcure": 0.4529,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "plan_offer",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 389387.98,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": 0.11
     },
     {
       "loan_id": "F25Q40053227",
       "exposure": 1209000.0,
       "p_worsen": 0.5137,
       "p_selfcure": 0.6121,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 373128.87,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": 0.26
     },
     {
       "loan_id": "F25Q20002899",
       "exposure": 1208000.0,
       "p_worsen": 0.2083,
       "p_selfcure": 0.8839,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
+      "best_action": null,
+      "value": 161156.32,
+      "minutes": 25,
+      "enters_allocator_at": 0.16,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q30227051",
       "exposure": 1208000.0,
       "p_worsen": 0.2157,
       "p_selfcure": 0.9091,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
+      "best_action": null,
+      "value": 129728.72,
+      "minutes": 25,
+      "enters_allocator_at": 0.3,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q40318109",
       "exposure": 1208000.0,
       "p_worsen": 0.1278,
       "p_selfcure": 0.9582,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
+      "best_action": null,
+      "value": 62878.56,
+      "minutes": 25,
+      "enters_allocator_at": null,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q30155365",
       "exposure": 1206000.0,
       "p_worsen": 0.3254,
       "p_selfcure": 0.6121,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 372202.93,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q30021415",
       "exposure": 1205000.0,
       "p_worsen": 0.3745,
       "p_selfcure": 0.5618,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 385595.39,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": 0.45
     },
     {
       "loan_id": "F25Q30285030",
       "exposure": 1205000.0,
       "p_worsen": 0.3509,
       "p_selfcure": 0.4758,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 390651.75,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": 0.57
     },
     {
       "loan_id": "F25Q30023981",
       "exposure": 1204950.7,
       "p_worsen": 0.7295,
       "p_selfcure": 0.2216,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "plan_offer",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 270174.89,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": 0.12
     },
     {
       "loan_id": "F25Q10177844",
       "exposure": 1204543.58,
       "p_worsen": 0.4425,
       "p_selfcure": 0.4,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 375761.28,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": 0.36
     },
     {
       "loan_id": "F25Q10108733",
       "exposure": 1203130.6,
       "p_worsen": 0.3783,
       "p_selfcure": 0.4758,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 390045.67,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": 0.42
     },
     {
       "loan_id": "F25Q20260939",
       "exposure": 1201404.06,
       "p_worsen": 0.6693,
       "p_selfcure": 0.2328,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 278916.35,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": 0.19
     },
     {
       "loan_id": "F25Q10097401",
       "exposure": 1200709.52,
       "p_worsen": 0.2784,
       "p_selfcure": 0.7656,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 280040.94,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F26Q10050122",
       "exposure": 1200000.0,
       "p_worsen": 0.1465,
       "p_selfcure": 0.8255,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 224645.21,
+      "minutes": 25,
+      "enters_allocator_at": 0.04,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q10071563",
       "exposure": 1199213.57,
       "p_worsen": 0.2459,
       "p_selfcure": 0.8255,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 224497.97,
+      "minutes": 25,
+      "enters_allocator_at": 0.04,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q10014956",
       "exposure": 1198484.57,
       "p_worsen": 0.2083,
       "p_selfcure": 0.7805,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 266875.8,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q40021958",
       "exposure": 1197000.0,
       "p_worsen": 0.2459,
       "p_selfcure": 0.7366,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 301834.3,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q30120583",
       "exposure": 1196000.0,
       "p_worsen": 0.2702,
       "p_selfcure": 0.7805,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 266322.49,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q10092361",
       "exposure": 1191966.88,
       "p_worsen": 0.6857,
       "p_selfcure": 0.2372,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "plan_offer",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 280298.18,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": 0.15
     },
     {
       "loan_id": "F25Q40068603",
       "exposure": 1191000.0,
       "p_worsen": 0.2459,
       "p_selfcure": 0.7366,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 300321.22,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q40089648",
       "exposure": 1191000.0,
       "p_worsen": 0.0841,
       "p_selfcure": 0.9148,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
+      "best_action": null,
+      "value": 120585.98,
+      "minutes": 25,
+      "enters_allocator_at": 0.35,
+      "enters_risk_at": null
     },
     {
       "loan_id": "F25Q10184845",
       "exposure": 1188000.0,
       "p_worsen": 0.3509,
       "p_selfcure": 0.7869,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
-    },
-    {
-      "loan_id": "F25Q30237132",
-      "exposure": 1187000.0,
-      "p_worsen": 0.6693,
-      "p_selfcure": 0.2328,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": "restructure",
+      "value": 258935.14,
+      "minutes": 25,
+      "enters_allocator_at": 0.02,
+      "enters_risk_at": 0.56
     },
     {
       "loan_id": "F25Q30191413",
       "exposure": 1187000.0,
       "p_worsen": 0.0841,
       "p_selfcure": 0.9621,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
+      "best_action": null,
+      "value": 56255.36,
+      "minutes": 25,
+      "enters_allocator_at": null,
+      "enters_risk_at": null
     },
     {
-      "loan_id": "F25Q20167459",
-      "exposure": 1182963.91,
-      "p_worsen": 0.3509,
-      "p_selfcure": 0.4758,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "loan_id": "F24Q30255680",
+      "exposure": 541810.95,
+      "p_worsen": 0.0781,
+      "p_selfcure": 1.0,
+      "best_action": null,
+      "value": 0.0,
+      "minutes": 0,
+      "enters_allocator_at": null,
+      "enters_risk_at": null
     },
     {
-      "loan_id": "F24Q40201905",
-      "exposure": 1176662.8,
-      "p_worsen": 0.5,
-      "p_selfcure": 0.4529,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "loan_id": "F24Q30094190",
+      "exposure": 514955.83,
+      "p_worsen": 0.0619,
+      "p_selfcure": 1.0,
+      "best_action": null,
+      "value": 0.0,
+      "minutes": 0,
+      "enters_allocator_at": null,
+      "enters_risk_at": null
     },
     {
-      "loan_id": "F24Q10081651",
-      "exposure": 1173732.99,
-      "p_worsen": 0.319,
-      "p_selfcure": 0.7077,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "loan_id": "F24Q10028797",
+      "exposure": 472483.59,
+      "p_worsen": 0.0808,
+      "p_selfcure": 1.0,
+      "best_action": null,
+      "value": 0.0,
+      "minutes": 0,
+      "enters_allocator_at": null,
+      "enters_risk_at": null
     },
     {
-      "loan_id": "F24Q30037398",
-      "exposure": 1170091.27,
-      "p_worsen": 0.7024,
-      "p_selfcure": 0.2328,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "plan_offer",
-      "disagree": true
+      "loan_id": "F24Q30105342",
+      "exposure": 433871.32,
+      "p_worsen": 0.0817,
+      "p_selfcure": 1.0,
+      "best_action": null,
+      "value": 0.0,
+      "minutes": 0,
+      "enters_allocator_at": null,
+      "enters_risk_at": null
     },
     {
-      "loan_id": "F25Q20084152",
-      "exposure": 1170000.0,
-      "p_worsen": 0.4966,
+      "loan_id": "F24Q30191855",
+      "exposure": 367600.76,
+      "p_worsen": 0.0808,
+      "p_selfcure": 1.0,
+      "best_action": null,
+      "value": 0.0,
+      "minutes": 0,
+      "enters_allocator_at": null,
+      "enters_risk_at": null
+    },
+    {
+      "loan_id": "F24Q30145251",
+      "exposure": 201095.44,
+      "p_worsen": 0.0619,
+      "p_selfcure": 1.0,
+      "best_action": null,
+      "value": 0.0,
+      "minutes": 0,
+      "enters_allocator_at": null,
+      "enters_risk_at": null
+    },
+    {
+      "loan_id": "F25Q30236157",
+      "exposure": 24000.0,
+      "p_worsen": 0.814,
       "p_selfcure": 0.2424,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "best_action": null,
+      "value": 5704.4,
+      "minutes": 25,
+      "enters_allocator_at": null,
+      "enters_risk_at": 0.07
     },
     {
-      "loan_id": "F25Q10115892",
-      "exposure": 1167740.61,
-      "p_worsen": 0.2702,
-      "p_selfcure": 0.7865,
-      "allocator_action": "restructure",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": true
+      "loan_id": "F24Q30071671",
+      "exposure": 23429.07,
+      "p_worsen": 0.7295,
+      "p_selfcure": 0.2733,
+      "best_action": null,
+      "value": 6023.98,
+      "minutes": 25,
+      "enters_allocator_at": null,
+      "enters_risk_at": 0.11
     },
     {
-      "loan_id": "F25Q40127241",
-      "exposure": 1149000.0,
-      "p_worsen": 0.1465,
-      "p_selfcure": 0.9148,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
+      "loan_id": "F25Q10013155",
+      "exposure": 18805.49,
+      "p_worsen": 0.814,
+      "p_selfcure": 0.2216,
+      "best_action": null,
+      "value": 4191.97,
+      "minutes": 25,
+      "enters_allocator_at": null,
+      "enters_risk_at": 0.07
     },
     {
-      "loan_id": "F25Q40193288",
-      "exposure": 1140000.0,
-      "p_worsen": 0.1644,
-      "p_selfcure": 0.902,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
+      "loan_id": "F24Q20231437",
+      "exposure": 8088.21,
+      "p_worsen": 0.8102,
+      "p_selfcure": 0.4,
+      "best_action": null,
+      "value": 2498.31,
+      "minutes": 25,
+      "enters_allocator_at": null,
+      "enters_risk_at": 0.09
     },
     {
-      "loan_id": "F24Q40124444",
-      "exposure": 1139938.0,
-      "p_worsen": 0.2459,
-      "p_selfcure": 0.8839,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
+      "loan_id": "F24Q20071256",
+      "exposure": 5465.78,
+      "p_worsen": 0.7024,
+      "p_selfcure": 0.3693,
+      "best_action": null,
+      "value": 1629.89,
+      "minutes": 25,
+      "enters_allocator_at": null,
+      "enters_risk_at": 0.13
     },
     {
-      "loan_id": "F25Q10029794",
-      "exposure": 1137090.81,
-      "p_worsen": 0.1402,
-      "p_selfcure": 0.8839,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
-    },
-    {
-      "loan_id": "F25Q40041572",
-      "exposure": 1137000.0,
-      "p_worsen": 0.2459,
-      "p_selfcure": 0.9091,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
-    },
-    {
-      "loan_id": "F25Q40142562",
-      "exposure": 1134000.0,
-      "p_worsen": 0.0878,
-      "p_selfcure": 0.9621,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
-    },
-    {
-      "loan_id": "F25Q20102644",
-      "exposure": 1097000.0,
-      "p_worsen": 0.0841,
-      "p_selfcure": 0.9468,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
-    },
-    {
-      "loan_id": "F24Q40109037",
-      "exposure": 1089976.86,
-      "p_worsen": 0.1465,
-      "p_selfcure": 0.8839,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
-    },
-    {
-      "loan_id": "F24Q40138554",
-      "exposure": 1087435.0,
-      "p_worsen": 0.1465,
-      "p_selfcure": 0.8839,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
-    },
-    {
-      "loan_id": "F25Q40220858",
-      "exposure": 1086000.0,
-      "p_worsen": 0.1278,
-      "p_selfcure": 0.9621,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
-    },
-    {
-      "loan_id": "F25Q30077354",
-      "exposure": 1076000.0,
-      "p_worsen": 0.2459,
-      "p_selfcure": 0.8839,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
-    },
-    {
-      "loan_id": "F25Q40011303",
-      "exposure": 1057000.0,
-      "p_worsen": 0.1402,
-      "p_selfcure": 0.9148,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
-    },
-    {
-      "loan_id": "F25Q20101884",
-      "exposure": 1035000.0,
-      "p_worsen": 0.1834,
-      "p_selfcure": 0.8839,
-      "allocator_action": "do_not_contact",
-      "risk_ranking_action": "do_not_contact",
-      "disagree": false
+      "loan_id": "F24Q40000483",
+      "exposure": 1289.3,
+      "p_worsen": 0.8265,
+      "p_selfcure": 0.3292,
+      "best_action": null,
+      "value": 345.1,
+      "minutes": 25,
+      "enters_allocator_at": null,
+      "enters_risk_at": 0.05
     }
   ]
 }

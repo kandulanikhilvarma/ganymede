@@ -174,56 +174,86 @@ def stage_risk() -> dict:
 
 
 def stage_allocator() -> dict:
-    """The capacity frontier, and the queue both strategies would build.
+    """The capacity frontier, and the queue each strategy would build.
 
-    Every point is a real allocator run at that budget -- the site's capacity
-    slider reads this array, so it is never interpolating between two runs.
+    Every point is a real allocator run at that budget, and for the sampled
+    accounts we record the capacity at which each strategy first funds them.
+    That threshold is what the site's slider reads, so the page never
+    re-implements the allocation rule in JavaScript and never drifts from it.
     """
     import polars as pl
-    from ganymede.allocator import (ACTION_MINUTES, allocate, compare,
+    from ganymede.allocator import (ACTION_MINUTES, allocate, _realised_value,
                                     _risk_ranking, score_accounts)
     from ganymede.config import LAMBDA_HARM
-    from ganymede.state import estimate_state, strategy_for
 
     accounts = score_accounts()
-    fracs = [round(0.01 * i, 3) for i in range(2, 61)]  # 2% .. 60% of full-coverage minutes
-    frontier = [compare(accounts, f, LAMBDA_HARM) for f in fracs]
+    n = accounts.height
+    fracs = [round(0.01 * i, 3) for i in range(2, 61)]  # 2% .. 60% of full coverage
 
-    # The default operating point, and the two queues it produces.
-    default_frac = 0.15
-    cap = int(accounts.height * ACTION_MINUTES["plan_offer"] * default_frac)
-    alloc = allocate(accounts, cap, LAMBDA_HARM)
-    risk = _risk_ranking(accounts, cap)
-
-    alloc_actions = dict(zip(alloc["idx"].to_list(), alloc["action"].to_list()))
-    risk_actions = dict(zip(risk["idx"].to_list(), risk["action"].to_list()))
-
-    # Ship the accounts the two strategies disagree about most, plus enough
-    # agreement to keep the picture honest.
+    # Sample first, so membership is tracked for a stable set across the sweep:
+    # the biggest exposures, plus the two contrasts that carry the argument.
     ranked = accounts.sort("exposure", descending=True)
-    rows = []
-    for r in ranked.iter_rows(named=True):
-        a, k = alloc_actions.get(r["idx"], "do_not_contact"), risk_actions.get(r["idx"], "do_not_contact")
-        rows.append({
+    sample_ids = set(ranked.head(40)["idx"].to_list())
+    sample_ids |= set(accounts.filter((pl.col("p_worsen") > 0.6) & (pl.col("exposure") > 1000))
+                              .sort("exposure").head(6)["idx"].to_list())
+    sample_ids |= set(accounts.filter(pl.col("exposure") > 100_000)
+                              .sort("p_selfcure", descending=True).head(6)["idx"].to_list())
+
+    frontier, enters_alloc, enters_risk = [], {}, {}
+    default_frac = 0.15
+    detail = None
+
+    for f in fracs:
+        cap = int(n * ACTION_MINUTES["plan_offer"] * f)
+        alloc = allocate(accounts, cap, LAMBDA_HARM)
+        risk = _risk_ranking(accounts, cap)
+        v_a, v_r = _realised_value(alloc), _realised_value(risk)
+
+        a_funded = set(alloc.filter(pl.col("action") != "do_not_contact")["idx"].to_list())
+        r_funded = set(risk.filter(pl.col("action") != "do_not_contact")["idx"].to_list())
+        for i in sample_ids:
+            if i in a_funded:
+                enters_alloc.setdefault(i, f)
+            if i in r_funded:
+                enters_risk.setdefault(i, f)
+
+        frontier.append({
+            "capacity_frac": f, "capacity_minutes": cap, "accounts": n,
+            "allocator_value": round(v_a, 1), "risk_ranking_value": round(v_r, 1),
+            "lift_pct": round(100 * (v_a - v_r) / abs(v_r), 1) if v_r else float("inf"),
+            "allocator_contacts": len(a_funded), "risk_contacts": len(r_funded),
+        })
+        if abs(f - default_frac) < 1e-9:
+            detail = alloc
+
+    at_default = next(p for p in frontier if abs(p["capacity_frac"] - default_frac) < 1e-9)
+    action_of = {r["idx"]: r for r in detail.iter_rows(named=True)}
+
+    queue_sample = []
+    for r in accounts.filter(pl.col("idx").is_in(list(sample_ids))).iter_rows(named=True):
+        i = r["idx"]
+        d = action_of[i]
+        queue_sample.append({
             "loan_id": r["loan_id"],
             "exposure": round(float(r["exposure"]), 2),
             "p_worsen": round(float(r["p_worsen"]), 4),
             "p_selfcure": round(float(r["p_selfcure"]), 4),
-            "allocator_action": a,
-            "risk_ranking_action": k,
-            "disagree": a != k,
+            "best_action": d["action"] if d["action"] != "do_not_contact" else None,
+            "value": round(float(d["value"]), 2),
+            "minutes": int(d["minutes"]),
+            # capacity at which each strategy first funds this account; null means
+            # it is never funded anywhere in the sweep
+            "enters_allocator_at": enters_alloc.get(i),
+            "enters_risk_at": enters_risk.get(i),
         })
-    disagreeing = [r for r in rows if r["disagree"]][:40]
-    agreeing = [r for r in rows if not r["disagree"]][:20]
-    sample = sorted(disagreeing + agreeing, key=lambda r: -r["exposure"])
-
-    at_default = next(p for p in frontier if abs(p["capacity_frac"] - default_frac) < 1e-9)
+    queue_sample.sort(key=lambda a: -a["exposure"])
 
     return {
         "action_minutes": ACTION_MINUTES,
         "lambda_harm": LAMBDA_HARM,
         "default_capacity_frac": default_frac,
-        "accounts_in_queue": fig(accounts.height, "measured", "test-period delinquent snapshot"),
+        "sweep_from": fracs[0], "sweep_to": fracs[-1],
+        "accounts_in_queue": fig(n, "measured", "test-period delinquent snapshot"),
         "frontier": frontier,
         "headline": {
             "lift_pct": fig(at_default["lift_pct"], "simulated",
@@ -236,7 +266,7 @@ def stage_allocator() -> dict:
             "risk_contacts": fig(at_default["risk_contacts"], "simulated",
                                  "allocator.compare at 15% capacity"),
         },
-        "queue_sample": sample,
+        "queue_sample": queue_sample,
     }
 
 
@@ -254,7 +284,11 @@ def stage_audio() -> dict:
     summary = analyse(str(wav))
     samples, sr = load_wav_mono16k(str(wav))
     segs = segments(speech_frames(samples, sr))
-    gaps_ms = np.array(inter_turn_gaps(segs)) * 1000.0
+    # Round once, here. Gaps are frame-quantised in seconds, so a gap of exactly
+    # 300 ms can land at 299.999... after the multiply -- which put eight
+    # boundaries on the wrong side of the budget compared with the rounded array
+    # the site actually draws. One array, one truth.
+    gaps_ms = np.round(np.array(inter_turn_gaps(segs)) * 1000.0, 1)
 
     edges = list(range(0, 2100, 100))
     hist = []
@@ -388,7 +422,11 @@ def stage_coach() -> dict:
 
     return {
         "min_strategy_support": MIN_STRATEGY_SUPPORT,
-        "min_turn_gap_ms": MIN_TURN_GAP_MS,
+        "min_turn_gap_ms": fig(MIN_TURN_GAP_MS, "measured",
+                               "coach.boundary.MIN_TURN_GAP_MS, matching the VAD threshold",
+                               unit="ms",
+                               note="a silence shorter than this is a within-speech micro-pause, "
+                                    "not a hand-off, so no hint fires there"),
         "recorded": recorded,
         "strategies": strategies,
         "all_provisional": fig(

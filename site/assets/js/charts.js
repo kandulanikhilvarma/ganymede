@@ -68,9 +68,9 @@ function axes(g, { x, y, w, h, pad, xTicks, yTicks, xLabel, yLabel }) {
     fill: 'var(--faint)', 'font-size': 10,
   }, xLabel));
   if (yLabel) g.appendChild(el('text', {
-    x: 10, y: (pad.t + h - pad.b) / 2, 'text-anchor': 'middle',
+    x: 13, y: (pad.t + h - pad.b) / 2, 'text-anchor': 'middle',
     fill: 'var(--faint)', 'font-size': 10,
-    transform: `rotate(-90 10 ${(pad.t + h - pad.b) / 2})`,
+    transform: `rotate(-90 13 ${(pad.t + h - pad.b) / 2})`,
   }, yLabel));
 }
 

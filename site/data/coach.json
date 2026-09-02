@@ -1,6 +1,12 @@
 {
   "min_strategy_support": 5,
-  "min_turn_gap_ms": 200,
+  "min_turn_gap_ms": {
+    "value": 200,
+    "provenance": "measured",
+    "source": "coach.boundary.MIN_TURN_GAP_MS, matching the VAD threshold",
+    "unit": "ms",
+    "note": "a silence shorter than this is a within-speech micro-pause, not a hand-off, so no hint fires there"
+  },
   "recorded": {
     "ptp_field_accuracy": {
       "value": 0.934,
