@@ -719,7 +719,15 @@ def main() -> int:
             stale.append(name)
         print(f"  {'checked' if args.check else 'wrote'}  {name}.json")
 
-    if set(wanted) == set(STAGES) or "metrics" in wanted:
+    # metrics is assembled from every other stage, so it is only meaningful when
+    # every other stage actually ran. On a clean checkout the panel and the call
+    # audio are absent, and rebuilding metrics from the handful of stages that
+    # survived would compare a six-row table against the committed eighteen and
+    # call the committed one stale. Skip it instead, and say why.
+    metrics_wanted = set(wanted) == set(STAGES) or "metrics" in wanted
+    if metrics_wanted and skipped:
+        print("  SKIPPED metrics: assembled from stages that could not run here")
+    elif metrics_wanted:
         m = stage_metrics(bundle)
         if not write("metrics", m, args.check):
             stale.append("metrics")
@@ -732,8 +740,11 @@ def main() -> int:
         print(f"\nsite data is stale: {', '.join(stale)} -- run `python scripts/build_site_data.py`")
         return 1
     if skipped and args.check:
-        print("\nnote: skipped stages were not checked; their inputs are absent here")
-    print("\nsite data OK" if args.check else f"\nwrote {len(bundle) + 1} files to site/data/")
+        names = ", ".join(n for n, _ in skipped)
+        print(f"\nnote: not checked, inputs absent here: {names}")
+    # metrics only counts when it was actually written
+    written = len(bundle) + (0 if skipped else 1)
+    print("\nsite data OK" if args.check else f"\nwrote {written} files to site/data/")
     return 0
 
 
