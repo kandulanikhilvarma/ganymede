@@ -1,3 +1,7 @@
 .venv/
 __pycache__/
 extracted.txt
+
+# personal task materials — not for the public repo
+*.pdf
+extracted.txt
