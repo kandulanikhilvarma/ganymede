@@ -16,4 +16,4 @@ krippendorff>=0.6
 matplotlib>=3.8
 
 # Audio layer (optional — VAD gap measurement, ASR)
-imageio-ffmpeg>=0.5
+imageio-ffmpeg>=0.6.0
