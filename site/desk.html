@@ -180,7 +180,13 @@
 
   .quality { margin-top: var(--s-3); }
   .quality .bar { height: 6px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
-  .quality .bar i { display: block; height: 100%; background: var(--kept); width: 0; transition: width var(--dur) var(--ease-out); }
+  /* scaleX, not width: this updates on every keystroke in the promise fields,
+     and animating width relayouts the whole action column each time. */
+  .quality .bar i {
+    display: block; height: 100%; width: 100%; background: var(--kept);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform var(--dur) var(--ease-out), background var(--dur) var(--ease-out);
+  }
   .quality .txt { font-size: 11.5px; color: var(--muted); margin-top: 5px; }
 
   .boundary { list-style: none; padding: 0; margin: var(--s-2) 0 0; }
@@ -714,7 +720,7 @@ function log(kind, text) {
 function ptpQuality() {
   const amt = $('ptpAmt').value.trim(), due = $('ptpDue').value, m = $('ptpMethod').value;
   const have = [!!amt, !!due, !!m].filter(Boolean).length;
-  $('qualBar').style.width = (have / 3 * 100) + '%';
+  $('qualBar').style.transform = `scaleX(${have / 3})`;
   $('qualBar').style.background = have === 3 ? 'var(--kept)' : 'var(--predict)';
   $('qualTxt').textContent = have === 3
     ? 'Specific: amount, date and method are all pinned down.'
