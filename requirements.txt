@@ -1,6 +1,6 @@
 # Core modelling + data
 pydantic>=2.6
-polars>=0.20
+polars>=1.44.1
 lightgbm>=4.3
 scikit-learn>=1.4
 numpy>=1.26
