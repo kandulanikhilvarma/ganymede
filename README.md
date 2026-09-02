@@ -31,6 +31,19 @@ They are one product because they close a single loop. Risk picks the conversati
 
 ---
 
+## Try it
+
+Four things on the site respond to you rather than just describing themselves.
+
+| | What to do | What it shows |
+|---|---|---|
+| [**Allocator studio**](https://ganymede-kandula.vercel.app/queue) | Drag the capacity slider | Both queues re-rank. Every position on that slider is a real allocator run, not an interpolation between two |
+| [**Agent desk**](https://ganymede-kandula.vercel.app/desk) | Press play, then switch to the control arm | Hints firing at real turn boundaries, and the counterfactual with coaching switched off |
+| [**Evidence**](https://ganymede-kandula.vercel.app/evidence) | Drag the latency budget line | How many real turn boundaries a hint at that speed would actually fit inside |
+| [**Start here**](https://ganymede-kandula.vercel.app/) | Scroll the walkthrough | One borrower from trajectory bend to retrained model, in six decisions |
+
+---
+
 ## The site
 
 Everything below is explorable rather than only readable.
@@ -60,7 +73,24 @@ The allocator maximises **expected recovered value per agent-minute**: uplift ov
 
 ![Allocator against risk-ranking: 59% more recovered value with half the contacts](docs/img/allocator.png)
 
-Two real rows carry the argument on their own. A €1.93M account at 18% probability that risk-ranking never reaches anywhere in the sweep, and a €1,289 account at 83% that it funds at 5% capacity while the allocator never does. [Move the slider yourself.](https://ganymede-kandula.vercel.app/queue)
+
+| Agent capacity | Allocator | Risk-ranking | Edge | Contacts used |
+|---|---:|---:|---:|---|
+| 2% | 153.9M | 52.5M | **+193.1%** | 568 vs 1,178 |
+| 5% | 344.4M | 150.6M | **+128.7%** | 1,416 vs 2,946 |
+| 15% | 865.1M | 543.6M | **+59.1%** | 4,243 vs 8,839 |
+| 30% | 1.48B | 1.11B | **+33.3%** | 8,486 vs 17,679 |
+| 60% | 2.39B | 2.33B | **+2.4%** | 16,973 vs 35,358 |
+
+Two real rows carry the argument on their own.
+
+| Account | Exposure | p(worsen) | Self-cure | Allocator funds it | Risk-ranking funds it |
+|---|---:|---:|---:|---|---|
+| `F25Q20015405` | €1,929,000 | 0.18 | 0.91 | at 8% capacity | **never** |
+| `F24Q40000483` | €1,289 | 0.83 | 0.33 | **never** | at 5% capacity |
+
+Risk-ranking sorts by probability, so it calls the €1,289 account early and never reaches the €1.93M one anywhere in the sweep. Twelve agent-minutes cost more than the whole uplift on the small account is worth. [Move the slider yourself.](https://ganymede-kandula.vercel.app/queue)
+
 
 ### The risk score is calibrated, so the number means what it says
 
@@ -126,6 +156,62 @@ flowchart TB
   OUT --> DRIFT["Drift monitors"]
 ```
 
+**One call, in order.** The latency numbers are the measured ones, not targets.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant B as Borrower
+    participant V as VAD
+    participant C as Coach Lens
+    participant A as Agent
+    participant L as Decision log
+    B->>V: speaks, then stops
+    V->>C: turn boundary, pause of 200 ms or more
+    C->>A: tier-1 hint in under 1 ms, lands inside the gap
+    Note over C,A: tier-2 needs 500 to 1500 ms,<br/>so it waits for the next pause
+    A->>B: asks the question that separates cannot-pay from will-not-pay
+    B->>A: commits to an amount, a date, a method
+    A->>L: promise captured, with experiment arm and propensity
+    L->>L: resolve against what actually arrived
+    L-->>C: kept or broken, and both lenses retrain on it
+```
+
+
+---
+
+## How a number earns its badge
+
+Every figure the site renders passes through this, and one with no answer cannot render at all.
+
+```mermaid
+flowchart TD
+  Q{"Where did this number come from?"}
+  Q -->|"observed directly in real data"| M["measured"]
+  Q -->|"real data, held-out time split"| B["backtested"]
+  Q -->|"real data plus a modelled assumption"| S["simulated"]
+  Q -->|"practice, with zero outcome support"| SE["seeded"]
+  Q -->|"needs live data to earn"| P["pending, deliberately not estimated"]
+```
+
+Of the eighteen headline figures: **9 measured**, **3 backtested**, **2 simulated**, **4 pending**.
+
+<details>
+<summary><b>The four it refuses to estimate</b></summary>
+
+<br>
+
+| Figure | Why it is not reported |
+|---|---|
+| Recovery lift in production | Cannot be estimated from simulation. The control arm measures it or nobody does |
+| Agent override rate | Needs agents using the system |
+| PTP-kept lift from coaching | Needs the randomised slice running |
+| Conversation features beating tabular | Blocked by invariant I1. `evals/metrics.py` refuses to compute lift on synthetic records, because the generator's own priors would leak into the answer |
+
+Each of these could have been estimated into something impressive. That is exactly why they are not.
+
+</details>
+
 ---
 
 ## Design invariants
@@ -140,7 +226,31 @@ Fourteen failures found in review were converted from a postmortem list into **i
 | I10 | "Do not contact" is a first-class scored action | in the `Action` enum, self-cure precision tracked |
 | I13 | No timing feature from a source without calendar dates | `features.py` raises on a source tagged false |
 
-[All fourteen, with what each one caught →](https://ganymede-kandula.vercel.app/system)
+<details>
+<summary><b>All fourteen</b></summary>
+
+<br>
+
+| # | Invariant | Enforced by |
+|---|---|---|
+| I1 | Synthetic conversations never support a predictive-lift claim | `evals/metrics.py` refuses lift on any set containing a synthetic record |
+| I2 | Every conversation carries an experiment arm, assigned before it starts | `arm` is non-nullable in `schema.py`, and the check fails if a later edit makes it optional |
+| I3 | Every decision logs the acting policy and its propensity | Non-nullable `propensity`, and the retrain aborts if any row in the window lacks one |
+| I4 | The latency budget is measured, never chosen | Lives in `config.py`, sourced from the gap distribution. Reading it before it is set fails loudly |
+| I5 | No strategy is promoted below minimum support, and every hint shows its count | `playbook.py` gates promotion, the renderer requires a support field |
+| I6 | Nothing in the label path ships without a gold set and an accuracy bar | The PTP extractor was blocked from downstream use until it cleared 0.80 |
+| I7 | Strategy branches on borrower state, never on risk score alone | `compose.py` requires a `BorrowerState`. Uncertain state yields a question, not a guess |
+| I8 | `ContactEvent` is channel-agnostic, and nothing assumes voice | Schema-level, so email and SMS are not a rewrite |
+| I9 | Accounts are ranked by expected value, never by probability | `allocator.py` is the only queue producer. No sort-by-score path exists |
+| I10 | "Do not contact" is a first-class action with money attached | In the action enum with a value in the objective, self-cure precision tracked |
+| I11 | Conversation outcome outranks hint usefulness, and hints are capped | Rate limiter in `compose.py`, `metrics.py` reports outcome first |
+| I12 | Input, score and outcome distributions are monitored | `monitors/drift.py` exits non-zero on breach. It caught the self-cure regime shift |
+| I13 | No timing feature from a dataset without calendar dates | `panel.py` tags each source, `features.py` raises on one tagged false |
+| I14 | The riskiest open assumption is tested now, not later | Phase order reviewed at every gate. This is why the latency spike preceded the coaching layer |
+
+</details>
+
+[What each one actually caught →](https://ganymede-kandula.vercel.app/system)
 
 ---
 
@@ -156,6 +266,11 @@ The same discipline runs through the front end, because a design system and a he
 ---
 
 ## Repository structure
+
+<details>
+<summary><b>The tree</b></summary>
+
+<br>
 
 ```
 ganymede/            the Python package
@@ -187,6 +302,8 @@ scripts/
 docs/                per-phase results, the written case, figures
 tests/               invariant + component tests (70 passing)
 ```
+
+</details>
 
 ---
 
