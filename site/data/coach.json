@@ -29,7 +29,7 @@
       "capacity": "cannot_pay",
       "willingness": "will_pay",
       "objection": null,
-      "text": "Offer the smallest realistic instalment and let them name what they can manage — do not push a figure they'll break.",
+      "text": "Offer the smallest realistic instalment and let them name what they can manage. Do not push a figure they'll break.",
       "support_count": 0,
       "provisional": true
     },
@@ -38,7 +38,7 @@
       "capacity": "cannot_pay",
       "willingness": "will_not_pay",
       "objection": null,
-      "text": "Re-establish contact and safety before money — acknowledge the situation, then ask one gentle affordability question.",
+      "text": "Re-establish contact and safety before money. Acknowledge the situation, then ask one gentle affordability question.",
       "support_count": 0,
       "provisional": true
     },
@@ -56,7 +56,7 @@
       "capacity": "can_pay",
       "willingness": "will_pay",
       "objection": null,
-      "text": "This is friction, not inability — offer to set up the payment right now on the call and get one confirmation.",
+      "text": "This is friction, not inability. Offer to set up the payment right now on the call and get one confirmation.",
       "support_count": 0,
       "provisional": true
     },
@@ -74,7 +74,7 @@
       "capacity": null,
       "willingness": null,
       "objection": "affordability",
-      "text": "Do not argue the amount — walk through income and essential outgoings so the plan is one they can actually service.",
+      "text": "Do not argue the amount. Walk through income and essential outgoings so the plan is one they can actually service.",
       "support_count": 0,
       "provisional": true
     },
@@ -83,7 +83,7 @@
       "capacity": null,
       "willingness": null,
       "objection": "deferral",
-      "text": "A vague 'I'll call back' rarely converts — offer a specific short window and confirm a callback time before ending.",
+      "text": "A vague 'I'll call back' rarely converts, so offer a specific short window and confirm a callback time before ending.",
       "support_count": 0,
       "provisional": true
     }

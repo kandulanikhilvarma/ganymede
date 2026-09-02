@@ -47,7 +47,7 @@ _COMPOSE_SYSTEM = (
 
 def _diagnostic_hint() -> Hint:
     return Hint(
-        text="You don't yet know if they can't pay or won't — ask one question that "
+        text="You don't yet know if they can't pay or won't. Ask one question that "
              "tells them apart before proposing anything.",
         is_deterministic=True,
     )

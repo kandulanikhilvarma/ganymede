@@ -445,7 +445,7 @@
         "speaker": "borrower",
         "text": "Yes, speaking. Who is this?",
         "hint": {
-          "text": "You don't yet know if they can't pay or won't — ask one question that tells them apart before proposing anything.",
+          "text": "You don't yet know if they can't pay or won't. Ask one question that tells them apart before proposing anything.",
           "tier": "deterministic",
           "support": null
         }
@@ -473,7 +473,7 @@
         "speaker": "borrower",
         "text": "Yeah, I… I know. It's just… things have been really tough lately. I lost my job a few months back, and I'm still trying to get back on my feet.",
         "hint": {
-          "text": "You don't yet know if they can't pay or won't — ask one question that tells them apart before proposing anything.",
+          "text": "You don't yet know if they can't pay or won't. Ask one question that tells them apart before proposing anything.",
           "tier": "deterministic",
           "support": null
         }
@@ -487,7 +487,7 @@
         "speaker": "borrower",
         "text": "I wish I could. I really do. I've been trying to scrape something together, but honestly, I'm barely covering my essential living costs right now. I don't have anything extra.",
         "hint": {
-          "text": "You don't yet know if they can't pay or won't — ask one question that tells them apart before proposing anything.",
+          "text": "You don't yet know if they can't pay or won't. Ask one question that tells them apart before proposing anything.",
           "tier": "deterministic",
           "support": null
         }

@@ -25,7 +25,7 @@
     "long": "The single most valuable prediction in collections, and the one conventional risk-ranking cannot make. Roughly two-thirds of early delinquents self-cure. Ganymede's L2 model scores it explicitly, and do-not-contact is a first-class scored action with money attached rather than the absence of an action, enforced as invariant I10."
   },
   "ptp": {
-    "term": "PTP — promise to pay",
+    "term": "PTP: promise to pay",
     "short": "A commitment captured on a call: an amount, by a date, via a method. Specific promises are kept far more often than vague ones.",
     "long": "The primary conversion event in collections. Ganymede extracts PTPs from call transcripts (93.4% on the gold set) and resolves them against subsequent payments, which closes the loop: the promise becomes a label that retrains both lenses. Promise quality, whether all three of amount, date and method were pinned down, is itself a coached behaviour."
   },
@@ -85,7 +85,7 @@
     "long": "Ganymede's backtest shows the self-cure rate rising sharply across the window. The ranking held; absolute calibration lagged, because no model calibrates to a regime shift it never saw. The drift monitor and the outcome loop exist precisely for this, and reporting it plainly is the point."
   },
   "psi": {
-    "term": "PSI — population stability index",
+    "term": "PSI: population stability index",
     "short": "A number for how far a feature distribution has moved since training. Above roughly 0.25 is usually treated as a material shift.",
     "long": "One of two drift signals Ganymede monitors, the other being outcome-rate change. PSI catches input drift before it shows up as degraded predictions, which buys time to retrain rather than discovering the problem from missed recoveries."
   },
@@ -105,7 +105,7 @@
     "long": "Needed to reweight logged decisions when training on them; without it, models trained on the system's own output learn the allocator's preferences rather than borrower behaviour. Recorded on every decision as a schema requirement."
   },
   "vad": {
-    "term": "VAD — voice activity detection",
+    "term": "VAD: voice activity detection",
     "short": "Detecting where speech starts and stops in audio, which is how turn boundaries in a live call are found.",
     "long": "Ganymede's Phase 0 used an energy VAD over real call audio to measure 328 inter-turn gaps. The resulting distribution is what set the latency budget, the coaching design is derived from measured physics rather than asserted."
   },
@@ -145,7 +145,7 @@
     "long": "Stage 1 of the recommended rollout, 4–6 weeks. It compares the queue the system would have built against the one actually worked, and logs the hints it would have fired. Cheap, reversible, and the only honest way to meet real contact data and real ASR for the first time."
   },
   "asr": {
-    "term": "ASR — automatic speech recognition",
+    "term": "ASR: automatic speech recognition",
     "short": "Turning call audio into text. Telephony audio is 8 kHz and noisy, which costs accuracy.",
     "long": "Ganymede's latency work was measured on clean 16 kHz audio; real telephony adds an estimated 8–12% word error rate. The audio layer sits behind a swappable interface for exactly this reason, and the gap is listed as open rather than hand-waved."
   }

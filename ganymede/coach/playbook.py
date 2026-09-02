@@ -36,19 +36,19 @@ class Strategy:
 # is provisional until the outcome loop promotes it.
 SEED: list[Strategy] = [
     Strategy("plan_small", (Capacity.CANNOT_PAY, Willingness.WILL_PAY),
-             None, "Offer the smallest realistic instalment and let them name what they can manage — do not push a figure they'll break.", 0),
+             None, "Offer the smallest realistic instalment and let them name what they can manage. Do not push a figure they'll break.", 0),
     Strategy("hardship_first", (Capacity.CANNOT_PAY, Willingness.WILL_NOT_PAY),
-             None, "Re-establish contact and safety before money — acknowledge the situation, then ask one gentle affordability question.", 0),
+             None, "Re-establish contact and safety before money. Acknowledge the situation, then ask one gentle affordability question.", 0),
     Strategy("firm_consequence", (Capacity.CAN_PAY, Willingness.WILL_NOT_PAY),
              None, "State the next consequence plainly and calmly, then offer a clear way to avoid it today.", 0),
     Strategy("remove_friction", (Capacity.CAN_PAY, Willingness.WILL_PAY),
-             None, "This is friction, not inability — offer to set up the payment right now on the call and get one confirmation.", 0),
+             None, "This is friction, not inability. Offer to set up the payment right now on the call and get one confirmation.", 0),
     Strategy("obj_dispute", None, "dispute",
              "Acknowledge the dispute, log it, and separate the disputed portion from what is not in question so a partial payment can still move.", 0),
     Strategy("obj_cant_afford", None, "affordability",
-             "Do not argue the amount — walk through income and essential outgoings so the plan is one they can actually service.", 0),
+             "Do not argue the amount. Walk through income and essential outgoings so the plan is one they can actually service.", 0),
     Strategy("obj_callback", None, "deferral",
-             "A vague 'I'll call back' rarely converts — offer a specific short window and confirm a callback time before ending.", 0),
+             "A vague 'I'll call back' rarely converts, so offer a specific short window and confirm a callback time before ending.", 0),
 ]
 
 
