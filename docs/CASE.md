@@ -10,6 +10,12 @@ it shows, whether it is ready for a live pilot, and what is still missing.
 
 ---
 
+
+> **Figures here are a snapshot.** The live site regenerates every number from the
+> pipeline on each build (`python scripts/build_site_data.py`), so
+> [ganymede-kandula.vercel.app](https://ganymede-kandula.vercel.app) is the
+> authority if the two ever disagree.
+
 ## 1. What was built
 
 Ten phases, each with a pass/fail gate, built strictly in sequence. Everything
@@ -21,7 +27,7 @@ below runs; nothing is a slide.
 | 2 Panel | 1.4M-row monthly borrower panel from Freddie Mac | verified: real dates, full roll curve, no leakage |
 | 3 Risk models | L1 trajectory, L2 self-cure, reason codes | L1 AUC 0.62 beats base Brier; L2 AUC 0.67 |
 | 4 Allocator | expected-value allocation under capacity | **+59% recovered value vs risk-ranking, half the contacts** |
-| 5 Borrower state | capacity x willingness, uncertainty output | 6/6 archetypes; 98% route to a diagnostic question |
+| 5 Borrower state | capacity x willingness, uncertainty output | 6/6 archetypes; 97.5% route to a diagnostic question |
 | 6 Conversations | conditioned generation, PTP extractor | extractor **93.4%** on gold; loop closes, no drops |
 | 7 Coach Lens | two-tier hints, playbook, checklist | tier-1 0.04ms, tier-2 demotes at 4.5s |
 | 8 Evals | LLM judge, Krippendorff alpha, drift | judge **91.7%** agreement, under reliability ceiling |
@@ -45,7 +51,7 @@ money, because it skips the self-curers and the tiny-exposure accounts that
 risk-ranking wastes minutes on. (Uplift is modelled, not measured — see limits.)
 
 **Self-cure is the most valuable thing the Risk Lens does, and it needs a "do
-not contact" action.** 68% of delinquent accounts cure with no contact. Calling
+not contact" action.** 72% of delinquent accounts cure with no contact. Calling
 them costs money and annoys people who were about to pay. Making "do not contact"
 a first-class scored action, not the absence of one, is where a large slice of the
 efficiency comes from.
@@ -53,7 +59,7 @@ efficiency comes from.
 **Borrower state is unknowable from servicing data alone — so the system asks.**
 Capacity is estimable from trajectory and affordability. Willingness is not,
 without a conversation. On real accounts, only 2% reach a confident quadrant; the
-other 98% route to a diagnostic question rather than a guessed strategy. This is
+other 97.5% route to a diagnostic question rather than a guessed strategy. This is
 not a weakness — it is why the product has two lenses. The Coach Lens's first job,
 on nearly every account, is the question that separates cannot-pay from won't-pay.
 Teaching an agent what to ask beats telling them what to say when the model does

@@ -22,7 +22,7 @@ surfaced at the next pause. `deliver()` times each hint and routes it.
   promise down: ask for an amount, a date, a method." Deterministic, instant.
 - **Identity (tier-1).** Fires before the balance is discussed if the account
   holder is not yet confirmed.
-- **Diagnostic question (tier-1).** When borrower state is uncertain — 98% of
+- **Diagnostic question (tier-1).** When borrower state is uncertain — 97.5% of
   accounts on servicing data — the hint is the question that resolves capacity vs
   willingness, never a guessed strategy (I7).
 - **Strategy (tier-2, LLM).** Composed from the playbook for a certain quadrant or

@@ -1,7 +1,7 @@
 # Phase 9 — Agent Desk
 
 A collections agent workstation that replays a real scored call. Published as an
-Artifact (private): https://claude.ai/code/artifact/2c0d2222-b533-49a7-a21e-96c7de57b7b9
+Live: https://ganymede-kandula.vercel.app/desk
 
 ## What it shows
 
@@ -16,7 +16,7 @@ mockup:
 - **Self-cure 23%**: L2 output — this account is unlikely to cure alone, so it is
   worth contacting.
 - **Borrower state**: uncertain (confidence 0.18), so the recommended move is the
-  diagnostic question, not a strategy — the 98%-of-accounts behavior, shown
+  diagnostic question, not a strategy — the 97.5%-of-accounts behavior, shown
   honestly.
 - **Live coaching**: hints fire at borrower turns with their real tier-1
   latencies (0.03-0.08 ms, well inside the 300ms budget). Diagnostic and

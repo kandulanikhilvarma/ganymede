@@ -9,7 +9,7 @@ Strictly sequential. A phase starts only when the previous gate is green.
 | 2 | Panel | **done** | `panel.py --verify` | 1.4M rows, 87.8k loans, 9 vintages, full roll curve; sample_weight recorded |
 | 3 | Risk models | **done** | `risk --backtest` per-model gate | L1 AUC 0.62 beats base Brier; L2 AUC 0.67; self-cure drift documented; L3 deferred (no contact data) |
 | 4 | Allocator | **done** | `allocator --simulate` | +59.1% recovered value vs risk-ranking, fewer contacts; uplift modelled not measured (I1) |
-| 5 | Borrower state | **done** | `test_state.py` | 6/6 archetypes; 98% route to diagnostic question (willingness needs conversation data) |
+| 5 | Borrower state | **done** | `test_state.py` | 6/6 archetypes; 97.5% route to diagnostic question (willingness needs conversation data) |
 | 6 | Conversations + extraction | **done** | `outcomes --verify` | PTP extractor 93.4% (bar 80%); generate->extract->resolve, no drops |
 | 7 | Coach Lens | **done** | `test_coach.py` | tier-1 0.04ms, tier-2 demotes at 4.5s; promise-quality + diagnostic + strategy hints |
 | 8 | Evals | **done** | `evals.report --report` | judge 91.7% agree, alpha under ceiling; drift monitors; pilot metrics honestly pending |
