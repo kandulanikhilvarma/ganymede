@@ -1,4 +1,4 @@
-# Phase 8 — evals
+# Phase 8, evals
 
 One command prints the metric table and writes a dated report. What is measurable
 now is measured; what needs the randomised pilot is marked pending, never faked.
@@ -15,13 +15,13 @@ intra-rater ceiling.
 
 | Metric | Value |
 |---|---|
-| Judge vs human agreement | **0.917** (target 0.60 — your bar) |
+| Judge vs human agreement | **0.917** (target 0.60, your bar) |
 | Within-judge alpha (ceiling) | 1.0 |
 | Mixed-pool alpha | 0.886 |
-| Ceiling ok (not fitting noise) | **yes** — 0.886 ≤ 1.0 |
+| Ceiling ok (not fitting noise) | **yes**, 0.886 ≤ 1.0 |
 
 Mixed-pool alpha sitting at or below the within-judge ceiling means the judge
-behaves like a genuine second coder agreeing with judgment, not with itself —
+behaves like a genuine second coder agreeing with judgment, not with itself, 
 the SCHUFA-style self-agreement failure the plan warned about does not occur.
 
 ## The metric table
@@ -36,7 +36,7 @@ the SCHUFA-style self-agreement failure the plan warned about does not occur.
 | Override rate | **pilot required (live traffic)** |
 
 The three pending rows are the honest boundary: they need the randomised control
-arm and real traffic. `lift_on_set` enforces I1 in code — it refuses to compute a
+arm and real traffic. `lift_on_set` enforces I1 in code, it refuses to compute a
 lift number on any set containing synthetic records.
 
 ## Drift monitors (I12)

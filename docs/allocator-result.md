@@ -1,4 +1,4 @@
-# Allocator — Phase 4 result
+# Allocator. Phase 4 result
 
 The D9 fix, quantified. Conventional collections sorts by probability of default
 and works the top of the list. The allocator maximises expected recovered value
@@ -28,8 +28,8 @@ On the test-period delinquent queue (58,931 accounts), same capacity budget:
 
 ## The honest caveat
 
-Freddie Mac has no treatment data, so the *uplift* term — P(recover | contact) −
-P(self-cure) — is **modelled, not measured**. The shape is from the uplift
+Freddie Mac has no treatment data, so the *uplift* term. P(recover | contact) −
+P(self-cure), is **modelled, not measured**. The shape is from the uplift
 literature: effect peaks in the persuadable middle and vanishes at both ends.
 This proves the allocator's *logic* dominates risk-ranking under a defensible
 uplift structure. The magnitude (+59%) is a property of the assumed shape, not a

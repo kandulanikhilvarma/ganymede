@@ -18,9 +18,9 @@ Strictly sequential. A phase starts only when the previous gate is green.
 
 ## Blocked on the user
 
-1. `ANTHROPIC_API_KEY` — not in env (only `ANTHROPIC_BASE_URL` set). Blocks Phase 0 hint generation, Phase 6 generation, Phase 8 judging.
-2. Freddie Mac SF Loan-Level registration (free) — blocks Phase 2.
-3. Kaggle token or manual Home Credit download into `data/raw/` — Phase 2 feature enrichment.
+1. `ANTHROPIC_API_KEY`, not in env (only `ANTHROPIC_BASE_URL` set). Blocks Phase 0 hint generation, Phase 6 generation, Phase 8 judging.
+2. Freddie Mac SF Loan-Level registration (free), blocks Phase 2.
+3. Kaggle token or manual Home Credit download into `data/raw/`. Phase 2 feature enrichment.
 4. Sample telephony audio for the Phase 0 VAD gap measurement.
 
 ## Notes

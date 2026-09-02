@@ -1,12 +1,12 @@
-# Phase 0 — latency budget (VAD half)
+# Phase 0, latency budget (VAD half)
 
-Measured, not guessed (I4). The human-stopwatch half — do hints help or distract —
+Measured, not guessed (I4). The human-stopwatch half, do hints help or distract, 
 still needs a person and remains open. This is the timing half.
 
 ## Method
 
 silero/energy-VAD over 10.3 minutes of a real two-way call (decoded to 16kHz
-mono). Inter-turn gaps = silences ≥200ms between speech segments — the windows a
+mono). Inter-turn gaps = silences ≥200ms between speech segments, the windows a
 coaching hint has to land in.
 
 ```
@@ -42,7 +42,7 @@ A median turn gap is **479ms**. LLM composition plus network is 500–1500ms. So
 
 This is the plan's two-tier delivery, now backed by measured data rather than
 asserted. The demotion path in the architecture sequence diagram is not a
-nice-to-have — it is the only physically available option for LLM hints.
+nice-to-have, it is the only physically available option for LLM hints.
 
 ## Caveats
 

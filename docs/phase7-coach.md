@@ -1,7 +1,7 @@
-# Phase 7 — Coach Lens
+# Phase 7. Coach Lens
 
 At most one hint at a time, two tiers, rate-limited. Single agent (one model call
-per strategy hint), not a crew — a debate while a human is mid-sentence is the
+per strategy hint), not a crew, a debate while a human is mid-sentence is the
 wrong shape at any latency.
 
 ## Two tiers, measured
@@ -11,7 +11,7 @@ wrong shape at any latency.
 | Tier-1 deterministic | checklist rules | **0.043 ms** | yes, 7,000x under the 300ms budget |
 | Tier-2 LLM strategy | playbook + compose | **4,511 ms** | no -> demoted to next turn |
 
-The demotion is not a fallback that rarely fires — it is the normal path for LLM
+The demotion is not a fallback that rarely fires, it is the normal path for LLM
 hints, forced by physics (Phase 0: median gap 479ms, LLM 500-1500ms+). Tier-1
 hints hit the live gap; tier-2 hints are pre-composed during the prior turn or
 surfaced at the next pause. `deliver()` times each hint and routes it.
@@ -22,8 +22,8 @@ surfaced at the next pause. `deliver()` times each hint and routes it.
   promise down: ask for an amount, a date, a method." Deterministic, instant.
 - **Identity (tier-1).** Fires before the balance is discussed if the account
   holder is not yet confirmed.
-- **Diagnostic question (tier-1).** When borrower state is uncertain — 97.5% of
-  accounts on servicing data — the hint is the question that resolves capacity vs
+- **Diagnostic question (tier-1).** When borrower state is uncertain, 97.5% of
+  accounts on servicing data, the hint is the question that resolves capacity vs
   willingness, never a guessed strategy (I7).
 - **Strategy (tier-2, LLM).** Composed from the playbook for a certain quadrant or
   a detected objection. Every strategy hint carries its support count (I5); seeded
@@ -43,6 +43,6 @@ excess; a slow LLM hint demotes to next turn. All pass.
 
 ## Cold start (I5)
 
-The playbook seeds from collections/negotiation practice with support_count 0 —
+The playbook seeds from collections/negotiation practice with support_count 0, 
 every strategy provisional until the outcome loop promotes it above the support
 bar. Nothing is presented as outcome-backed before it is.
