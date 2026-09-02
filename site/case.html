@@ -3,26 +3,26 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>The case · Ganymede</title>
-<meta name="description" content="The Day-100 case for Ganymede: what was built, what the evidence shows, whether it is ready for a pilot, and an honest list of what is still missing.">
+<title>The argument · Ganymede</title>
+<meta name="description" content="Why Ganymede recovers more money per agent-minute: what the evidence shows, how it reaches the floor, and the figures it will not estimate before it has earned them.">
 <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://ganymede-kandula.vercel.app/case">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ganymede">
-<meta property="og:title" content="The Ganymede case">
-<meta property="og:description" content="The Day-100 case for Ganymede: what was built, what the evidence shows, whether it is ready for a pilot, and an honest list of what is still missing.">
+<meta property="og:title" content="The Ganymede argument">
+<meta property="og:description" content="Why Ganymede recovers more money per agent-minute, how it reaches the floor, and the figures it will not estimate before it has earned them.">
 <meta property="og:url" content="https://ganymede-kandula.vercel.app/case">
 <meta property="og:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="The Ganymede case">
-<meta name="twitter:description" content="The Day-100 case for Ganymede: what was built, what the evidence shows, whether it is ready for a pilot, and an honest list of what is still missing.">
+<meta name="twitter:title" content="The Ganymede argument">
+<meta name="twitter:description" content="Why Ganymede recovers more money per agent-minute, how it reaches the floor, and the figures it will not estimate before it has earned them.">
 <meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
-<link rel="preload" as="font" type="font/woff2" crossorigin
-      href="assets/fonts/hanken-grotesk-latin-e9201edd.woff2">
-<link rel="preload" as="font" type="font/woff2" crossorigin
-      href="assets/fonts/newsreader-latin-62981321.woff2">
+<!-- font-preload -->
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/geist-latin-19f9c925.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/fraunces-latin-7234ed86.woff2">
+<!-- /font-preload -->
 <link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/base.css">
@@ -36,53 +36,62 @@
   } catch (e) {}
 </script>
 <style>
+  .masthead { border-bottom: 1px solid var(--line); overflow: hidden; }
+  .masthead-in {
+    max-width: 1100px; margin: 0 auto;
+    padding: clamp(56px,9vw,110px) var(--s-6) clamp(40px,6vw,72px);
+    display: grid; grid-template-columns: minmax(0,1.15fr) minmax(0,.85fr);
+    gap: clamp(28px,6vw,72px); align-items: center;
+  }
+  @media (max-width: 880px) { .masthead-in { grid-template-columns: minmax(0,1fr); } }
+  .masthead h1 { font-size: clamp(2.4rem,5.4vw,3.7rem); margin: var(--s-4) 0 var(--s-5); max-width: 15ch; }
+  .moonwrap { max-width: 380px; margin-inline: auto; width: 100%; }
+  .mooncap { font-size: var(--fs--2); color: var(--faint); text-align: center;
+             margin-top: var(--s-4); line-height: var(--lh-snug); }
+  @media (max-width: 880px) { .moonwrap { max-width: 220px; order: -1; } }
+
   .doc { max-width: 1100px; margin: 0 auto; padding: 0 var(--s-6) var(--s-12);
-         display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: var(--s-9); }
+         display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: var(--s-9); }
   @media (max-width: 940px) { .doc { grid-template-columns: minmax(0, 1fr); gap: var(--s-6); } }
 
-  .toc { position: sticky; top: 84px; align-self: start; font-size: var(--fs--1); }
-  @media (max-width: 940px) { .toc { position: static; border-bottom: 1px solid var(--line); padding-bottom: var(--s-4); } }
+  .toc { position: sticky; top: 88px; align-self: start; font-size: var(--fs--1); padding-top: var(--s-9); }
+  @media (max-width: 940px) { .toc { position: static; border-bottom: 1px solid var(--line);
+                                     padding: var(--s-5) 0 var(--s-4); } }
   .toc ol { list-style: none; padding: 0; margin: var(--s-3) 0 0; }
   .toc li { margin: 0; }
-  .toc a {
-    display: block; padding: var(--s-2) var(--s-3); border-left: 2px solid var(--line);
-    color: var(--muted); text-decoration: none;
-  }
+  .toc a { display: block; padding: var(--s-2) var(--s-3); border-left: 2px solid var(--line);
+           color: var(--muted); text-decoration: none; }
   .toc a:hover { color: var(--text); border-left-color: var(--line-strong); }
   .toc a[aria-current="true"] { color: var(--signal); border-left-color: var(--signal); }
 
-  header.masthead { padding: var(--s-11) 0 var(--s-8); }
-  header.masthead h1 { font-size: clamp(2.4rem, 5.6vw, 3.6rem); margin: var(--s-4) 0 var(--s-5); }
-
+  article { padding-top: var(--s-9); }
   article h2 {
-    font-family: var(--font-display); font-weight: 400; font-size: clamp(1.7rem, 3.2vw, 2.1rem);
-    letter-spacing: var(--tracking-tight); margin: var(--s-11) 0 var(--s-2);
-    padding-top: var(--s-6); border-top: 1px solid var(--line-strong); scroll-margin-top: 76px;
+    font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem,3.4vw,2.3rem);
+    letter-spacing: var(--tracking-tight); margin: var(--s-11) 0 var(--s-3);
+    padding-top: var(--s-6); border-top: 1px solid var(--line-strong); scroll-margin-top: 80px;
   }
   article h2:first-child { margin-top: 0; border-top: 0; padding-top: 0; }
-  article h2 .n {
-    display: block; font-family: var(--font-mono); font-size: var(--fs--1);
-    color: var(--signal); margin-bottom: var(--s-2); letter-spacing: .05em;
-  }
+  article h2 .n { display: block; font-family: var(--font-mono); font-size: var(--fs--1);
+                  color: var(--signal); margin-bottom: var(--s-2); letter-spacing: .05em; }
   article h3 { font-size: var(--fs-1); font-weight: 600; margin: var(--s-8) 0 var(--s-2); }
-  article p { font-size: 1.02rem; }
+  article p { font-size: 1.03rem; }
 
-  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: var(--s-4); margin: var(--s-7) 0; }
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+              gap: var(--s-4); margin: var(--s-7) 0; }
   .stage { font-family: var(--font-mono); font-size: var(--fs--1); color: var(--signal); font-weight: 500; }
   .win { color: var(--kept); font-weight: 600; }
-
   .gates td:first-child { font-weight: 500; }
   .phasegate { display: inline-flex; align-items: center; gap: 6px; }
-  .phasegate::before {
-    content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--kept); flex: none;
-  }
-
+  .phasegate::before { content: ""; width: 7px; height: 7px; border-radius: 50%;
+                       background: var(--kept); flex: none; }
   .gap-list li { margin-bottom: var(--s-4); }
   .gap-list strong { display: block; }
 
+  .phasebreak { margin: var(--s-9) 0; padding: var(--s-7) 0; border-block: 1px solid var(--line); }
+  .phasebreak p { font-size: var(--fs--1); color: var(--faint); margin: var(--s-5) 0 0; max-width: 62ch; }
+
   @media print {
-    .doc { grid-template-columns: 1fr; }
-    .toc { display: none; }
+    .doc { grid-template-columns: 1fr; } .toc, .moonwrap, .phasebreak { display: none; }
     article h2 { margin-top: 28pt; }
   }
 </style>
@@ -105,9 +114,9 @@
     <a href="evidence.html">Evidence</a>
     <a href="queue.html">Allocator</a>
     <a href="desk.html">Desk</a>
-    <a href="case.html">The case</a>
+    <a href="case.html">The argument</a>
     <a href="glossary.html">Glossary</a>
-    <a href="design.html">Design</a>
+    <a href="about.html">About</a>
   </div>
   <span class="spacer"></span>
   <button class="themebtn" data-theme-btn aria-label="Toggle theme">
@@ -122,15 +131,33 @@
   </button>
 </nav>
 
+<header class="masthead aura">
+  <div class="masthead-in">
+    <div>
+      <p class="eyebrow">The argument</p>
+      <h1 class="display">Fewer calls. <em>More</em> money. Every step on the record.</h1>
+      <p class="lede">Ganymede decides which delinquent borrower is worth an agent-minute, then
+        shapes the conversation that follows. This is the case for both halves: what the evidence
+        shows, how it reaches the floor, and the figures it refuses to estimate before it has
+        earned them.</p>
+    </div>
+    <figure class="moonwrap">
+      <div id="moon"></div>
+      <figcaption class="mooncap">Ganymede. Ancient cratered ground cut across by long parallel
+        grooves, formed where the crust pulled apart. Drawn from the palette, not photographed.</figcaption>
+    </figure>
+  </div>
+</header>
+
 <div class="doc">
   <aside class="toc no-print" aria-label="Contents">
     <p class="eyebrow">Contents</p>
     <ol>
-      <li><a href="#results">01 The results</a></li>
-      <li><a href="#built">02 What was built</a></li>
-      <li><a href="#pilot">03 Ready for a pilot?</a></li>
-      <li><a href="#missing">04 What is missing</a></li>
-      <li><a href="#posture">05 The posture</a></li>
+      <li><a href="#results">01 What the evidence says</a></li>
+      <li><a href="#built">02 What is built</a></li>
+      <li><a href="#live">03 How it reaches the floor</a></li>
+      <li><a href="#missing">04 What it will not claim yet</a></li>
+      <li><a href="#standard">05 The standard</a></li>
     </ol>
     <div class="seg" style="margin-top:var(--s-5)" role="group" aria-label="Reading depth">
       <button data-depth-btn="1" aria-pressed="false">2m</button>
@@ -140,30 +167,20 @@
   </aside>
 
   <main id="main">
-    <header class="masthead">
-      <p class="eyebrow">Ganymede · Day-100 case</p>
-      <h1 class="display">Predict the wobble. <em>Shape</em> the call. Keep the book.</h1>
-      <p class="lede">One system, two lenses over the same decision. The Risk Lens picks who to
-        contact and when. The Coach Lens shapes how the conversation goes. The outcome of that
-        conversation retrains both. This is what was built, what it shows, and whether it is ready
-        to touch a real borrower.</p>
-    </header>
-
     <article>
-      <h2 id="results"><span class="n">01</span>The results that make the case</h2>
-      <p>The code is the smaller half. These findings are the argument. Every figure is
-        regenerated from the pipeline on each build and carries the kind of evidence behind it —
-        hover a badge for its source.</p>
+      <h2 id="results"><span class="n">01</span>What the evidence says</h2>
+      <p>Every figure here is regenerated from the pipeline each time the site builds, and each one
+        carries the kind of evidence standing behind it. Hover a badge to see its source.</p>
 
       <div class="stat-row">
         <div class="stat signal">
           <b data-fig="allocator:headline.lift_pct" data-fig-format="signed">—</b>
-          <span class="cap">recovered value against risk-ranking at the same capacity, with
+          <span class="cap">recovered value against risk-ranking at the same capacity, using
             roughly half the contacts <span data-badge-slot></span></span>
         </div>
         <div class="stat predict">
           <b data-fig="risk:models.L2_selfcure.base_rate" data-fig-format="pct01">—</b>
-          <span class="cap">of delinquent accounts self-cure with no contact at all
+          <span class="cap">of delinquent accounts return to current with no contact at all
             <span data-badge-slot></span></span>
         </div>
         <div class="stat">
@@ -176,192 +193,224 @@
       <h3>Value-ranking beats risk-ranking, decisively</h3>
       <p>Conventional collections sorts by probability of default and works the top of the list.
         The <span data-term="allocator">allocator</span> maximises expected recovered value per
-        agent-minute — <span data-term="uplift">uplift</span> over
+        agent-minute: <span data-term="uplift">uplift</span> over
         <span data-term="self-cure">self-cure</span>, weighted by
         <span data-term="exposure">exposure</span>, under a capacity constraint. On the test queue
-        it recovered far more money with roughly half the calls, because it skips the self-curers
+        it recovers far more money with roughly half the calls, because it skips the self-curers
         and the trivial-exposure accounts that risk-ranking burns minutes on. A borrower 40% likely
         to worsen owing <span class="mono">€168,000</span> outranks one 95% likely owing
-        <span class="mono">€2,000</span>; risk-ranking gets that backwards.</p>
+        <span class="mono">€2,000</span>. Risk-ranking gets that backwards every time.</p>
       <p data-tier="2">The edge is not a constant. It is largest when capacity is scarce and
-        shrinks as capacity approaches full coverage — which is the honest shape of the result and
-        the reason the <a href="queue.html">allocator studio</a> ships the whole frontier rather
-        than one flattering point.</p>
+        shrinks as capacity approaches full coverage, which is the honest shape of the result and
+        the reason the <a href="queue.html">allocator studio</a> ships the whole frontier instead
+        of one flattering point.</p>
 
-      <h3>Self-cure is the most valuable call the Risk Lens makes</h3>
+      <h3>Silence is the most valuable call the Risk Lens makes</h3>
       <p>Most early delinquents pay without being chased. Chasing them costs money and irritates
-        people who were about to pay. Making <strong>&ldquo;do not contact&rdquo;</strong> a scored
-        action with money attached, rather than the absence of one, is where a large share of the
-        efficiency lives.</p>
+        people who were about to pay anyway. Making <strong>&ldquo;do not contact&rdquo;</strong> a
+        scored action with money attached, rather than the absence of one, is where a large share
+        of the efficiency lives.</p>
 
-      <h3>Borrower state is unknowable from servicing data — so the system asks</h3>
+      <h3>Borrower state is unknowable from servicing data, so the system asks</h3>
       <p><span data-term="capacity-willingness">Capacity</span> is estimable from payment
-        trajectory and affordability. Willingness is not, without a conversation. On real accounts
-        only <span class="mono" data-fig="state:confident_quadrant" data-fig-format="pct01" data-fig-badge="off">—</span>
-        reach a confident capacity&times;willingness quadrant; the rest route to the
+        trajectory and affordability. Willingness is not, at least not without a conversation. On
+        real accounts only
+        <span class="mono" data-fig="state:confident_quadrant" data-fig-format="pct01" data-fig-badge="off">—</span>
+        reach a confident capacity by willingness quadrant. The rest route to the
         <span data-term="diagnostic-question">diagnostic question</span> that separates
-        <em>cannot pay</em> from <em>will not pay</em>. That is not a shortfall — it is the reason
-        the product has two lenses. Teaching an agent what to ask beats telling them what to say
-        when the model does not know.</p>
+        <em>cannot pay</em> from <em>will not pay</em>. That is not a shortfall. It is the reason
+        the product has two lenses at all, because teaching an agent what to ask beats telling them
+        what to say when the model does not know.</p>
       <p data-tier="3">Median confidence across the queue is
         <span class="mono" data-fig="state:median_confidence" data-fig-badge="off">—</span>.
-        Willingness is capped low by construction here, because the servicing data carries no
-        contact events, no promises, and no channel response to learn it from.</p>
+        Willingness is capped low by construction here, because servicing data carries no contact
+        events, no promises, and no channel response to learn it from.</p>
 
       <h3>The two-tier hint design is forced by physics</h3>
       <p>Real call audio gives a median <span data-term="turn-boundary">inter-turn gap</span> of
         <span class="mono" data-fig="audio:gap_p50_ms" data-fig-format="ms" data-fig-badge="off">—</span>,
         measured across <span class="mono" data-fig="audio:n_gaps" data-fig-badge="off">—</span>
-        real turn boundaries. LLM composition takes 500&ndash;1500&thinsp;ms — it cannot fit that
-        gap. So deterministic hints render in under a millisecond and hit the live gap; LLM
-        strategy hints are demoted to the next pause.
-        <span data-badge-slot></span></p>
-      <p data-tier="2">Concretely:
+        real turn boundaries. Model composition takes 500 to 1500 ms and cannot fit that gap. So
+        deterministic hints render in under a millisecond and land live, while model-composed
+        strategy hints wait for the next pause. <span data-badge-slot></span></p>
+      <p data-tier="2">Concretely,
         <span class="mono" data-fig="audio:share_gaps_fitting_budget" data-fig-format="pct01" data-fig-badge="off">—</span>
         of real boundaries are wide enough for a hint at the
-        <span data-term="latency-budget">300&thinsp;ms budget</span>, against
+        <span data-term="latency-budget">300 ms budget</span>, against
         <span class="mono" data-fig="audio:share_gaps_fitting_llm" data-fig-format="pct01" data-fig-badge="off">—</span>
-        for a 500&thinsp;ms model call. The budget itself is the measured 25th percentile
+        for a 500 ms model call. The budget itself is the measured 25th percentile
         (<span class="mono" data-fig="audio:gap_p25_ms" data-fig-format="ms" data-fig-badge="off">—</span>)
         rounded up, not a number chosen for convenience.</p>
 
-      <h3>Models drift — the honest move is to catch it</h3>
+      <h3>Models drift, and the monitor catches it</h3>
       <p>Self-cure rate rose from
-        <span class="mono" data-fig="risk:drift.self_cure_train" data-fig-badge="off">—</span> to
+        <span class="mono" data-fig="risk:drift.self_cure_train">—</span> to
         <span class="mono" data-fig="risk:drift.self_cure_test" data-fig-badge="off">—</span>
-        across the backtest window. The ranking held; absolute
+        across the backtest window. The ranking held. Absolute
         <span data-term="calibration">calibration</span> lagged, because no model calibrates to a
         regime shift it never saw. That is precisely what the outcome loop and
-        <span data-term="drift">drift monitor</span> exist for. <span data-badge-slot></span></p>
+        <span data-term="drift">drift monitor</span> exist for.</p>
 
-      <h2 id="built"><span class="n">02</span>What was built</h2>
-      <p>Ten phases, each with a pass/fail gate, built strictly in sequence. A phase started only
-        when the previous gate was green. Everything runs.</p>
+      <div class="phasebreak">
+        <div id="phases"></div>
+        <p>Quiet, bending, behind, recovering, quiet again. An account moves through phases the way
+          the moon does, and the entire product is built to notice the second one.</p>
+      </div>
+
+      <h2 id="built"><span class="n">02</span>What is built</h2>
+      <p>Ten stages, each with a pass or fail gate, built in sequence. A stage started only once
+        the previous gate was green. Everything runs.</p>
       <div class="scroll-x">
         <table class="gates">
-          <thead><tr><th>Phase</th><th>Gate result</th></tr></thead>
+          <thead><tr><th>Capability</th><th>Gate result</th></tr></thead>
           <tbody>
             <tr><td>Panel</td><td><span class="phasegate">
               <span class="mono" data-fig="panel:rows" data-fig-format="compact" data-fig-badge="off">—</span>-row
               monthly panel over
               <span class="mono" data-fig="panel:loans" data-fig-format="n" data-fig-badge="off">—</span>
-              loans; real dates, full roll curve, no <span data-term="leakage">leakage</span></span></td></tr>
+              loans, real dates, full roll curve, no <span data-term="leakage">leakage</span></span></td></tr>
             <tr><td>Risk models</td><td><span class="phasegate mono">L1
               <span data-term="auc">AUC</span> <span data-fig="risk:models.L1_trajectory.auc" data-fig-badge="off">—</span>
               (beats base <span data-term="brier">Brier</span>) · L2 AUC
               <span data-fig="risk:models.L2_selfcure.auc" data-fig-badge="off">—</span></span></td></tr>
             <tr><td>Allocator</td><td><span class="phasegate"><span class="win">
               <span data-fig="allocator:headline.lift_pct" data-fig-format="signed" data-fig-badge="off">—</span></span>
-              recovered value vs risk-ranking</span></td></tr>
-            <tr><td>Borrower state</td><td><span class="phasegate">6/6 archetypes;
+              recovered value against risk-ranking</span></td></tr>
+            <tr><td>Borrower state</td><td><span class="phasegate">6 of 6 archetypes,
               <span class="mono" data-fig="state:routes_to_diagnostic" data-fig-format="pct01" data-fig-badge="off">—</span>
               route to a diagnostic question</span></td></tr>
             <tr><td>Conversations</td><td><span class="phasegate mono">
               <span data-term="ptp">PTP</span> extractor
               <span data-fig="coach:recorded.ptp_field_accuracy" data-fig-format="pct01" data-fig-badge="off">—</span>
-              on gold; loop closes</span></td></tr>
-            <tr><td>Coach Lens</td><td><span class="phasegate mono">tier-1 0.04&thinsp;ms · tier-2 demotes at 4.5&thinsp;s</span></td></tr>
+              on gold, loop closes</span></td></tr>
+            <tr><td>Coach Lens</td><td><span class="phasegate mono">tier 1 at 0.04 ms · tier 2 demotes at 4.5 s</span></td></tr>
             <tr><td>Evals</td><td><span class="phasegate mono">judge
               <span data-fig="coach:recorded.judge_agreement" data-fig-format="pct01" data-fig-badge="off">—</span>
               agreement, under the reliability ceiling</span></td></tr>
             <tr><td>Latency budget</td><td><span class="phasegate mono">
               <span data-fig="audio:budget_ms" data-fig-format="ms" data-fig-badge="off">—</span>, from
               <span data-fig="audio:n_gaps" data-fig-badge="off">—</span> real turn gaps</span></td></tr>
-            <tr><td>Agent desk</td><td><span class="phasegate">live replay of a real scored call;
-              hints, override, <span data-term="control-arm">control arm</span></span></td></tr>
+            <tr><td>Agent desk</td><td><span class="phasegate">live replay of a real scored call,
+              with hints, override and a <span data-term="control-arm">control arm</span></span></td></tr>
           </tbody>
         </table>
       </div>
       <p data-tier="2">Seventy tests pass. Fourteen design invariants are enforced in code rather
-        than in a checklist — a defect is closed when something automated fails if it comes back,
-        never before. <a href="system.html">The invariants, and what each one caught &rarr;</a></p>
+        than in a checklist, because a defect is closed when something automated fails if it comes
+        back, never before. <a href="system.html">The invariants, and what each one caught</a>.</p>
 
-      <h2 id="pilot"><span class="n">03</span>Ready for a pilot?</h2>
-      <blockquote class="callout callout-kept"><strong>Yes — as a shadow-then-limited pilot, not a
-        full rollout.</strong> The pieces that must exist before touching real borrowers exist: a
-        calibrated risk model with <span data-term="reason-code">reason codes</span>, an allocator
-        that beats the status quo in simulation, a coaching layer inside the latency budget, an
+      <h2 id="live"><span class="n">03</span>How it reaches the floor</h2>
+      <blockquote class="callout callout-kept"><strong>Shadow first, then a randomised slice, then
+        the floor.</strong> Everything needed before the system touches a real borrower already
+        exists: a calibrated risk model with <span data-term="reason-code">reason codes</span>, an
+        allocator that beats the status quo, a coaching layer inside the latency budget, an
         experiment framework that can prove or disprove value, and a decision log of every score,
-        hint, and override.</blockquote>
+        hint and override.</blockquote>
 
-      <p><span class="stage">Stage 1 · <span data-term="shadow-pilot">shadow</span> (4–6 weeks).</span>
-        Run both lenses alongside live calls, showing nothing to agents. Compare the queue it would
-        have built to the one that was worked; log the hints it would have fired. This validates
-        the models on real contact data and real <span data-term="asr">ASR</span> before an agent
-        sees anything.</p>
-      <p><span class="stage">Stage 2 · limited live (8–12 weeks).</span> Coaching on for a
-        randomised subset of agents, against the permanent control arm the desk already implements.
-        Guardrails — complaint rate, <span data-term="broken-promise">broken-promise</span> rate,
-        repeat-contact rate — are hard stops, not report lines. This is the first honest read on
-        whether coaching moves money.</p>
-      <p><strong>Do not skip the control arm to move faster.</strong> Without it the pilot cannot
-        tell the product working from the allocator simply selecting recoverable borrowers. The arm
-        is cheap; running blind is not.</p>
+      <p><span class="stage">Stage 1 · <span data-term="shadow-pilot">shadow</span>, 4 to 6 weeks.</span>
+        Both lenses run alongside live calls and show nothing to agents. The queue the system would
+        have built is compared against the one that was worked, and the hints it would have fired
+        are logged. This is where the models meet real contact data and real
+        <span data-term="asr">ASR</span> for the first time, at no risk to anyone.</p>
+      <p><span class="stage">Stage 2 · limited live, 8 to 12 weeks.</span> Coaching switches on for
+        a randomised subset of agents, against the permanent control arm the desk already
+        implements. Complaint rate,
+        <span data-term="broken-promise">broken-promise</span> rate and repeat-contact rate are
+        hard stops rather than report lines. This is the first honest read on whether coaching
+        moves money.</p>
+      <p><strong>The control arm is not optional.</strong> Without it there is no way to separate
+        the product working from the allocator simply selecting more recoverable borrowers. The arm
+        costs almost nothing. Running blind costs the entire result.</p>
       <p data-tier="3">Every logged decision carries its
         <span data-term="experiment-arm">arm</span> and its
-        <span data-term="propensity">propensity</span>, non-optionally. A retrain aborts if either
-        is absent, which is what stops the models quietly learning the allocator's preferences
-        instead of borrower behaviour.</p>
+        <span data-term="propensity">propensity</span>, and a retrain aborts if either is absent.
+        That is what stops the models quietly learning the allocator's preferences instead of
+        borrower behaviour.</p>
 
-      <h2 id="missing"><span class="n">04</span>What is still missing</h2>
-      <p>A pilot plan that hides its gaps is worse than useless.</p>
+      <h2 id="missing"><span class="n">04</span>What it will not claim yet</h2>
+      <p>Each of these could have been estimated into something impressive. They carry
+        <span class="badge badge-pending">pending</span> instead, and the code enforces it.</p>
       <ul class="gap-list">
-        <li><strong>Real conversation data linked to outcomes.</strong> The biggest gap. All
-          conversation work rests on synthetic data, which validates plumbing but cannot prove
-          conversation features improve prediction — the generator's own priors would leak into any
-          lift. Only real calls joined to real payments settle it, and
+        <li><strong>Real conversation data linked to outcomes.</strong> The largest gap. All
+          conversation work rests on synthetic transcripts, which validate plumbing but cannot
+          prove conversation features improve prediction, because the generator's own priors would
+          leak into any lift. Only real calls joined to real payments settle it, and
           <code class="mono">evals/metrics.py</code> refuses to compute the number until then.</li>
-        <li><strong>L3 contactability.</strong> Best-time, best-channel needs contact-event
-          history, which the servicing data does not carry. It waits for pilot data.</li>
-        <li><strong>Measured uplift.</strong> The allocator's edge assumes an uplift shape from the
-          literature. The shape is defensible; the magnitude is not a promise until the control arm
-          measures it — which is why it is badged
-          <span class="badge badge-simulated">simulated</span> and not
+        <li><strong>Contactability.</strong> Best time and best channel need contact-event history,
+          which servicing data does not carry. It waits for live data.</li>
+        <li><strong>Measured uplift.</strong> The allocator's edge assumes an uplift shape from
+          published practice. The shape is defensible. The magnitude is not a promise until the
+          control arm measures it, which is why it carries
+          <span class="badge badge-simulated">simulated</span> rather than
           <span class="badge badge-backtested">backtested</span>.</li>
-        <li><strong>Production ASR on telephony.</strong> The budget was measured on one call with
-          an energy <span data-term="vad">VAD</span> at 16&thinsp;kHz. Real 8&thinsp;kHz telephony
-          adds an estimated 8–12% word error rate; the audio layer sits behind a swappable
-          interface for exactly this.</li>
+        <li><strong>Telephony-grade ASR.</strong> The budget was measured on 16 kHz audio with an
+          energy <span data-term="vad">VAD</span>. Real 8 kHz telephony adds an estimated 8 to 12%
+          word error rate, and the audio layer sits behind a swappable interface for exactly that
+          reason.</li>
         <li><strong>A second labeller.</strong> Every eval rests on one person's gold labels. That
-          buys consistency, not correctness — a practitioner second-labelling is the first quality
-          upgrade available.</li>
+          buys consistency, not correctness, and a practitioner second-labelling is the first
+          quality upgrade available.</li>
         <li data-tier="2"><strong>Outcome support for the playbook.</strong> Every coaching
-          strategy is currently <span class="badge badge-seeded">seeded</span> from collections
-          practice with a support count of zero. None is promoted until real outcomes back it above
-          the threshold, and the desk shows the count on every hint so thin evidence looks thin.</li>
+          strategy currently carries <span class="badge badge-seeded">seeded</span> from
+          collections practice with a support count of zero. None is promoted until real outcomes
+          back it above the threshold, and the desk shows that count on every hint so thin evidence
+          looks thin.</li>
       </ul>
 
-      <h2 id="posture"><span class="n">05</span>The posture</h2>
-      <p>Three things this project refused to fake, and would have been easy to. It does not claim
-        conversation features beat tabular features — the code refuses to compute that number on
-        synthetic records. It does not report recovery lift, PTP-kept lift, or override rate — those
-        need a pilot and are marked <span class="badge badge-pending">pending</span>, not estimated.
-        It does not dress a regime-shift calibration miss as a failure, nor bury it as a pass — it
-        reports the drift and points at the mechanism built to handle it.</p>
-      <p>The measure of the work is not that every number is green. It is that every number is one
-        you could stake a lending decision on — and where a number cannot yet be earned honestly,
-        the system says so, and shows what it would take.</p>
+      <h2 id="standard"><span class="n">05</span>The standard</h2>
+      <p>Three things this system refuses to fake, all of which would have been easy. It does not
+        claim conversation features beat tabular features, because the code will not compute that
+        number on synthetic records. It does not report recovery lift, promise-kept lift or
+        override rate, because those need live data and carry a pending badge rather than an
+        estimate. It does not dress a regime-shift calibration miss as a pass, and it does not bury
+        it either. It reports the drift and points at the mechanism built to handle it.</p>
+      <p>The measure of this work is not that every number is green. It is that every number is one
+        you could stake a lending decision on, and that where a number cannot yet be earned
+        honestly, the system says so and shows exactly what it would take.</p>
 
-      <p style="margin-top:var(--s-8)"><a href="evidence.html">See every figure with its method
-        &rarr;</a> &nbsp;·&nbsp; <a href="desk.html">Open the agent desk &rarr;</a></p>
+      <p style="margin-top:var(--s-8)"><a href="evidence.html">See every figure with its method</a>
+        &nbsp;·&nbsp; <a href="desk.html">Open the agent desk</a></p>
     </article>
   </main>
 </div>
 
 <footer class="site">
-  <div style="max-width:1100px;margin:0 auto">
-    <div>Ganymede · Day-100 case. Inspired by, not built for, Project Jupiter. A research
-      prototype, not fit for production lending decisions without a pilot and appropriate
-      data-protection controls.</div>
+  <div class="footwrap">
+    <div class="footbrand">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <defs><clipPath id="fd"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+        <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+        <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#fd)" fill="currentColor"/>
+      </svg>
+      <span>Ganymede</span>
+    </div>
+    <nav class="footnav" aria-label="Footer">
+      <a href="index.html">Start</a>
+      <a href="system.html">How it works</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="queue.html">Allocator</a>
+      <a href="desk.html">Desk</a>
+      <a href="case.html">The argument</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="footmeta">
+      <a href="https://github.com/kandulanikhilvarma/ganymede">Source</a>
+      <a href="mailto:kandulanikhilvarma@gmail.com">Contact</a>
+      <span>Built by Nikhilvarma Kandula</span>
+    </div>
   </div>
 </footer>
 
 <script type="module" src="assets/js/site.js"></script>
 <script type="module">
 import { resolveFigures } from './assets/js/figures.js';
-resolveFigures();
+import { ganymede, phaseStrip } from './assets/js/moon.js';
 
-// Mark the section the reader is in.
+resolveFigures();
+ganymede(document.getElementById('moon'), { seed: 11, grooves: 30, craters: 20, phase: 0.36 });
+phaseStrip(document.getElementById('phases'), { count: 7, size: 42, seed: 5 });
+
 const heads = [...document.querySelectorAll('article h2[id]')];
 const links = new Map(heads.map(h => [h.id, document.querySelector(`.toc a[href="#${h.id}"]`)]));
 if ('IntersectionObserver' in window) {

@@ -5,24 +5,25 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Design system · Ganymede</title>
 <meta name="description" content="The Ganymede design language: a semantic colour system where every family carries one decision meaning, and every number on the site wears its evidence.">
+<meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://ganymede-kandula.vercel.app/design">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ganymede">
-<meta property="og:title" content="Ganymede — design system">
+<meta property="og:title" content="Ganymede · design system">
 <meta property="og:description" content="The Ganymede design language: a semantic colour system where every family carries one decision meaning, and every number on the site wears its evidence.">
 <meta property="og:url" content="https://ganymede-kandula.vercel.app/design">
 <meta property="og:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Ganymede — design system">
+<meta name="twitter:title" content="Ganymede · design system">
 <meta name="twitter:description" content="The Ganymede design language: a semantic colour system where every family carries one decision meaning, and every number on the site wears its evidence.">
 <meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
-<link rel="preload" as="font" type="font/woff2" crossorigin
-      href="assets/fonts/hanken-grotesk-latin-e9201edd.woff2">
-<link rel="preload" as="font" type="font/woff2" crossorigin
-      href="assets/fonts/newsreader-latin-62981321.woff2">
+<!-- font-preload -->
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/geist-latin-19f9c925.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/fraunces-latin-7234ed86.woff2">
+<!-- /font-preload -->
 <link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/base.css">
@@ -58,7 +59,7 @@
   .ramp div { flex: 1; height: 56px; position: relative; }
   .ramp div span {
     position: absolute; inset: auto 0 4px; text-align: center;
-    font-family: var(--font-mono); font-size: 9px; opacity: .75;
+    font-family: var(--font-mono); font-size: var(--fs-micro); opacity: .75;
   }
   .ramp-label { display: flex; justify-content: space-between; align-items: baseline; margin: var(--s-6) 0 var(--s-2); }
   .ramp-label b { font-size: var(--fs-0); font-weight: 600; }
@@ -95,7 +96,7 @@
 
   .scalebar { display: flex; align-items: flex-end; gap: var(--s-2); flex-wrap: wrap; }
   .scalebar div { background: var(--signal-quiet); border: 1px solid var(--signal); border-radius: 2px; }
-  .scalebar p { margin: 0; font-family: var(--font-mono); font-size: 9px; color: var(--faint); text-align: center; }
+  .scalebar p { margin: 0; font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--faint); text-align: center; }
 
   .demo { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-3); padding: var(--s-6); }
   .demo + .demo { margin-top: var(--s-4); }
@@ -124,9 +125,9 @@
     <a href="evidence.html">Evidence</a>
     <a href="queue.html">Allocator</a>
     <a href="desk.html">Desk</a>
-    <a href="case.html">The case</a>
+    <a href="case.html">The argument</a>
     <a href="glossary.html">Glossary</a>
-    <a href="design.html">Design</a>
+    <a href="about.html">About</a>
   </div>
   <span class="spacer"></span>
   <button class="themebtn" data-theme-btn aria-label="Toggle theme">
@@ -200,8 +201,7 @@
     <h2><span class="n">02</span>Four families, four jobs</h2>
     <p>Ramps are generated in OKLCH by <code class="mono">scripts/gen_palette.py</code> so the
       steps are perceptually even, then contrast-verified against fourteen named pairs on every
-      build. Nothing in the site's CSS references a raw step — only the semantic names below —
-      which is what keeps the meanings enforceable rather than aspirational.</p>
+      build. Nothing in the site's CSS references a raw step, only the semantic names below, which is what keeps the meanings enforceable rather than aspirational.</p>
 
     <div class="ramp-label"><b>Ice</b><em>The system's own signal: model voice, links, controls, the Risk Lens.</em></div>
     <div class="ramp" id="ramp-ice"></div>
@@ -221,21 +221,19 @@
       <p style="margin:0"><strong>A probability is never coloured red, amber and green.</strong>
       Three colours over a scalar invent category boundaries the model never produced, and an
       agent reads those boundaries as the system's opinion. Probabilities get the Ember ramp,
-      where lightness alone encodes magnitude. Green and red are spent only on realised
-      outcomes — a promise kept, a promise broken.</p>
+      where lightness alone encodes magnitude. Green and red are spent only on realised outcomes: a promise kept, a promise broken.</p>
       <p style="margin:var(--s-3) 0 0;color:var(--muted)">Ember means we predict.
       Green means it occurred. That distinction is the product's epistemology, in colour.</p>
     </div>
 
     <div class="riskdemo demo">
       <div>
-        <p class="eyebrow" style="margin-bottom:var(--s-2)">p(worsen) — drag it</p>
+        <p class="eyebrow" style="margin-bottom:var(--s-2)">p(worsen), drag it</p>
         <input type="range" id="riskRange" min="0" max="100" value="81" step="1"
                aria-label="Probability of worsening">
         <p style="color:var(--muted);font-size:var(--fs--1);margin:var(--s-3) 0 0">
           Lightness is monotonic across all eleven stops, so the ramp keeps encoding magnitude in
-          greyscale and under deuteranopia. Verified on generation — if a stop ever breaks
-          monotonicity the build fails.</p>
+          greyscale and under deuteranopia. Verified on generation. If a stop ever breaks monotonicity the build fails.</p>
       </div>
       <div class="riskchip" id="riskChip">
         <b id="riskVal">81</b><span>p(worsen)</span>
@@ -268,8 +266,7 @@
   <section class="sec">
     <h2><span class="n">03</span>Provenance badges</h2>
     <p>The component that makes the site self-explaining. Every number carries the kind of
-      evidence behind it, mapped onto distinctions the codebase already enforces — invariant I1,
-      the playbook's <code class="mono">is_provisional</code> flag, and the phase gates. Shape
+      evidence behind it, mapped onto distinctions the codebase already enforces: invariant I1, the playbook's <code class="mono">is_provisional</code> flag, and the phase gates. Shape
       differs as well as colour, so the distinction survives greyscale.</p>
     <div class="demo scroll-x">
       <table style="min-width:520px">
@@ -301,17 +298,15 @@
   <!-- ================= 04 TYPE ================= -->
   <section class="sec">
     <h2><span class="n">04</span>Type</h2>
-    <p>Three faces, three jobs. <strong>Newsreader</strong> for display — an editorial serif
-      signals argument rather than dashboard. <strong>Hanken Grotesk</strong> for interface and
-      body. <strong>IBM Plex Mono</strong> for every number, always with
+    <p>Three faces, three jobs. <strong>Fraunces</strong> for display, because an editorial serif signals argument rather than dashboard. <strong>Geist</strong> for interface and body. <strong>Geist Mono</strong> for every number, always with
       <code class="mono">tabular-nums</code> so digits do not jitter as values animate.</p>
     <div class="demo">
       <div class="typerow"><code>--fs-7</code><div class="samp display">Predict the wobble</div></div>
       <div class="typerow"><code>--fs-5</code><div class="samp display">Shape the call</div></div>
       <div class="typerow"><code>--fs-4</code><div class="samp display">Keep the book</div></div>
-      <div class="typerow"><code>--fs-1</code><div class="samp lede" style="max-width:none">Lede — one system, two lenses over the same decision.</div></div>
+      <div class="typerow"><code>--fs-1</code><div class="samp lede" style="max-width:none">Lede. One system, two lenses over the same decision.</div></div>
       <div class="typerow"><code>--fs-0</code><div class="samp">Body. A collections agent reads the risk number and acts on its face value.</div></div>
-      <div class="typerow"><code>--fs--1</code><div class="samp" style="color:var(--muted)">Secondary — captions, table cells, control labels.</div></div>
+      <div class="typerow"><code>--fs--1</code><div class="samp" style="color:var(--muted)">Secondary. Captions, table cells, control labels.</div></div>
       <div class="typerow"><code>--fs--2</code><div class="samp eyebrow">Eyebrow · uppercase · tracked</div></div>
       <div class="typerow" style="border:0"><code>mono</code><div class="samp mono">0.62 · 479 ms · €168,459 · 93.4%</div></div>
     </div>
@@ -320,7 +315,7 @@
   <!-- ================= 05 SPACE, FORM, MOTION ================= -->
   <section class="sec">
     <h2><span class="n">05</span>Space, form, motion</h2>
-    <h3 class="sub">Spacing — 4pt base</h3>
+    <h3 class="sub">Spacing on a 4pt base</h3>
     <div class="scalebar" id="spacebar"></div>
 
     <h3 class="sub">Radius and elevation</h3>
@@ -363,8 +358,7 @@
     </div>
 
     <h3 class="sub">Glossary terms</h3>
-    <p>Any domain word gets a definition where it is used, from one JSON file shared with the
-      glossary page — so the tooltip and the page can never disagree. Hover or focus:
+    <p>Any domain word gets a definition where it is used, from one JSON file shared with the glossary page, so the tooltip and the page can never disagree. Hover or focus:
       <span data-term="self-cure">self-cure</span>,
       <span data-term="ptp">promise to pay</span>,
       <span data-term="uplift">uplift</span>,
@@ -379,7 +373,7 @@
         <button data-depth-btn="2" aria-pressed="true">12 min</button>
         <button data-depth-btn="3" aria-pressed="false">Everything</button>
       </div>
-      <p data-tier="1" style="margin-top:var(--s-4)"><strong>Tier 1.</strong> Always visible — the claim.</p>
+      <p data-tier="1" style="margin-top:var(--s-4)"><strong>Tier 1.</strong> Always visible. The claim.</p>
       <p data-tier="2" style="margin:0"><strong>Tier 2.</strong> The reasoning behind the claim.</p>
       <p data-tier="3" style="margin:0"><strong>Tier 3.</strong> The method, the caveat, the number's provenance.</p>
     </div>
@@ -387,10 +381,30 @@
 </main>
 
 <footer class="site">
-  <div style="max-width:1080px;margin:0 auto">
-    Ganymede · design language · generated tokens in
-    <code class="mono">site/assets/tokens.css</code>, regenerate with
-    <code class="mono">python scripts/gen_palette.py</code>
+  <div class="footwrap">
+    <div class="footbrand">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <defs><clipPath id="fd"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+        <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+        <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#fd)" fill="currentColor"/>
+      </svg>
+      <span>Ganymede</span>
+    </div>
+    <nav class="footnav" aria-label="Footer">
+      <a href="index.html">Start</a>
+      <a href="system.html">How it works</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="queue.html">Allocator</a>
+      <a href="desk.html">Desk</a>
+      <a href="case.html">The argument</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="footmeta">
+      <a href="https://github.com/kandulanikhilvarma/ganymede">Source</a>
+      <a href="mailto:kandulanikhilvarma@gmail.com">Contact</a>
+      <span>Built by Nikhilvarma Kandula</span>
+    </div>
   </div>
 </footer>
 

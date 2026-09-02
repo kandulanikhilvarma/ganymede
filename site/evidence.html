@@ -9,20 +9,20 @@
 <link rel="canonical" href="https://ganymede-kandula.vercel.app/evidence">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ganymede">
-<meta property="og:title" content="Ganymede — evidence">
+<meta property="og:title" content="Ganymede · evidence">
 <meta property="og:description" content="Every Ganymede figure with its method and its provenance: calibration, the latency budget from real call audio, self-cure drift, the roll curve, and the capacity frontier.">
 <meta property="og:url" content="https://ganymede-kandula.vercel.app/evidence">
 <meta property="og:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Ganymede — evidence">
+<meta name="twitter:title" content="Ganymede · evidence">
 <meta name="twitter:description" content="Every Ganymede figure with its method and its provenance: calibration, the latency budget from real call audio, self-cure drift, the roll curve, and the capacity frontier.">
 <meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
-<link rel="preload" as="font" type="font/woff2" crossorigin
-      href="assets/fonts/hanken-grotesk-latin-e9201edd.woff2">
-<link rel="preload" as="font" type="font/woff2" crossorigin
-      href="assets/fonts/newsreader-latin-62981321.woff2">
+<!-- font-preload -->
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/geist-latin-19f9c925.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/fraunces-latin-7234ed86.woff2">
+<!-- /font-preload -->
 <link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/base.css">
@@ -64,12 +64,12 @@
   .controls { display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap; margin-bottom: var(--s-4); font-size: var(--fs--1); color: var(--muted); }
   .controls input[type=range] { accent-color: var(--predict); width: 200px; }
 
-  .matrix { display: grid; gap: 3px; font-family: var(--font-mono); font-size: 11px; min-width: 460px; }
-  .matrix .h { color: var(--faint); font-size: 10px; text-align: center; padding-bottom: 2px; }
+  .matrix { display: grid; gap: 3px; font-family: var(--font-mono); font-size: var(--fs--2); min-width: 460px; }
+  .matrix .h { color: var(--faint); font-size: var(--fs-micro); text-align: center; padding-bottom: 2px; }
   .matrix .rh { color: var(--muted); text-align: right; padding-right: var(--s-2); align-self: center; }
   .matrix .cell {
     aspect-ratio: 1.9; border-radius: var(--r-1); display: flex; align-items: center;
-    justify-content: center; color: #fff; font-size: 10.5px;
+    justify-content: center; color: #fff; font-size: var(--fs-micro);
   }
   .matrix .cell.zero { background: var(--surface-2); color: var(--faint); }
 
@@ -102,9 +102,9 @@
     <a href="evidence.html">Evidence</a>
     <a href="queue.html">Allocator</a>
     <a href="desk.html">Desk</a>
-    <a href="case.html">The case</a>
+    <a href="case.html">The argument</a>
     <a href="glossary.html">Glossary</a>
-    <a href="design.html">Design</a>
+    <a href="about.html">About</a>
   </div>
   <span class="spacer"></span>
   <button class="themebtn" data-theme-btn aria-label="Toggle theme">
@@ -123,10 +123,7 @@
   <header class="top">
     <p class="eyebrow">Evidence</p>
     <h1 class="display">Every number, and what it rests on.</h1>
-    <p class="lede">These charts are drawn from JSON the pipeline regenerates, not from images
-      exported once and forgotten. Each figure carries the kind of evidence behind it, because
-      &ldquo;measured&rdquo; and &ldquo;simulated&rdquo; are not the same claim and a results page
-      that blurs them is doing something dishonest.</p>
+    <p class="lede">These charts are drawn from JSON the pipeline regenerates, not from images exported once and left to rot. Each figure carries the kind of evidence behind it, because &ldquo;measured&rdquo; and &ldquo;simulated&rdquo; are not the same claim, and a results page that blurs the two is doing something dishonest.</p>
   </header>
 
   <div class="legendbox" id="legend"></div>
@@ -150,9 +147,7 @@
       AUC <span class="mono" data-fig="risk:models.L1_trajectory.auc" data-fig-badge="off">—</span>.
       L2 AUC <span class="mono" data-fig="risk:models.L2_selfcure.auc" data-fig-badge="off">—</span>.
       Hover a point for its bin count.
-      <span class="method" data-tier="2">Method: time split at
-        <span class="mono" id="cutoff">—</span>, never random — a random split leaks the future
-        into the past on a panel. Metrics are unweighted on the delinquency-enriched sample, which
+      <span class="method" data-tier="2">Method: time split at <span class="mono" id="cutoff">—</span>, never random. A random split leaks the future into the past on a panel. Metrics are unweighted on the delinquency-enriched sample, which
         is the frame the Risk Lens actually ranks in.
         Reproduce with <code>python -m ganymede.risk --backtest</code>.</span>
     </figcaption>
@@ -166,8 +161,7 @@
       <span style="margin-left:auto" data-badge-slot></span>
     </header>
     <p class="lead">Every <span data-term="turn-boundary">inter-turn gap</span> in a real ten-minute
-      call. Drag the budget line: bars to its left are boundaries too narrow for a hint arriving at
-      that latency — the hint lands after the moment it addressed has passed.</p>
+      call. Drag the budget line: bars to its left are boundaries too narrow for a hint arriving at that latency, so the hint lands after the moment it addressed has passed.</p>
     <div class="plot">
       <div class="controls">
         <label for="budgetRange">hint latency</label>
@@ -186,9 +180,7 @@
       the p25 rounded up.
       <span class="method" data-tier="2">Method: energy <span data-term="vad">VAD</span> over 16 kHz
         mono audio; a silence shorter than
-        <span class="mono" data-fig="coach:min_turn_gap_ms" data-fig-badge="off">200</span> ms is
-        treated as a within-speech micro-pause, not a hand-off. Real 8 kHz telephony would shift
-        this — that gap is listed as open, not corrected for.
+        <span class="mono" data-fig="coach:min_turn_gap_ms" data-fig-badge="off">200</span> ms is treated as a within-speech micro-pause rather than a hand-off. Real 8 kHz telephony would shift this, and that gap is listed as open rather than corrected for.
         Reproduce with <code>python -m ganymede.audio.vad</code>.</span>
     </figcaption>
   </figure>
@@ -201,7 +193,7 @@
       <span style="margin-left:auto" data-badge-slot></span>
     </header>
     <p class="lead">Monthly <span data-term="self-cure">self-cure</span> rate among delinquent
-      accounts. The training window sits left of the split; the test window right of it. No model
+      accounts. The training window sits left of the split, the test window right of it. No model
       calibrates to a regime shift it never saw, which is the point of having a
       <span data-term="drift">drift monitor</span> rather than an annual review.</p>
     <div class="plot"><div id="driftPlot"></div></div>
@@ -215,7 +207,7 @@
       (alert at <span class="mono" id="psiAlert">—</span>).
       <span class="method" data-tier="2">The L2 evaluation deliberately mirrors production: the
         booster trains once, then calibration is refit on the earlier half of the test window and
-        scored on the later half — which is what the outcome loop does as new outcomes land. The
+        scored on the later half, which is what the outcome loop does as new outcomes land. The
         booster never sees the evaluation rows.</span>
     </figcaption>
   </figure>
@@ -227,9 +219,7 @@
       <a class="anchor" href="#roll">#roll</a>
       <span style="margin-left:auto" data-badge-slot></span>
     </header>
-    <p class="lead">Where an account sits next month, given where it sits today. Read a row: half
-      of accounts one month behind cure on their own; one month later that has collapsed and the
-      dominant move is deeper delinquency. The month when a conversation is cheap and effective is
+    <p class="lead">Where an account sits next month, given where it sits today. Read a row. Half of accounts one month behind cure on their own. One month later that has collapsed, and the dominant move is deeper delinquency. The month when a conversation is cheap and effective is
       the month before most systems are looking.</p>
     <div class="plot scroll-x"><div class="matrix" id="rollMatrix"></div></div>
     <figcaption>
@@ -252,7 +242,7 @@
       <a class="anchor" href="#frontier">#frontier</a>
       <span style="margin-left:auto" data-badge-slot></span>
     </header>
-    <p class="lead">Not one number: the whole curve. The advantage over risk-ranking is largest
+    <p class="lead">Not one number, but the whole curve. The advantage over risk-ranking is largest
       when capacity is scarce and converges toward zero as capacity approaches full coverage,
       because with enough agents to call everybody the ordering stops mattering.</p>
     <div class="plot"><div id="frontierPlot"></div></div>
@@ -263,9 +253,7 @@
       contacts against
       <span class="mono" data-fig="allocator:headline.risk_contacts" data-fig-format="n" data-fig-badge="off">—</span>.
       <a href="queue.html">Move the capacity slider yourself &rarr;</a>
-      <span class="method" data-tier="2">Honest boundary: the servicing data carries no treatment
-        history, so <span data-term="uplift">uplift</span> cannot be measured here. It is modelled
-        from published practice — largest in the persuadable middle, near zero at both ends. This
+      <span class="method" data-tier="2">Honest boundary. The servicing data carries no treatment history, so <span data-term="uplift">uplift</span> cannot be measured here. It is modelled from published practice: largest in the persuadable middle, near zero at both ends. This
         demonstrates the allocator's <em>logic</em> beating risk-ranking under a defensible shape.
         The magnitude is not a claim about real lift, which is why the badge says
         <span class="badge badge-simulated">simulated</span>.
@@ -296,10 +284,30 @@
 </main>
 
 <footer class="site">
-  <div class="shell" style="padding-bottom:0">
-    <a href="case.html">The written case &rarr;</a> ·
-    <a href="queue.html">Allocator studio &rarr;</a> ·
-    <a href="desk.html">Agent desk &rarr;</a>
+  <div class="footwrap">
+    <div class="footbrand">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <defs><clipPath id="fd"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+        <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+        <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#fd)" fill="currentColor"/>
+      </svg>
+      <span>Ganymede</span>
+    </div>
+    <nav class="footnav" aria-label="Footer">
+      <a href="index.html">Start</a>
+      <a href="system.html">How it works</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="queue.html">Allocator</a>
+      <a href="desk.html">Desk</a>
+      <a href="case.html">The argument</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="footmeta">
+      <a href="https://github.com/kandulanikhilvarma/ganymede">Source</a>
+      <a href="mailto:kandulanikhilvarma@gmail.com">Contact</a>
+      <span>Built by Nikhilvarma Kandula</span>
+    </div>
   </div>
 </footer>
 
@@ -333,7 +341,7 @@ loadFile('metrics').then(m => {
       : r.value + (r.unit ? ' ' + r.unit : '');
     if (r.value === null) tr.children[1].style.color = 'var(--faint)';
     tr.children[2].appendChild(badgeFor(r));
-    tr.children[3].textContent = r.note ? `${r.source} — ${r.note}` : r.source;
+    tr.children[3].textContent = r.note ? `${r.source}. ${r.note}` : r.source;
     return tr;
   }));
 

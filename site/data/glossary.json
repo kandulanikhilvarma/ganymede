@@ -6,7 +6,7 @@
   },
   "exposure": {
     "term": "Exposure",
-    "short": "The total unpaid balance at risk on an account — not the overdue part, the whole outstanding principal.",
+    "short": "The total unpaid balance at risk on an account, not the overdue part, the whole outstanding principal.",
     "long": "Unpaid principal balance (UPB). It is the amount the lender stands to lose in the worst case, and it is the weight in the allocator's expected-value calculation. A 40% chance of worsening on €168,000 is worth far more attention than a 95% chance on €2,000; ranking by probability alone gets that backwards."
   },
   "delinquency-bucket": {
@@ -16,18 +16,18 @@
   },
   "roll-curve": {
     "term": "Roll curve",
-    "short": "The rates at which accounts move between delinquency buckets month to month — the shape of how a book deteriorates or recovers.",
+    "short": "The rates at which accounts move between delinquency buckets month to month, the shape of how a book deteriorates or recovers.",
     "long": "A transition matrix over delinquency buckets. It is the collections industry's core diagnostic: what fraction of 30-day accounts roll to 60, what fraction cure back to current. Ganymede's panel verification checks the roll curve is complete, because a broken roll curve means the panel has silently dropped months."
   },
   "self-cure": {
     "term": "Self-cure",
     "short": "A delinquent account that returns to current with no contact at all. Chasing these costs money and irritates people who were already going to pay.",
-    "long": "The single most valuable prediction in collections, and the one conventional risk-ranking cannot make. Roughly two-thirds of early delinquents self-cure. Ganymede's L2 model scores it explicitly, and do-not-contact is a first-class scored action with money attached rather than the absence of an action — enforced as invariant I10."
+    "long": "The single most valuable prediction in collections, and the one conventional risk-ranking cannot make. Roughly two-thirds of early delinquents self-cure. Ganymede's L2 model scores it explicitly, and do-not-contact is a first-class scored action with money attached rather than the absence of an action, enforced as invariant I10."
   },
   "ptp": {
     "term": "PTP — promise to pay",
     "short": "A commitment captured on a call: an amount, by a date, via a method. Specific promises are kept far more often than vague ones.",
-    "long": "The primary conversion event in collections. Ganymede extracts PTPs from call transcripts (93.4% on the gold set) and resolves them against subsequent payments, which closes the loop: the promise becomes a label that retrains both lenses. Promise quality — whether all three of amount, date and method were pinned down — is itself a coached behaviour."
+    "long": "The primary conversion event in collections. Ganymede extracts PTPs from call transcripts (93.4% on the gold set) and resolves them against subsequent payments, which closes the loop: the promise becomes a label that retrains both lenses. Promise quality, whether all three of amount, date and method were pinned down, is itself a coached behaviour."
   },
   "broken-promise": {
     "term": "Broken promise",
@@ -37,17 +37,17 @@
   "charge-off": {
     "term": "Charge-off",
     "short": "The point at which the lender writes the debt off as a loss. The terminal state collections exists to prevent.",
-    "long": "Accounting recognition that a debt is unlikely to be recovered, typically after a set number of days delinquent. Everything upstream — contact, hardship arrangements, payment plans — is an attempt to avoid this absorbing state."
+    "long": "Accounting recognition that a debt is unlikely to be recovered, typically after a set number of days delinquent. Everything upstream, contact, hardship arrangements, payment plans, is an attempt to avoid this absorbing state."
   },
   "capacity-willingness": {
     "term": "Capacity × willingness",
     "short": "The two-axis read on a borrower: can they pay, and will they. Four quadrants, four completely different conversations.",
-    "long": "Capacity is estimable from payment trajectory and affordability signals. Willingness is not — not without a conversation. On real accounts only a small minority reach a confident quadrant from servicing data alone; the rest route to a diagnostic question. That is not a modelling shortfall, it is the reason the product has a Coach Lens at all."
+    "long": "Capacity is estimable from payment trajectory and affordability signals. Willingness is not, not without a conversation. On real accounts only a small minority reach a confident quadrant from servicing data alone; the rest route to a diagnostic question. That is not a modelling shortfall, it is the reason the product has a Coach Lens at all."
   },
   "diagnostic-question": {
     "term": "Diagnostic question",
     "short": "The one question that separates cannot-pay from will-not-pay, asked before proposing anything.",
-    "long": "When the borrower-state classifier is not confident, the correct coaching output is not a strategy — it is the question that resolves the uncertainty. Teaching an agent what to ask beats telling them what to say when the model does not know."
+    "long": "When the borrower-state classifier is not confident, the correct coaching output is not a strategy, it is the question that resolves the uncertainty. Teaching an agent what to ask beats telling them what to say when the model does not know."
   },
   "allocator": {
     "term": "Allocator",
@@ -62,7 +62,7 @@
   "calibration": {
     "term": "Calibration",
     "short": "Whether a predicted 30% actually happens about 30% of the time. Separate from, and more important than, ranking accuracy.",
-    "long": "A collections agent reads the risk number and acts on its face value, so calibration is the gate, not AUC. A model can rank perfectly and still be badly calibrated — which is exactly what happens under regime shift, and what Ganymede's drift monitor is built to catch."
+    "long": "A collections agent reads the risk number and acts on its face value, so calibration is the gate, not AUC. A model can rank perfectly and still be badly calibrated, which is exactly what happens under regime shift, and what Ganymede's drift monitor is built to catch."
   },
   "auc": {
     "term": "AUC",
@@ -91,7 +91,7 @@
   },
   "experiment-arm": {
     "term": "Experiment arm",
-    "short": "Which version of the system a given decision was made under — coached, or control.",
+    "short": "Which version of the system a given decision was made under, coached, or control.",
     "long": "Every decision Ganymede logs carries its arm and its propensity, non-optionally (invariants I2 and I3); retrain aborts if either is missing. Without them there is no way to tell the product working from the allocator simply selecting more recoverable borrowers."
   },
   "control-arm": {
@@ -107,22 +107,22 @@
   "vad": {
     "term": "VAD — voice activity detection",
     "short": "Detecting where speech starts and stops in audio, which is how turn boundaries in a live call are found.",
-    "long": "Ganymede's Phase 0 used an energy VAD over real call audio to measure 328 inter-turn gaps. The resulting distribution is what set the latency budget — the coaching design is derived from measured physics rather than asserted."
+    "long": "Ganymede's Phase 0 used an energy VAD over real call audio to measure 328 inter-turn gaps. The resulting distribution is what set the latency budget, the coaching design is derived from measured physics rather than asserted."
   },
   "turn-boundary": {
     "term": "Turn boundary",
-    "short": "The pause where one speaker stops and the other starts — the only moment a live hint can appear without talking over someone.",
+    "short": "The pause where one speaker stops and the other starts, the only moment a live hint can appear without talking over someone.",
     "long": "A hint is only surfaced at a pause long enough to be a real hand-off (at least 200 ms), never at a within-speech micro-pause. The measured median gap on real call audio is 479 ms."
   },
   "latency-budget": {
     "term": "Latency budget",
-    "short": "300 ms — the time a hint has to render if it is going to land inside a real conversational gap.",
+    "short": "300 ms, the time a hint has to render if it is going to land inside a real conversational gap.",
     "long": "Derived from the 25th percentile of 328 measured gaps, not chosen. Anything slower arrives after the moment it addressed has passed, which is worse than nothing because it pulls the agent's attention away mid-sentence."
   },
   "two-tier-hint": {
     "term": "Two-tier hint",
     "short": "Deterministic hints render in under a millisecond and hit the live gap; LLM-composed hints take 500–1500 ms and are demoted to the next pause.",
-    "long": "The design is forced by the latency measurement rather than chosen for elegance. An LLM cannot compose inside a 479 ms median gap, so the system does not pretend it can — it splits the work and is explicit about which tier fired and when."
+    "long": "The design is forced by the latency measurement rather than chosen for elegance. An LLM cannot compose inside a 479 ms median gap, so the system does not pretend it can, it splits the work and is explicit about which tier fired and when."
   },
   "playbook-support": {
     "term": "Strategy support",
@@ -131,7 +131,7 @@
   },
   "panel": {
     "term": "Panel",
-    "short": "The month-by-month record of every loan's state — the backbone every trajectory feature is computed from.",
+    "short": "The month-by-month record of every loan's state, the backbone every trajectory feature is computed from.",
     "long": "Built from Freddie Mac single-family servicing data across nine vintages. Real calendar dates matter: a timing feature derived from a source without them is refused outright (invariant I13)."
   },
   "leakage": {

@@ -79,4 +79,13 @@ export async function resolveFigures(scope = document) {
   }));
 }
 
+/* Unwrap a data field that may or may not carry provenance.
+
+   Wrapping a plain number in a provenance record silently turns every raw
+   reader of it into "[object Object]" on the page. That happened once, to the
+   minimum turn gap on the desk. Read through this and it cannot happen again. */
+export function val(field) {
+  return field && typeof field === 'object' && 'value' in field ? field.value : field;
+}
+
 export { file as loadFile, dig };

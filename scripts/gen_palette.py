@@ -136,6 +136,7 @@ def check() -> list[str]:
 SEMANTIC = {
     "light": {
         "ground": "slate.50", "surface": "slate.100", "surface-2": "slate.200",
+        "surface-3": "slate.300",
         "line": "slate.300", "line-strong": "slate.400",
         "text": "slate.900", "muted": "slate.700", "faint": "slate.600",
         "signal": "ice.700", "signal-strong": "ice.800", "signal-quiet": "ice.200",
@@ -147,6 +148,7 @@ SEMANTIC = {
     },
     "dark": {
         "ground": "slate.950", "surface": "slate.900", "surface-2": "slate.800",
+        "surface-3": "slate.700",
         "line": "slate.800", "line-strong": "slate.700",
         "text": "slate.100", "muted": "slate.400", "faint": "slate.500",
         "signal": "ice.300", "signal-strong": "ice.200", "signal-quiet": "ice.900",
@@ -159,15 +161,22 @@ SEMANTIC = {
 }
 
 STATIC = """
-  /* ---- type ------------------------------------------------------------ */
-  --font-display:"Newsreader",Georgia,"Times New Roman",serif;
-  --font-ui:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --font-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  /* ---- type ------------------------------------------------------------
+     Fraunces carries the argument, Geist carries the readout. The contrast
+     between an editorial serif and a grotesk built for data is the concept. */
+  --font-display:"Fraunces",Georgia,"Times New Roman",serif;
+  --font-ui:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
 
-  /* 1.200 minor third from a 16px base; --fs-0 is body */
-  --fs--2:0.694rem; --fs--1:0.833rem; --fs-0:1rem;    --fs-1:1.2rem;
+  /* 1.200 minor third from a 17px base. The small end is deliberately not
+     small: the two steps below body carry captions, table cells and control
+     labels, and at a 16px base they were landing near 11px. */
+  --fs--2:0.78rem;  --fs--1:0.882rem; --fs-0:1rem;     --fs-1:1.2rem;
   --fs-2:1.44rem;   --fs-3:1.728rem;  --fs-4:2.074rem; --fs-5:2.488rem;
   --fs-6:2.986rem;  --fs-7:3.583rem;  --fs-8:4.3rem;
+
+  /* the smallest type the site is allowed to use, for chart ticks and chips */
+  --fs-micro:0.735rem;
 
   --lh-tight:1.06; --lh-snug:1.3; --lh-normal:1.6; --lh-loose:1.75;
   --tracking-tight:-0.018em; --tracking-normal:0; --tracking-wide:0.08em;
@@ -210,9 +219,16 @@ def emit() -> str:
     out.append("}")
     out.append("")
 
-    for theme, mapping in SEMANTIC.items():
+    # Dark is the default. This is an instrument before it is a document: the
+    # risk ramp, the signal colour and the trajectory field all carry more on a
+    # dark ground, and the identity is dark everywhere else it appears. Light
+    # stays one click away and is remembered.
+    # Dark first, light last: the two selectors have equal specificity, so
+    # source order is what lets an explicit light choice win.
+    for theme in ("dark", "light"):
+        mapping = SEMANTIC[theme]
         selector = (
-            ':root, :root[data-theme="light"]' if theme == "light" else ':root[data-theme="dark"]'
+            ':root[data-theme="light"]' if theme == "light" else ':root, :root[data-theme="dark"]'
         )
         out.append(f"/* ---- semantic: {theme} ---- */")
         out.append(f"{selector} {{")
@@ -223,16 +239,8 @@ def emit() -> str:
         out.append("}")
         out.append("")
 
-    dark = SEMANTIC["dark"]
-    out.append("@media (prefers-color-scheme:dark) {")
-    out.append('  :root:not([data-theme="light"]) {')
-    out.append("    color-scheme:dark;")
-    for name, ref in dark.items():
-        out.append(f"    --{name}:{resolve(ref)};")
-    out.append("  " + _shadows("dark").strip())
-    out.append("  }")
-    out.append("}")
-    out.append("")
+    # No prefers-color-scheme block: dark is the base, not a preference.
+    # An explicit light choice is the only thing that overrides it.
     return "\n".join(out)
 
 

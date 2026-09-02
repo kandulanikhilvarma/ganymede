@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en" data-depth="2">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About · Ganymede</title>
+<meta name="description" content="Ganymede is built by Nikhilvarma Kandula, an AI engineer who ships production systems: event-driven fintech services, four live products, and a research background in data fusion.">
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://ganymede-kandula.vercel.app/about">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ganymede">
+<meta property="og:title" content="About Ganymede">
+<meta property="og:description" content="Built by Nikhilvarma Kandula, an AI engineer who ships production systems.">
+<meta property="og:url" content="https://ganymede-kandula.vercel.app/about">
+<meta property="og:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About Ganymede">
+<meta name="twitter:description" content="Built by Nikhilvarma Kandula, an AI engineer who ships production systems.">
+<meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
+<!-- font-preload -->
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/geist-latin-19f9c925.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/fraunces-latin-7234ed86.woff2">
+<!-- /font-preload -->
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/components.css">
+<script>
+  try {
+    var t = localStorage.getItem('gm-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var d = localStorage.getItem('gm-depth');
+    if (d) document.documentElement.setAttribute('data-depth', d);
+  } catch (e) {}
+</script>
+<style>
+  .shell { max-width: 1080px; margin: 0 auto; padding: 0 var(--s-6) var(--s-12); }
+
+  .hero { border-bottom: 1px solid var(--line); overflow: hidden; }
+  .hero-in {
+    max-width: 1080px; margin: 0 auto;
+    padding: clamp(56px,9vw,116px) var(--s-6) clamp(44px,6vw,76px);
+    display: grid; grid-template-columns: minmax(0,1.1fr) minmax(0,.9fr);
+    gap: clamp(28px,6vw,64px); align-items: center;
+  }
+  @media (max-width: 860px) { .hero-in { grid-template-columns: minmax(0,1fr); } }
+  .hero h1 { font-size: clamp(2.3rem,5.4vw,3.6rem); margin: var(--s-4) 0 var(--s-5); max-width: 16ch; }
+  .moonwrap { max-width: 340px; width: 100%; margin-inline: auto; }
+  @media (max-width: 860px) { .moonwrap { max-width: 200px; order: -1; } }
+
+  .sec { margin-top: var(--s-11); padding-top: var(--s-7); border-top: 1px solid var(--line-strong); }
+  .sec h2 { font-family: var(--font-display); font-weight: 400;
+            font-size: clamp(1.7rem,3.2vw,2.1rem); letter-spacing: var(--tracking-tight);
+            margin-bottom: var(--s-4); }
+  .sec .n { display: block; font-family: var(--font-mono); font-size: var(--fs--1);
+            color: var(--signal); margin-bottom: var(--s-2); }
+
+  .creed { font-family: var(--font-display); font-size: clamp(1.5rem,3.4vw,2.1rem);
+           line-height: 1.25; letter-spacing: var(--tracking-tight); max-width: 22ch;
+           margin: 0; }
+  .creed span { color: var(--signal); }
+
+  .two { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+         gap: clamp(24px,5vw,60px); align-items: start; }
+  @media (max-width: 820px) { .two { grid-template-columns: minmax(0,1fr); } }
+
+  .facts { display: grid; gap: 0; margin-top: var(--s-6); }
+  .fact { display: grid; grid-template-columns: 170px minmax(0,1fr); gap: var(--s-5);
+          padding: var(--s-4) 0; border-top: 1px solid var(--line); }
+  @media (max-width: 620px) { .fact { grid-template-columns: minmax(0,1fr); gap: var(--s-2); } }
+  .fact dt { color: var(--faint); font-size: var(--fs--1); }
+  .fact dd { margin: 0; }
+
+  .work { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr));
+          gap: var(--s-4); margin-top: var(--s-6); }
+  .work article { border: 1px solid var(--line); border-radius: var(--r-3);
+                  padding: var(--s-5); background: var(--surface); }
+  .work h3 { font-size: var(--fs-0); font-weight: 600; margin-bottom: var(--s-2); }
+  .work p { font-size: var(--fs--1); color: var(--muted); margin: 0; }
+
+  .links { display: flex; gap: var(--s-3); flex-wrap: wrap; margin-top: var(--s-7); }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="topnav">
+  <a class="brand" href="index.html">
+    <svg viewBox="0 0 32 32" aria-hidden="true" style="color:var(--signal)">
+      <defs><clipPath id="nav-d"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+      <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+      <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#nav-d)" fill="currentColor"/>
+    </svg>
+    Ganymede
+  </a>
+  <div class="navlinks">
+    <a href="index.html">Start</a>
+    <a href="system.html">How it works</a>
+    <a href="evidence.html">Evidence</a>
+    <a href="queue.html">Allocator</a>
+    <a href="desk.html">Desk</a>
+    <a href="case.html">The argument</a>
+    <a href="glossary.html">Glossary</a>
+    <a href="about.html">About</a>
+  </div>
+  <span class="spacer"></span>
+  <button class="themebtn" data-theme-btn aria-label="Toggle theme">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>
+    </svg>
+  </button>
+  <button class="themebtn navtoggle" data-nav-toggle aria-expanded="false" aria-label="Open menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16"/>
+    </svg>
+  </button>
+</nav>
+
+<header class="hero aura">
+  <div class="hero-in">
+    <div>
+      <p class="eyebrow">About</p>
+      <h1 class="display">Built by someone who <em>ships</em>.</h1>
+      <p class="lede">Ganymede is the work of Nikhilvarma Kandula, an AI engineer who builds
+        products end to end and puts them in front of people. Four other applications are live.
+        This one is the most demanding of them, because it decides who gets a phone call about
+        money they do not have.</p>
+    </div>
+    <div class="moonwrap"><div id="moon"></div></div>
+  </div>
+</header>
+
+<main id="main" class="shell">
+
+  <section class="sec" style="border-top:0">
+    <div class="two">
+      <p class="creed">&ldquo;I build the thing, <span>then I ship it.</span>&rdquo;</p>
+      <div>
+        <p>That is the whole method. Prototypes are cheap and plentiful. What is rare is a system
+          that survives contact with real data, real users and real failure modes, which is why
+          this one is built around gates that fail loudly rather than dashboards that look
+          reassuring.</p>
+        <p>Fourteen invariants sit in the codebase and break the build when a known defect returns.
+          Every figure on this site is regenerated from the pipeline and labelled with the kind of
+          evidence behind it. Where a number has not been earned, the site says so. That posture is
+          not modesty. It is what makes the numbers that <em>are</em> claimed worth anything.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <span class="n">01</span>
+    <h2>Background</h2>
+    <div class="two">
+      <div>
+        <p>Eighteen months in US fintech, rebuilding monolithic systems into event-driven services
+          carrying more than 500 concurrent users, moving from data engineer to lead developer over
+          that stretch. The habits on this site come from there: idempotent decisions, logged
+          propensities, and the assumption that anything unlogged did not happen.</p>
+        <p>Currently reading for an M.Sc. in Big Data and Business Analytics at FOM Hochschule,
+          alongside peer-reviewed research on rainfall estimation through data fusion, published in
+          IRJMETS in March 2025.</p>
+      </div>
+      <dl class="facts">
+        <div class="fact"><dt>Role</dt><dd>Founder and AI engineer</dd></div>
+        <div class="fact"><dt>Focus</dt><dd>AI and LLM products, full-stack engineering, data
+          engineering, event-driven architecture</dd></div>
+        <div class="fact"><dt>Based</dt><dd>Germany and India</dd></div>
+        <div class="fact"><dt>Study</dt><dd>M.Sc. Big Data and Business Analytics, FOM Hochschule,
+          through August 2027</dd></div>
+        <div class="fact"><dt>Research</dt><dd>Rainfall estimation via data fusion, IRJMETS,
+          March 2025</dd></div>
+        <div class="fact"><dt>Open to</dt><dd>Data, software and AI engineering roles</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="sec">
+    <span class="n">02</span>
+    <h2>Other things that are live</h2>
+    <p>Each of these is running, not a screenshot in a deck.</p>
+    <div class="work">
+      <article>
+        <h3>Bud</h3>
+        <p>A habit tracker built on game mechanics, local-first so it works with no account and no
+          network.</p>
+      </article>
+      <article>
+        <h3>Cartwise</h3>
+        <p>Turns a photographed receipt into a nutrition summary using OCR and product matching.</p>
+      </article>
+      <article>
+        <h3>FirstChair</h3>
+        <p>Monitors how law firms are represented by AI assistants across ChatGPT, Gemini and
+          Perplexity.</p>
+      </article>
+      <article>
+        <h3>Knock</h3>
+        <p>A local services booking platform, built to handle concurrent users competing for the
+          same slot without double-booking it.</p>
+      </article>
+    </div>
+    <p style="margin-top:var(--s-6)"><a href="https://kandula.studio">See all of it at
+      kandula.studio</a></p>
+  </section>
+
+  <section class="sec">
+    <span class="n">03</span>
+    <h2>Why this one is called Ganymede</h2>
+    <div class="two">
+      <div>
+        <p>Ganymede is the largest moon in the solar system and the only one that generates its own
+          magnetic field. Its surface is ancient cratered ground cut across by long parallel
+          grooves, formed where the crust pulled apart under strain.</p>
+        <p>That is a reasonable picture of a credit book. Most of it is quiet and unchanging. The
+          interesting part is where the surface starts to pull apart, and the whole product exists
+          to see that early enough to do something cheap about it.</p>
+        <p>The mark is the same idea reduced: a moon in phase, where the boundary between light and
+          dark is not a clean arc but a bent trajectory.</p>
+      </div>
+      <div>
+        <div id="phases" style="margin-bottom:var(--s-5)"></div>
+        <p style="font-size:var(--fs--1);color:var(--muted);margin:0">Phases, left to right. An
+          account passes through the same sequence, and the Risk Lens is built to catch the second
+          one rather than the fourth.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <span class="n">04</span>
+    <h2>Get in touch</h2>
+    <p>Questions about the system, the evidence behind it, or working together.</p>
+    <div class="links">
+      <a class="btn btn-primary" href="mailto:kandulanikhilvarma@gmail.com">Email</a>
+      <a class="btn" href="https://www.linkedin.com/in/nikhilvarmakandula">LinkedIn</a>
+      <a class="btn" href="https://github.com/kandulanikhilvarma">GitHub</a>
+      <a class="btn" href="https://kandula.studio">kandula.studio</a>
+      <a class="btn" href="https://github.com/kandulanikhilvarma/ganymede">Source for this system</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="footwrap">
+    <div class="footbrand">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <defs><clipPath id="fd"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+        <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+        <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#fd)" fill="currentColor"/>
+      </svg>
+      <span>Ganymede</span>
+    </div>
+    <nav class="footnav" aria-label="Footer">
+      <a href="index.html">Start</a>
+      <a href="system.html">How it works</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="queue.html">Allocator</a>
+      <a href="desk.html">Desk</a>
+      <a href="case.html">The argument</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="footmeta">
+      <a href="https://github.com/kandulanikhilvarma/ganymede">Source</a>
+      <a href="mailto:kandulanikhilvarma@gmail.com">Contact</a>
+      <span>Built by Nikhilvarma Kandula</span>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="assets/js/site.js"></script>
+<script type="module">
+import { ganymede, phaseStrip } from './assets/js/moon.js';
+ganymede(document.getElementById('moon'), { seed: 23, grooves: 32, craters: 22, phase: 0.3 });
+phaseStrip(document.getElementById('phases'), { count: 6, size: 46, seed: 9 });
+</script>
+</body>
+</html>

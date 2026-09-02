@@ -3,7 +3,14 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+html {
+  /* 17px base. The old 16px put captions and control labels near 11px, which
+     is where this site was hardest to read. Everything is in rem, so this one
+     line lifts the whole scale. */
+  font-size: 106.25%;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
@@ -56,6 +63,10 @@ button { cursor: pointer; }
 .display {
   font-family: var(--font-display); font-weight: 400;
   line-height: var(--lh-tight); letter-spacing: var(--tracking-tight);
+  /* Fraunces carries an optical-size axis; let the browser use it so display
+     sizes get the display cut and small settings stay readable. */
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 0, "WONK" 0;
 }
 .display em { font-style: italic; color: var(--predict); }
 

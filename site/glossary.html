@@ -4,25 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Glossary · Ganymede</title>
-<meta name="description" content="The collections and credit-risk vocabulary this site uses: arrears, self-cure, promise to pay, roll curve, uplift, calibration, drift, propensity and the rest — defined plainly.">
+<meta name="description" content="The collections and credit-risk vocabulary this site uses: arrears, self-cure, promise to pay, roll curve, uplift, calibration, drift, propensity and the rest, defined plainly.">
 <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://ganymede-kandula.vercel.app/glossary">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ganymede">
-<meta property="og:title" content="Ganymede — glossary">
-<meta property="og:description" content="The collections and credit-risk vocabulary this site uses: arrears, self-cure, promise to pay, roll curve, uplift, calibration, drift, propensity and the rest — defined plainly.">
+<meta property="og:title" content="Ganymede · glossary">
+<meta property="og:description" content="The collections and credit-risk vocabulary this site uses: arrears, self-cure, promise to pay, roll curve, uplift, calibration, drift, propensity and the rest, defined plainly.">
 <meta property="og:url" content="https://ganymede-kandula.vercel.app/glossary">
 <meta property="og:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Ganymede — glossary">
-<meta name="twitter:description" content="The collections and credit-risk vocabulary this site uses: arrears, self-cure, promise to pay, roll curve, uplift, calibration, drift, propensity and the rest — defined plainly.">
+<meta name="twitter:title" content="Ganymede · glossary">
+<meta name="twitter:description" content="The collections and credit-risk vocabulary this site uses: arrears, self-cure, promise to pay, roll curve, uplift, calibration, drift, propensity and the rest, defined plainly.">
 <meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
-<link rel="preload" as="font" type="font/woff2" crossorigin
-      href="assets/fonts/hanken-grotesk-latin-e9201edd.woff2">
-<link rel="preload" as="font" type="font/woff2" crossorigin
-      href="assets/fonts/newsreader-latin-62981321.woff2">
+<!-- font-preload -->
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/geist-latin-19f9c925.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/fraunces-latin-7234ed86.woff2">
+<!-- /font-preload -->
 <link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/base.css">
@@ -37,8 +37,15 @@
 </script>
 <style>
   .shell { max-width: 940px; margin: 0 auto; padding: 0 var(--s-6) var(--s-12); }
-  header.top { padding: var(--s-10) 0 var(--s-6); }
+  header.top {
+    padding: clamp(48px,7vw,92px) 0 var(--s-7);
+    display: grid; grid-template-columns: minmax(0,1fr) 190px;
+    gap: clamp(24px,5vw,56px); align-items: center;
+  }
+  @media (max-width: 760px) { header.top { grid-template-columns: minmax(0,1fr); }
+                              header.top .moonwrap { max-width: 140px; order: -1; } }
   header.top h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); margin: var(--s-4) 0 var(--s-4); max-width: 16ch; }
+  .moonwrap { width: 100%; }
 
   .searchrow { display: flex; gap: var(--s-3); align-items: center; flex-wrap: wrap;
                position: sticky; top: 60px; z-index: 10; padding: var(--s-4) 0;
@@ -85,9 +92,9 @@
     <a href="evidence.html">Evidence</a>
     <a href="queue.html">Allocator</a>
     <a href="desk.html">Desk</a>
-    <a href="case.html">The case</a>
+    <a href="case.html">The argument</a>
     <a href="glossary.html">Glossary</a>
-    <a href="design.html">Design</a>
+    <a href="about.html">About</a>
   </div>
   <span class="spacer"></span>
   <button class="themebtn" data-theme-btn aria-label="Toggle theme">
@@ -103,16 +110,19 @@
 </nav>
 
 <main id="main" class="shell">
-  <header class="top">
-    <p class="eyebrow">Glossary</p>
-    <h1 class="display">The words, without the fog.</h1>
-    <p class="lede">Collections has a vocabulary that hides how simple most of it is. Every term
-      here appears somewhere on this site, and every one of them is also available inline — hover
-      or focus a dotted word anywhere and this definition appears in place.</p>
+  <header class="top aura">
+    <div>
+      <p class="eyebrow">Glossary</p>
+      <h1 class="display">The words, without the fog.</h1>
+      <p class="lede">Collections has a vocabulary that hides how simple most of it is. Every term
+        here appears somewhere on this site, and every one is also available inline. Hover or focus
+        a dotted word anywhere and the definition appears in place.</p>
+    </div>
+    <div class="moonwrap"><div id="moon"></div></div>
   </header>
 
   <div class="searchrow">
-    <input type="search" id="q" placeholder="Filter — try &ldquo;promise&rdquo; or &ldquo;drift&rdquo;"
+    <input type="search" id="q" placeholder="Filter. Try &ldquo;promise&rdquo; or &ldquo;drift&rdquo;"
            aria-label="Filter glossary terms" autocomplete="off">
     <span class="count" id="count">—</span>
   </div>
@@ -122,14 +132,39 @@
 </main>
 
 <footer class="site">
-  <div class="shell" style="padding-bottom:0">
-    One JSON file feeds both this page and every inline tooltip on the site, so the two cannot
-    disagree — <code class="mono">site/data/glossary.json</code>.
+  <div class="footwrap">
+    <div class="footbrand">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <defs><clipPath id="fd"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+        <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+        <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#fd)" fill="currentColor"/>
+      </svg>
+      <span>Ganymede</span>
+    </div>
+    <nav class="footnav" aria-label="Footer">
+      <a href="index.html">Start</a>
+      <a href="system.html">How it works</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="queue.html">Allocator</a>
+      <a href="desk.html">Desk</a>
+      <a href="case.html">The argument</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="footmeta">
+      <a href="https://github.com/kandulanikhilvarma/ganymede">Source</a>
+      <a href="mailto:kandulanikhilvarma@gmail.com">Contact</a>
+      <span>Built by Nikhilvarma Kandula</span>
+    </div>
   </div>
 </footer>
 
 <script type="module" src="assets/js/site.js"></script>
 <script type="module">
+import { ganymede } from './assets/js/moon.js';
+const moonNode = document.getElementById('moon');
+if (moonNode) ganymede(moonNode, { seed: 41, grooves: 26, craters: 14, phase: 0.44 });
+
 const $ = id => document.getElementById(id);
 
 const terms = await fetch('data/glossary.json').then(r => r.json()).catch(() => ({}));

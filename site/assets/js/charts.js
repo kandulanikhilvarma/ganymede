@@ -54,22 +54,22 @@ function axes(g, { x, y, w, h, pad, xTicks, yTicks, xLabel, yLabel }) {
     }));
     g.appendChild(el('text', {
       x: pad.l - 7, y: yy + 3.5, 'text-anchor': 'end',
-      fill: 'var(--faint)', 'font-size': 9.5, 'font-family': 'var(--font-mono)',
+      fill: 'var(--faint)', 'font-size': 11, 'font-family': 'var(--font-mono)',
     }, t.label));
   }
   for (const t of xTicks || []) {
     g.appendChild(el('text', {
       x: x(t.v), y: h - pad.b + 14, 'text-anchor': 'middle',
-      fill: 'var(--faint)', 'font-size': 9.5, 'font-family': 'var(--font-mono)',
+      fill: 'var(--faint)', 'font-size': 11, 'font-family': 'var(--font-mono)',
     }, t.label));
   }
   if (xLabel) g.appendChild(el('text', {
     x: (pad.l + w - pad.r) / 2, y: h - 2, 'text-anchor': 'middle',
-    fill: 'var(--faint)', 'font-size': 10,
+    fill: 'var(--faint)', 'font-size': 11.5,
   }, xLabel));
   if (yLabel) g.appendChild(el('text', {
     x: 13, y: (pad.t + h - pad.b) / 2, 'text-anchor': 'middle',
-    fill: 'var(--faint)', 'font-size': 10,
+    fill: 'var(--faint)', 'font-size': 11.5,
     transform: `rotate(-90 13 ${(pad.t + h - pad.b) / 2})`,
   }, yLabel));
 }
@@ -146,7 +146,7 @@ export function barChart(node, {
   for (const t of xTicks || []) {
     s.appendChild(el('text', {
       x: x(t.i), y: h - pad.b + 14, 'text-anchor': 'middle',
-      fill: 'var(--faint)', 'font-size': 9.5, 'font-family': 'var(--font-mono)',
+      fill: 'var(--faint)', 'font-size': 11, 'font-family': 'var(--font-mono)',
     }, t.label));
   }
   for (const m of markers) {
@@ -157,7 +157,7 @@ export function barChart(node, {
     }));
     s.appendChild(el('text', {
       x: mx + 5, y: pad.t + 6, fill: m.colour || 'var(--predict)',
-      'font-size': 10, 'font-family': 'var(--font-mono)',
+      'font-size': 11.5, 'font-family': 'var(--font-mono)',
     }, m.label));
   }
   node.replaceChildren(s);

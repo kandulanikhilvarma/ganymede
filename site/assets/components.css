@@ -163,3 +163,38 @@ footer.site {
   margin-top: var(--s-12); padding: var(--s-8) var(--s-6);
   border-top: 1px solid var(--line-strong); color: var(--faint); font-size: var(--fs--1);
 }
+
+/* ---- footer ------------------------------------------------------------ */
+.footwrap {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: auto 1fr auto; gap: var(--s-6);
+  align-items: start;
+}
+@media (max-width: 860px) { .footwrap { grid-template-columns: 1fr; gap: var(--s-5); } }
+.footbrand { display: inline-flex; align-items: center; gap: var(--s-2); color: var(--signal); font-weight: 600; }
+.footbrand svg { width: 20px; height: 20px; }
+.footbrand span { color: var(--text); }
+.footnav { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); }
+.footnav a { color: var(--muted); text-decoration: none; }
+.footnav a:hover { color: var(--signal); }
+.footmeta { display: flex; flex-direction: column; gap: 4px; text-align: right; }
+@media (max-width: 860px) { .footmeta { text-align: left; } }
+.footmeta a { color: var(--muted); text-decoration: none; }
+.footmeta a:hover { color: var(--signal); }
+
+/* ---- the moon ---------------------------------------------------------- */
+.ganymede { filter: drop-shadow(0 18px 44px rgb(0 0 0 / .28)); }
+.phasestrip { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.phasestrip span { display: block; flex: none; opacity: .9; }
+
+/* A quiet field of signal behind a hero. Sized in the page, not here.
+   It clips itself: the glow overhangs its box, and without this it silently
+   widens the page's scroll area by a few pixels on narrow screens. */
+.aura { position: relative; isolation: isolate; overflow: clip; }
+@supports not (overflow: clip) { .aura { overflow: hidden; } }
+.aura::before {
+  content: ""; position: absolute; z-index: -1; inset: -20% -10% auto auto;
+  width: min(760px, 70vw); aspect-ratio: 1;
+  background: radial-gradient(circle, var(--signal-quiet) 0%, transparent 68%);
+  opacity: .5; pointer-events: none;
+}

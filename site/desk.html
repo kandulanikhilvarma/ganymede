@@ -9,20 +9,20 @@
 <link rel="canonical" href="https://ganymede-kandula.vercel.app/desk">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ganymede">
-<meta property="og:title" content="Ganymede — agent desk">
+<meta property="og:title" content="Ganymede · agent desk">
 <meta property="og:description" content="Work a real scored collections queue: risk with reason codes, borrower state, live coaching hints against a measured latency budget, promise capture, override, and a permanent control arm.">
 <meta property="og:url" content="https://ganymede-kandula.vercel.app/desk">
 <meta property="og:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Ganymede — agent desk">
+<meta name="twitter:title" content="Ganymede · agent desk">
 <meta name="twitter:description" content="Work a real scored collections queue: risk with reason codes, borrower state, live coaching hints against a measured latency budget, promise capture, override, and a permanent control arm.">
 <meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
-<link rel="preload" as="font" type="font/woff2" crossorigin
-      href="assets/fonts/hanken-grotesk-latin-e9201edd.woff2">
-<link rel="preload" as="font" type="font/woff2" crossorigin
-      href="assets/fonts/newsreader-latin-62981321.woff2">
+<!-- font-preload -->
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/geist-latin-19f9c925.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/fraunces-latin-7234ed86.woff2">
+<!-- /font-preload -->
 <link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/base.css">
@@ -34,7 +34,7 @@
   } catch (e) {}
 </script>
 <style>
-  body { font-size: 14px; overflow: hidden; }
+  body { font-size: var(--fs--1); overflow: hidden; }
   @media (max-width: 1100px) { body { overflow: auto; } }
 
   .deskbar {
@@ -42,7 +42,7 @@
     padding: var(--s-2) var(--s-4); border-bottom: 1px solid var(--line);
     background: var(--surface); height: 52px;
   }
-  .deskbar .brand { font-size: 14px; }
+  .deskbar .brand { font-size: var(--fs--1); }
   .deskbar .lbl { font-size: var(--fs--2); letter-spacing: var(--tracking-wide);
                   text-transform: uppercase; color: var(--faint); font-weight: 600; }
 
@@ -66,16 +66,16 @@
   .qitem:hover { background: var(--surface); }
   .qitem[aria-current="true"] { background: var(--surface); border-color: var(--signal); }
   .qitem .top { display: flex; align-items: baseline; gap: var(--s-2); }
-  .qitem .rank { font-family: var(--font-mono); font-size: 10px; color: var(--faint); }
-  .qitem .exp { font-family: var(--font-mono); font-size: 13px; font-weight: 500; margin-left: auto; }
-  .qitem .sub { display: flex; align-items: center; gap: var(--s-2); margin-top: 5px; font-size: 11px; color: var(--muted); }
+  .qitem .rank { font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--faint); }
+  .qitem .exp { font-family: var(--font-mono); font-size: var(--fs--1); font-weight: 500; margin-left: auto; }
+  .qitem .sub { display: flex; align-items: center; gap: var(--s-2); margin-top: 5px; font-size: var(--fs--2); color: var(--muted); }
   .pchip {
-    font-family: var(--font-mono); font-size: 10px; padding: 1px 5px; border-radius: 3px;
+    font-family: var(--font-mono); font-size: var(--fs-micro); padding: 1px 5px; border-radius: 3px;
     color: #fff; font-weight: 500;
   }
-  .qitem .act { font-size: 10px; font-family: var(--font-mono); color: var(--faint); }
+  .qitem .act { font-size: var(--fs-micro); font-family: var(--font-mono); color: var(--faint); }
   .qitem.skip .act { color: var(--faint); }
-  .qitem .tape { font-size: 10px; color: var(--signal); }
+  .qitem .tape { font-size: var(--fs-micro); color: var(--signal); }
 
   /* ---- who ---- */
   .gauge-wrap { display: flex; flex-direction: column; align-items: center; margin: 0 0 var(--s-4); }
@@ -84,28 +84,28 @@
   .gauge .val { position: absolute; inset: 0; display: flex; flex-direction: column;
                 align-items: center; justify-content: center; }
   .gauge .val b { font-size: 34px; font-weight: 600; letter-spacing: -.02em; }
-  .gauge .val span { font-size: 10px; color: var(--faint); letter-spacing: .06em; text-transform: uppercase; }
-  .band-note { font-size: 11px; color: var(--faint); text-align: center; margin-top: var(--s-2); }
+  .gauge .val span { font-size: var(--fs-micro); color: var(--faint); letter-spacing: .06em; text-transform: uppercase; }
+  .band-note { font-size: var(--fs--2); color: var(--faint); text-align: center; margin-top: var(--s-2); }
 
   .field { border-top: 1px solid var(--line); padding: var(--s-3) 0; }
   .field:first-of-type { border-top: 0; }
-  .field .k { color: var(--muted); font-size: 12px; }
+  .field .k { color: var(--muted); font-size: var(--fs--2); }
   .field .v { font-weight: 600; margin-top: 2px; }
   .field .v.big { font-size: 20px; letter-spacing: -.01em; }
 
   .reasons { list-style: none; margin: var(--s-2) 0 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
   .reasons button {
-    display: flex; gap: 8px; align-items: baseline; font-size: 12.5px; width: 100%;
+    display: flex; gap: 8px; align-items: baseline; font-size: var(--fs--1); width: 100%;
     text-align: left; background: transparent; border: 0; padding: 3px 4px; border-radius: var(--r-1); color: inherit;
   }
   .reasons button:hover { background: var(--surface-2); }
   .reasons button::before { content: ""; width: 12px; height: 2px; margin-top: 7px; background: var(--signal); flex: none; }
-  .reasondrill { font-size: 11.5px; color: var(--muted); background: var(--surface-2);
+  .reasondrill { font-size: var(--fs--2); color: var(--muted); background: var(--surface-2);
                  border-radius: var(--r-2); padding: var(--s-3); margin-top: var(--s-2); display: none; }
   .reasondrill.on { display: block; }
 
   .statechip { display: inline-flex; align-items: center; gap: 7px; padding: 4px 9px; border-radius: var(--r-1);
-    background: var(--surface-2); border: 1px solid var(--line); font-size: 12px; font-weight: 500; }
+    background: var(--surface-2); border: 1px solid var(--line); font-size: var(--fs--2); font-weight: 500; }
   .statechip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--kept); }
   .statechip.uncertain .dot { background: var(--predict); }
 
@@ -114,9 +114,9 @@
   .thread { max-width: 660px; margin: 0 auto; display: flex; flex-direction: column; }
   .turn { opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); padding: 8px 0; }
   .turn.shown { opacity: 1; }
-  .turn .who { font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); font-weight: 600; margin-bottom: 3px; }
+  .turn .who { font-size: var(--fs-micro); letter-spacing: .06em; text-transform: uppercase; color: var(--faint); font-weight: 600; margin-bottom: 3px; }
   .turn.borrower .who { color: var(--signal); }
-  .turn .say { font-size: 15px; line-height: 1.55; }
+  .turn .say { font-size: var(--fs-0); line-height: 1.55; }
   .turn.agent .say { color: var(--muted); }
 
   .hint {
@@ -126,19 +126,19 @@
   }
   .hint.shown { opacity: 1; }
   .hint .lab { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
-  .hint .tier { font-size: 10px; letter-spacing: .06em; text-transform: uppercase; font-weight: 600;
+  .hint .tier { font-size: var(--fs-micro); letter-spacing: .06em; text-transform: uppercase; font-weight: 600;
     padding: 2px 6px; border-radius: 3px; background: var(--signal-quiet); color: var(--signal); }
   .hint.strategy .tier { background: var(--predict-quiet); color: var(--predict); }
-  .hint .lat { font-size: 11px; color: var(--faint); margin-left: auto; font-family: var(--font-mono); }
-  .hint .txt { font-size: 14px; line-height: 1.5; }
+  .hint .lat { font-size: var(--fs--2); color: var(--faint); margin-left: auto; font-family: var(--font-mono); }
+  .hint .txt { font-size: var(--fs--1); line-height: 1.5; }
   .hint .foot { display: flex; align-items: center; gap: var(--s-2); margin-top: 7px; flex-wrap: wrap; }
   .hint .fb { border: 1px solid var(--line); background: transparent; border-radius: var(--r-1);
-              font-size: 11px; padding: 2px 8px; color: var(--muted); }
+              font-size: var(--fs--2); padding: 2px 8px; color: var(--muted); }
   .hint .fb[aria-pressed="true"] { border-color: var(--signal); color: var(--signal); background: var(--signal-quiet); }
 
   .controlbanner { display: none; max-width: 660px; margin: 0 auto var(--s-4);
     padding: var(--s-3) var(--s-4); border-radius: var(--r-2);
-    background: var(--surface); border: 1px dashed var(--line-strong); color: var(--muted); font-size: 12.5px; }
+    background: var(--surface); border: 1px dashed var(--line-strong); color: var(--muted); font-size: var(--fs--1); }
   body[data-arm="control"] .controlbanner { display: block; }
   body[data-arm="control"] .hint { display: none !important; }
   body[data-arm="control"] .now { opacity: .45; }
@@ -151,13 +151,13 @@
 
   /* ---- latency meter ---- */
   .latmeter { max-width: 660px; margin: 0 auto var(--s-5); }
-  .latmeter .cap { display: flex; justify-content: space-between; font-size: 11px; color: var(--faint); margin-bottom: 4px; }
+  .latmeter .cap { display: flex; justify-content: space-between; font-size: var(--fs--2); color: var(--faint); margin-bottom: 4px; }
   .latbox { position: relative; height: 62px; border: 1px solid var(--line); border-radius: var(--r-2);
             background: var(--surface); overflow: hidden; }
   .latbox .dens { position: absolute; inset: 0; display: flex; align-items: flex-end; }
   .latbox .dens i { flex: 1; background: var(--faint); opacity: .2; }
   .latbox .budget { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed var(--predict); }
-  .latbox .budget span { position: absolute; top: 3px; left: 4px; font-size: 10px; font-family: var(--font-mono); color: var(--predict); white-space: nowrap; }
+  .latbox .budget span { position: absolute; top: 3px; left: 4px; font-size: var(--fs-micro); font-family: var(--font-mono); color: var(--predict); white-space: nowrap; }
   .latdot { position: absolute; width: 9px; height: 9px; border-radius: 50%; transform: translate(-50%, -50%);
             box-shadow: 0 0 0 2px var(--surface); }
   .latdot.t1 { background: var(--kept); }
@@ -166,13 +166,13 @@
   /* ---- act ---- */
   .now { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-3);
          padding: var(--s-4); margin-bottom: var(--s-4); }
-  .now .strat { font-size: 13.5px; line-height: 1.5; margin-top: 5px; }
+  .now .strat { font-size: var(--fs--1); line-height: 1.5; margin-top: 5px; }
   .panel { border-top: 1px solid var(--line); padding: var(--s-4) 0; }
-  .panel h4 { margin: 0 0 var(--s-2); font-size: 12.5px; font-weight: 600; }
-  label.f { display: block; font-size: 12px; color: var(--muted); margin: var(--s-2) 0 3px; }
+  .panel h4 { margin: 0 0 var(--s-2); font-size: var(--fs--1); font-weight: 600; }
+  label.f { display: block; font-size: var(--fs--2); color: var(--muted); margin: var(--s-2) 0 3px; }
   input, select, textarea {
     width: 100%; background: var(--ground); color: var(--text); border: 1px solid var(--line);
-    border-radius: var(--r-1); padding: 6px 8px; font-size: 13px;
+    border-radius: var(--r-1); padding: 6px 8px; font-size: var(--fs--1);
   }
   textarea { resize: vertical; min-height: 50px; }
   .btn-row { display: flex; gap: var(--s-2); margin-top: var(--s-3); }
@@ -187,15 +187,15 @@
     transform: scaleX(0); transform-origin: left;
     transition: transform var(--dur) var(--ease-out), background var(--dur) var(--ease-out);
   }
-  .quality .txt { font-size: 11.5px; color: var(--muted); margin-top: 5px; }
+  .quality .txt { font-size: var(--fs--2); color: var(--muted); margin-top: 5px; }
 
   .boundary { list-style: none; padding: 0; margin: var(--s-2) 0 0; }
-  .boundary li { font-size: 11.5px; color: var(--muted); padding-left: 16px; position: relative; margin: 5px 0; }
-  .boundary li::before { content: "\\2715"; position: absolute; left: 0; color: var(--broken); font-size: 10px; }
+  .boundary li { font-size: var(--fs--2); color: var(--muted); padding-left: 16px; position: relative; margin: 5px 0; }
+  .boundary li::before { content: "×"; position: absolute; left: 0; color: var(--broken); font-size: var(--fs-micro); }
 
   .feed { list-style: none; margin: var(--s-2) 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px;
           max-height: 210px; overflow-y: auto; }
-  .feed li { font-size: 11.5px; color: var(--muted); border-left: 2px solid var(--line); padding: 2px 0 2px 8px; }
+  .feed li { font-size: var(--fs--2); color: var(--muted); border-left: 2px solid var(--line); padding: 2px 0 2px 8px; }
   .feed li.override { border-left-color: var(--broken); }
   .feed li.ptp { border-left-color: var(--kept); }
   .feed li.outcome-kept { border-left-color: var(--kept); }
@@ -206,7 +206,7 @@
   dialog.help { border: 1px solid var(--line-strong); border-radius: var(--r-3); background: var(--surface);
                 color: var(--text); padding: var(--s-6); max-width: 420px; box-shadow: var(--shadow-3); }
   dialog.help::backdrop { background: rgba(0,0,0,.45); }
-  dialog.help kbd { font-family: var(--font-mono); font-size: 11px; border: 1px solid var(--line-strong);
+  dialog.help kbd { font-family: var(--font-mono); font-size: var(--fs--2); border: 1px solid var(--line-strong);
                     border-bottom-width: 2px; border-radius: 4px; padding: 1px 5px; }
   dialog.help table td { padding: 5px 8px 5px 0; border: 0; }
 
@@ -235,7 +235,7 @@
 </head>
 <body data-arm="full" data-tab="talk">
 <a class="skip" href="#main">Skip to the call</a>
-<h1 class="sr-only">Ganymede agent desk — work a scored collections queue</h1>
+<h1 class="sr-only">Ganymede agent desk. Work a scored collections queue</h1>
 
 <div class="deskbar">
   <a class="brand" href="index.html">
@@ -285,7 +285,7 @@
   <nav class="col queue" aria-label="Work queue">
     <div class="qhead">
       <p class="eyebrow">the queue</p>
-      <p style="font-size:11.5px;color:var(--muted);margin:6px 0 0">
+      <p style="font-size: var(--fs--2);color:var(--muted);margin:6px 0 0">
         Ranked by expected value per agent-minute, out of
         <span class="mono" data-fig="desk:queue_size" data-fig-format="n" data-fig-badge="off">—</span>
         delinquent accounts. Two the allocator skips are included on purpose.
@@ -296,7 +296,7 @@
 
   <!-- ============ WHO ============ -->
   <aside class="col who" aria-label="Borrower">
-    <p class="eyebrow">risk of worsening — 90 days</p>
+    <p class="eyebrow">risk of worsening over 90 days</p>
     <div class="gauge-wrap">
       <div class="gauge">
         <svg width="150" height="150" viewBox="0 0 150 150" aria-hidden="true">
@@ -320,14 +320,14 @@
     <div class="field">
       <div class="k">Borrower state</div>
       <div style="margin-top:6px"><span class="statechip uncertain" id="statechip"><span class="dot"></span><span id="stateTxt">—</span></span></div>
-      <div style="font-size:11.5px;color:var(--faint);margin-top:6px" id="stateConf"></div>
+      <div style="font-size: var(--fs--2);color:var(--faint);margin-top:6px" id="stateConf"></div>
     </div>
     <div class="field">
       <div class="k">Queue position</div>
       <div class="v mono" id="queuePos">—</div>
     </div>
     <div class="field" style="border-bottom:1px solid var(--line)">
-      <div class="k">Account</div><div class="v mono" id="loanId" style="font-size:13px">—</div>
+      <div class="k">Account</div><div class="v mono" id="loanId" style="font-size: var(--fs--1)">—</div>
     </div>
   </aside>
 
@@ -344,16 +344,14 @@
           <div class="dens" id="latDens"></div>
           <div class="budget" id="latBudget"><span></span></div>
         </div>
-        <p style="font-size:11px;color:var(--faint);margin:5px 0 0">
+        <p style="font-size: var(--fs--2);color:var(--faint);margin:5px 0 0">
           Grey is the real distribution of
           <span class="mono" data-fig="audio:n_gaps" data-fig-badge="off">—</span> inter-turn gaps.
           Anything right of the dashed line missed its window.</p>
       </div>
     </div>
 
-    <div class="controlbanner">Control arm — no coaching shown. This borrower's outcome is a clean
-      counterfactual against the coached arm, which is the only way to tell the product working
-      from the allocator picking recoverable people.</div>
+    <div class="controlbanner">Control arm. No coaching is shown. This borrower's outcome is a clean counterfactual against the coached arm, and it is the only way to tell the product working from the allocator picking recoverable people.</div>
 
     <div class="thread" id="thread" aria-live="polite" aria-relevant="additions"></div>
     <div class="shadow-note" id="shadowNote" hidden>
@@ -396,7 +394,7 @@
 
     <div class="panel" id="resolvePanel" hidden>
       <h4>Resolve the promise</h4>
-      <p style="font-size:11.5px;color:var(--muted);margin:0">What actually arrived is the label. It
+      <p style="font-size: var(--fs--2);color:var(--muted);margin:0">What actually arrived is the label. It
         retrains both lenses and moves the strategy that produced it.</p>
       <div class="btn-row">
         <button class="btn" id="markKept" style="border-color:var(--kept);color:var(--kept)">Kept</button>
@@ -424,7 +422,7 @@
 
     <div class="panel">
       <h4 style="display:flex;align-items:center">Decision log
-        <button class="btn" id="exportLog" style="margin-left:auto;font-size:11px;padding:2px 8px">Export</button></h4>
+        <button class="btn" id="exportLog" style="margin-left:auto;font-size: var(--fs--2);padding:2px 8px">Export</button></h4>
       <ul class="feed" id="feed"><li class="t">Nothing logged yet.</li></ul>
     </div>
   </aside>
@@ -446,7 +444,7 @@
 
 <script type="module" src="assets/js/site.js"></script>
 <script type="module">
-import { resolveFigures } from './assets/js/figures.js';
+import { resolveFigures, val } from './assets/js/figures.js';
 import { loadData } from './assets/js/charts.js';
 
 resolveFigures();
@@ -494,7 +492,7 @@ function renderAccount() {
   $('arrears').textContent = a.arrears_months + (a.arrears_months === 1 ? ' month past due' : ' months past due');
   $('loanId').textContent = a.loan_id;
   $('queuePos').textContent = a.queue_rank
-    ? `#${a.queue_rank.toLocaleString('en-GB')} — ${a.action.replace(/_/g, ' ')}`
+    ? `#${a.queue_rank.toLocaleString('en-GB')} · ${a.action.replace(/_/g, ' ')}`
     : 'not in the ranked queue';
 
   // reason codes, each drillable to the feature behind it
@@ -540,10 +538,10 @@ function renderAccount() {
   const certain = a.state_certain;
   $('stateTxt').textContent = certain
     ? `${a.capacity.replace(/_/g, ' ')} · ${a.willingness.replace(/_/g, ' ')}`
-    : 'uncertain — needs a diagnostic question';
+    : 'uncertain, needs a diagnostic question';
   $('statechip').classList.toggle('uncertain', !certain);
   $('stateConf').textContent =
-    `confidence ${a.state_conf.toFixed(2)} — willingness cannot be read from servicing data alone`;
+    `confidence ${a.state_conf.toFixed(2)} · willingness cannot be read from servicing data alone`;
 
   $('strategy').textContent = a.strategy.startsWith('DIAGNOSTIC')
     ? 'Ask the one question that separates cannot-pay from will-not-pay before proposing anything. The model is not confident enough here to assume.'
@@ -552,7 +550,7 @@ function renderAccount() {
   const support = $('strategySupport');
   if (a.strategy.startsWith('DIAGNOSTIC')) {
     support.innerHTML = '<span class="badge badge-measured">deterministic</span>';
-    support.querySelector('.badge').title = 'The diagnostic question is not retrieved from the playbook — it is what the system says when it does not know.';
+    support.querySelector('.badge').title = 'The diagnostic question is not retrieved from the playbook. It is what the system says when it does not know.';
   } else {
     support.innerHTML = '<span class="badge badge-seeded">seeded · 0 outcomes</span>';
     support.querySelector('.badge').title =
@@ -606,7 +604,7 @@ function buildLatMeter() {
   const budget = AUDIO.budget_ms.value;
   $('latBudget').style.left = (budget / LAT_MAX * 100) + '%';
   $('latBudget').querySelector('span').textContent = `${budget} ms budget`;
-  $('minGap').textContent = `${COACH.min_turn_gap_ms} ms`;
+  $('minGap').textContent = `${val(COACH.min_turn_gap_ms)} ms`;
 }
 function plotLatency(ms, tier) {
   const box = $('latbox');
@@ -646,14 +644,14 @@ function renderTurn(t) {
       </div>
       <div class="txt"></div>
       <div class="foot">
-        <span style="font-size:11px;color:var(--faint)">was this useful?</span>
+        <span style="font-size: var(--fs--2);color:var(--faint)">was this useful?</span>
         <button class="fb" data-v="yes" aria-pressed="false">yes</button>
         <button class="fb" data-v="no" aria-pressed="false">no</button>
       </div>`;
     h.querySelector('.txt').textContent = t.hint.text;
     h.querySelectorAll('.fb').forEach(btn => btn.addEventListener('click', () => {
       h.querySelectorAll('.fb').forEach(o => o.setAttribute('aria-pressed', String(o === btn)));
-      log('hint', `hint marked ${btn.dataset.v === 'yes' ? 'useful' : 'not useful'} — feeds the rubric, not the model directly`);
+      log('hint', `hint marked ${btn.dataset.v === 'yes' ? 'useful' : 'not useful'}. Feeds the rubric, not the model directly`);
     }));
     thread.appendChild(h);
     requestAnimationFrame(() => h.classList.add('shown'));
@@ -724,7 +722,7 @@ function ptpQuality() {
   $('qualBar').style.background = have === 3 ? 'var(--kept)' : 'var(--predict)';
   $('qualTxt').textContent = have === 3
     ? 'Specific: amount, date and method are all pinned down.'
-    : `${3 - have} field${have === 2 ? '' : 's'} still open — prompt for ${[!amt && 'an amount', !due && 'a date', !m && 'a method'].filter(Boolean).join(', ')}.`;
+    : `${3 - have} field${have === 2 ? '' : 's'} still open. Prompt for ${[!amt && 'an amount', !due && 'a date', !m && 'a method'].filter(Boolean).join(', ')}.`;
   return have;
 }
 ['ptpAmt', 'ptpDue', 'ptpMethod'].forEach(id => $(id).addEventListener('input', ptpQuality));
@@ -733,20 +731,20 @@ $('capturePtp').addEventListener('click', () => {
   const amt = $('ptpAmt').value.trim(), due = $('ptpDue').value, m = $('ptpMethod').value;
   const have = ptpQuality();
   const parts = [amt && `€${amt}`, due && `by ${due}`, m && m.replace(/_/g, ' ')].filter(Boolean);
-  log('ptp', `promise captured: ${parts.join(', ') || 'no detail'}${have === 3 ? '' : ' — vague, ask for the missing field'}`);
+  log('ptp', `promise captured: ${parts.join(', ') || 'no detail'}${have === 3 ? '' : '. Vague, so ask for the missing field'}`);
   $('resolvePanel').hidden = false;
 });
 $('markKept').addEventListener('click', () => {
-  log('outcome-kept', 'promise kept — label resolved, retrains L1 and L4, promotes the strategy that produced it');
+  log('outcome-kept', 'promise kept. Label resolved, retrains L1 and L4, promotes the strategy that produced it');
   $('resolvePanel').hidden = true;
 });
 $('markBroken').addEventListener('click', () => {
-  log('outcome-broken', 'promise broken — label resolved, demotes the strategy and counts against the pilot guardrail');
+  log('outcome-broken', 'promise broken. Label resolved, demotes the strategy and counts against the guardrail');
   $('resolvePanel').hidden = true;
 });
 $('override').addEventListener('click', () => {
   const r = $('ovReason').value.trim();
-  if (!r) { $('ovReason').focus(); log('override', 'override blocked — a reason is required'); return; }
+  if (!r) { $('ovReason').focus(); log('override', 'override blocked. A reason is required'); return; }
   log('override', `override logged: "${r}"`);
   $('ovReason').value = '';
 });

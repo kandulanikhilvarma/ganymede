@@ -5,11 +5,10 @@
 const root = document.documentElement;
 
 /* ---- theme ------------------------------------------------------------- */
-function systemTheme() {
-  return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-}
+// Dark is the site's default, not the operating system's preference. An
+// explicit choice is remembered; absent one, dark is what you get.
 function currentTheme() {
-  return root.getAttribute('data-theme') || systemTheme();
+  return root.getAttribute('data-theme') || 'dark';
 }
 function setTheme(t) {
   root.setAttribute('data-theme', t);

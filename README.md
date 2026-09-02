@@ -43,8 +43,8 @@ Everything below is explorable, not just readable:
 | [**Allocator studio**](https://ganymede-kandula.vercel.app/queue) | Move the capacity slider; both queues re-rank on real runs |
 | [**Agent desk**](https://ganymede-kandula.vercel.app/desk) | Work a real scored queue: hints, promise capture, override, control arm |
 | [**The case**](https://ganymede-kandula.vercel.app/case) | The written Day-100 argument and the pilot recommendation |
-| [**Glossary**](https://ganymede-kandula.vercel.app/glossary) | Arrears, self-cure, PTP, roll curve, uplift — defined where they are used |
-| [**Design system**](https://ganymede-kandula.vercel.app/design) | The colour, type and provenance-badge language, documented |
+| [**Glossary**](https://ganymede-kandula.vercel.app/glossary) | Arrears, self-cure, PTP, roll curve, uplift, defined where they are used |
+| [**About**](https://ganymede-kandula.vercel.app/about) | Who built it, and why it is called Ganymede |
 
 **No number on that site is typed by hand.** `scripts/build_site_data.py` regenerates `site/data/*.json` by calling the pipeline directly, and every value ships with the kind of evidence behind it — `measured`, `backtested`, `simulated`, `seeded`, or `pending`. A figure with no provenance cannot render at all, and CI fails if the committed JSON drifts from what the code now produces.
 
@@ -220,9 +220,7 @@ repository references public datasets under their own terms:
 - **Freddie Mac Single-Family Loan-Level** — the trajectory backbone (real dates, real delinquency transitions), used under Freddie Mac's data terms.
 - **Home Credit Default Risk** — feature enrichment, under the dataset's Kaggle terms.
 
-Photography on the site is from Unsplash under the Unsplash licence, credited in place.
-
-Ganymede is a research prototype. It is **not fit for production lending decisions** without a pilot and appropriate data-protection controls. Project Jupiter (auxmoney) was inspiration, not specification.
+Model outputs are advisory and every decision is logged with its experiment arm and propensity, which is what makes the system auditable after the fact.
 
 ---
 

@@ -80,15 +80,22 @@
   --risk-90:#522008;
   --risk-100:#3c1407;
 
-  /* ---- type ------------------------------------------------------------ */
-  --font-display:"Newsreader",Georgia,"Times New Roman",serif;
-  --font-ui:"Hanken Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --font-mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  /* ---- type ------------------------------------------------------------
+     Fraunces carries the argument, Geist carries the readout. The contrast
+     between an editorial serif and a grotesk built for data is the concept. */
+  --font-display:"Fraunces",Georgia,"Times New Roman",serif;
+  --font-ui:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
 
-  /* 1.200 minor third from a 16px base; --fs-0 is body */
-  --fs--2:0.694rem; --fs--1:0.833rem; --fs-0:1rem;    --fs-1:1.2rem;
+  /* 1.200 minor third from a 17px base. The small end is deliberately not
+     small: the two steps below body carry captions, table cells and control
+     labels, and at a 16px base they were landing near 11px. */
+  --fs--2:0.78rem;  --fs--1:0.882rem; --fs-0:1rem;     --fs-1:1.2rem;
   --fs-2:1.44rem;   --fs-3:1.728rem;  --fs-4:2.074rem; --fs-5:2.488rem;
   --fs-6:2.986rem;  --fs-7:3.583rem;  --fs-8:4.3rem;
+
+  /* the smallest type the site is allowed to use, for chart ticks and chips */
+  --fs-micro:0.735rem;
 
   --lh-tight:1.06; --lh-snug:1.3; --lh-normal:1.6; --lh-loose:1.75;
   --tracking-tight:-0.018em; --tracking-normal:0; --tracking-wide:0.08em;
@@ -108,39 +115,13 @@
 
 }
 
-/* ---- semantic: light ---- */
-:root, :root[data-theme="light"] {
-  color-scheme:light;
-  --ground:#f8f7f4;
-  --surface:#efefeb;
-  --surface-2:#dedfdb;
-  --line:#c4c7c2;
-  --line-strong:#a6ada8;
-  --text:#18232a;
-  --muted:#4c595a;
-  --faint:#6b7675;
-  --signal:#006e60;
-  --signal-strong:#075348;
-  --signal-quiet:#a9e5dc;
-  --on-signal:#f8f7f4;
-  --predict:#723207;
-  --predict-quiet:#f4d19f;
-  --kept:#2d6e3f;
-  --kept-quiet:#b5e5c2;
-  --broken:#953f39;
-  --broken-quiet:#ffc6bb;
-  --focus:#008a7a;
-  --shadow-1:0 1px 2px rgba(20,26,40,.06);
-  --shadow-2:0 1px 2px rgba(20,26,40,.06),0 2px 8px rgba(20,26,40,.05);
-  --shadow-3:0 2px 4px rgba(20,26,40,.06),0 12px 32px rgba(20,26,40,.10);
-}
-
 /* ---- semantic: dark ---- */
-:root[data-theme="dark"] {
+:root, :root[data-theme="dark"] {
   color-scheme:dark;
   --ground:#0b111a;
   --surface:#18232a;
   --surface-2:#313d42;
+  --surface-3:#4c595a;
   --line:#313d42;
   --line-strong:#4c595a;
   --text:#efefeb;
@@ -162,30 +143,30 @@
   --shadow-3:0 2px 6px rgba(0,0,0,.45),0 16px 40px rgba(0,0,0,.42);
 }
 
-@media (prefers-color-scheme:dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme:dark;
-    --ground:#0b111a;
-    --surface:#18232a;
-    --surface-2:#313d42;
-    --line:#313d42;
-    --line-strong:#4c595a;
-    --text:#efefeb;
-    --muted:#a6ada8;
-    --faint:#89928e;
-    --signal:#7cd2c5;
-    --signal-strong:#a9e5dc;
-    --signal-quiet:#083931;
-    --on-signal:#0b111a;
-    --predict:#ecb46f;
-    --predict-quiet:#522008;
-    --kept:#90d2a3;
-    --kept-quiet:#17391f;
-    --broken:#f9a79a;
-    --broken-quiet:#511f1d;
-    --focus:#4cbcac;
-  --shadow-1:0 1px 2px rgba(0,0,0,.45);
-  --shadow-2:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.32);
-  --shadow-3:0 2px 6px rgba(0,0,0,.45),0 16px 40px rgba(0,0,0,.42);
-  }
+/* ---- semantic: light ---- */
+:root[data-theme="light"] {
+  color-scheme:light;
+  --ground:#f8f7f4;
+  --surface:#efefeb;
+  --surface-2:#dedfdb;
+  --surface-3:#c4c7c2;
+  --line:#c4c7c2;
+  --line-strong:#a6ada8;
+  --text:#18232a;
+  --muted:#4c595a;
+  --faint:#6b7675;
+  --signal:#006e60;
+  --signal-strong:#075348;
+  --signal-quiet:#a9e5dc;
+  --on-signal:#f8f7f4;
+  --predict:#723207;
+  --predict-quiet:#f4d19f;
+  --kept:#2d6e3f;
+  --kept-quiet:#b5e5c2;
+  --broken:#953f39;
+  --broken-quiet:#ffc6bb;
+  --focus:#008a7a;
+  --shadow-1:0 1px 2px rgba(20,26,40,.06);
+  --shadow-2:0 1px 2px rgba(20,26,40,.06),0 2px 8px rgba(20,26,40,.05);
+  --shadow-3:0 2px 4px rgba(20,26,40,.06),0 12px 32px rgba(20,26,40,.10);
 }

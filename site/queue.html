@@ -9,20 +9,20 @@
 <link rel="canonical" href="https://ganymede-kandula.vercel.app/queue">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ganymede">
-<meta property="og:title" content="Ganymede — allocator studio">
+<meta property="og:title" content="Ganymede · allocator studio">
 <meta property="og:description" content="Move the capacity slider and watch two queues re-rank: expected value per agent-minute against conventional risk-ranking. Every position is a real allocator run.">
 <meta property="og:url" content="https://ganymede-kandula.vercel.app/queue">
 <meta property="og:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Ganymede — allocator studio">
+<meta name="twitter:title" content="Ganymede · allocator studio">
 <meta name="twitter:description" content="Move the capacity slider and watch two queues re-rank: expected value per agent-minute against conventional risk-ranking. Every position is a real allocator run.">
 <meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
-<link rel="preload" as="font" type="font/woff2" crossorigin
-      href="assets/fonts/hanken-grotesk-latin-e9201edd.woff2">
-<link rel="preload" as="font" type="font/woff2" crossorigin
-      href="assets/fonts/newsreader-latin-62981321.woff2">
+<!-- font-preload -->
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/geist-latin-19f9c925.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/fraunces-latin-7234ed86.woff2">
+<!-- /font-preload -->
 <link rel="stylesheet" href="assets/fonts/fonts.css">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/base.css">
@@ -48,7 +48,7 @@
   .control .head b { font-family: var(--font-mono); font-size: var(--fs-4); font-weight: 500; letter-spacing: var(--tracking-tight); }
   .control .head .sub { color: var(--muted); font-size: var(--fs--1); max-width: 46ch; }
   input[type=range] { width: 100%; accent-color: var(--signal); height: 26px; }
-  .ticks { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; color: var(--faint); }
+  .ticks { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--faint); }
 
   .readouts { display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: var(--s-4); margin-top: var(--s-5); }
   .ro { border-top: 2px solid var(--line); padding-top: var(--s-3); }
@@ -83,14 +83,14 @@
     align-items: baseline;
   }
   .qlist li:last-child { border-bottom: 0; }
-  .qlist .id { font-family: var(--font-mono); font-size: 11px; color: var(--faint); }
-  .qlist .exp { font-family: var(--font-mono); font-size: 14px; font-weight: 500; text-align: right; }
-  .qlist .meta { grid-column: 1 / -1; display: flex; gap: var(--s-3); font-size: 11px; color: var(--muted); align-items: center; }
+  .qlist .id { font-family: var(--font-mono); font-size: var(--fs--2); color: var(--faint); }
+  .qlist .exp { font-family: var(--font-mono); font-size: var(--fs--1); font-weight: 500; text-align: right; }
+  .qlist .meta { grid-column: 1 / -1; display: flex; gap: var(--s-3); font-size: var(--fs--2); color: var(--muted); align-items: center; }
   .qlist li.only { background: var(--signal-quiet); }
   .qcol.risk .qlist li.only { background: var(--predict-quiet); }
-  .qlist .tag { font-family: var(--font-mono); font-size: 10px; padding: 1px 5px; border-radius: 3px; }
+  .qlist .tag { font-family: var(--font-mono); font-size: var(--fs-micro); padding: 1px 5px; border-radius: 3px; }
   .empty { padding: var(--s-6); color: var(--faint); font-size: var(--fs--1); text-align: center; }
-  .pchip { font-family: var(--font-mono); font-size: 10px; padding: 1px 5px; border-radius: 3px; color: #fff; font-weight: 500; }
+  .pchip { font-family: var(--font-mono); font-size: var(--fs-micro); padding: 1px 5px; border-radius: 3px; color: #fff; font-weight: 500; }
 
   .versus { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-5); margin-top: var(--s-5); }
   @media (max-width: 760px) { .versus { grid-template-columns: 1fr; } }
@@ -121,9 +121,9 @@
     <a href="evidence.html">Evidence</a>
     <a href="queue.html">Allocator</a>
     <a href="desk.html">Desk</a>
-    <a href="case.html">The case</a>
+    <a href="case.html">The argument</a>
     <a href="glossary.html">Glossary</a>
-    <a href="design.html">Design</a>
+    <a href="about.html">About</a>
   </div>
   <span class="spacer"></span>
   <button class="themebtn" data-theme-btn aria-label="Toggle theme">
@@ -144,8 +144,7 @@
     <h1 class="display">How many agents do you have?</h1>
     <p class="lede">Conventional collections sorts by probability of default and works down the
       list. The <span data-term="allocator">allocator</span> maximises expected recovered value per
-      agent-minute. The gap between them is not a constant — it depends entirely on how scarce your
-      capacity is. Move the slider.</p>
+      agent-minute. The gap between them is not a constant. It depends entirely on how scarce your capacity is. Move the slider.</p>
   </header>
 
   <section class="control">
@@ -164,7 +163,7 @@
       <div class="ro alloc"><b id="roAllocV">—</b><span>recovered value, allocator</span></div>
       <div class="ro risk"><b id="roRiskV">—</b><span>recovered value, risk-ranking</span></div>
       <div class="ro lift"><b id="roLift">—</b><span>the allocator's edge at this capacity</span></div>
-      <div class="ro"><b id="roContacts">—</b><span>contacts made — allocator vs risk-ranking</span></div>
+      <div class="ro"><b id="roContacts">—</b><span>contacts made, allocator vs risk-ranking</span></div>
     </div>
   </section>
 
@@ -177,7 +176,7 @@
     <div id="frontier"></div>
     <p style="font-size:var(--fs--1);color:var(--muted);margin:var(--s-4) 0 0;max-width:70ch">
       Both strategies converge as capacity approaches full coverage: given enough agents to call
-      everybody, ordering stops mattering. The edge lives where real operations live — at the left
+      everybody, ordering stops mattering. The edge lives where real operations live, at the left
       of this chart. Reporting only the flattering end of it would be the easy thing to do.</p>
   </div>
 
@@ -185,7 +184,7 @@
     <span class="n">01</span>
     <h2>Who each strategy actually calls</h2>
     <p>Fifty-two accounts from the live queue, at the capacity you set. Highlighted rows are the
-      ones <em>only</em> this strategy funds — the disagreements are the whole argument.</p>
+      ones <em>only</em> this strategy funds. The disagreements are the whole argument.</p>
 
     <div class="queues">
       <div class="qcol alloc">
@@ -217,7 +216,7 @@
     <span class="n">03</span>
     <h2>Silence is a scored action</h2>
     <p>The accounts neither strategy funds are not an oversight. Most delinquents
-      <span data-term="self-cure">self-cure</span>: contacting them spends the most expensive
+      <span data-term="self-cure">self-cure</span>. Contacting them spends the most expensive
       resource in the business on someone who was already going to pay, and irritates them while
       doing it. So <strong>&ldquo;do not contact&rdquo;</strong> has a value in the objective, and
       wins on its merits. Invariant I9 makes this the only component allowed to produce a queue, so
@@ -228,9 +227,9 @@
       <div class="ro"><b data-fig="risk:models.L2_selfcure.base_rate" data-fig-format="pct01">—</b>
         <span>of delinquent accounts cure without contact <span data-badge-slot></span></span></div>
     </div>
-    <p data-tier="2" style="margin-top:var(--s-6)">One caveat, stated plainly: the uplift shape the
-      objective uses is modelled from published practice, not measured here — the servicing data
-      carries no treatment history to measure it from. The <em>logic</em> beating risk-ranking is
+    <p data-tier="2" style="margin-top:var(--s-6)">One caveat, stated plainly. The uplift shape the
+      objective uses is modelled from published practice rather than measured here, because the
+      servicing data carries no treatment history to measure it from. The <em>logic</em> beating risk-ranking is
       what this demonstrates. The magnitude stays badged
       <span class="badge badge-simulated">simulated</span> until a
       <span data-term="control-arm">control arm</span> produces it.</p>
@@ -238,9 +237,30 @@
 </main>
 
 <footer class="site">
-  <div class="shell" style="padding-bottom:0">
-    <a href="evidence.html">Every chart with its method &rarr;</a> ·
-    <a href="desk.html">Work the queue on the desk &rarr;</a>
+  <div class="footwrap">
+    <div class="footbrand">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <defs><clipPath id="fd"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+        <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+        <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#fd)" fill="currentColor"/>
+      </svg>
+      <span>Ganymede</span>
+    </div>
+    <nav class="footnav" aria-label="Footer">
+      <a href="index.html">Start</a>
+      <a href="system.html">How it works</a>
+      <a href="evidence.html">Evidence</a>
+      <a href="queue.html">Allocator</a>
+      <a href="desk.html">Desk</a>
+      <a href="case.html">The argument</a>
+      <a href="glossary.html">Glossary</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="footmeta">
+      <a href="https://github.com/kandulanikhilvarma/ganymede">Source</a>
+      <a href="mailto:kandulanikhilvarma@gmail.com">Contact</a>
+      <span>Built by Nikhilvarma Kandula</span>
+    </div>
   </div>
 </footer>
 
@@ -374,7 +394,7 @@ function buildVersus() {
 
   $('versus').replaceChildren(
     card(bigMissed, 'risk-ranking never calls this one',
-      `A large book at modest probability. Risk-ranking sorts by probability, so this account sits far enough down the list that it is <span class="no">never reached</span> — not at 60% capacity, not anywhere in the sweep. The allocator funds it almost immediately, because the money at stake dwarfs the difference in probability.`),
+      `A large book at modest probability. Risk-ranking sorts by probability, so this account sits far enough down the list that it is <span class="no">never reached</span>. Not at 60% capacity, not anywhere in the sweep. The allocator funds it almost immediately, because the money at stake dwarfs the difference in probability.`),
     card(smallCalled, 'risk-ranking calls this one first',
       `High probability, trivial exposure. Risk-ranking funds it at <span class="no">${smallCalled ? Math.round(smallCalled.enters_risk_at * 100) : ''}% capacity</span>; the allocator <span class="yes">never does</span>, because twelve agent-minutes cost more than the whole uplift is worth. This is the expensive mistake, made thousands of times a day.`),
   );
