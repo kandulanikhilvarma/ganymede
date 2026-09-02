@@ -1,0 +1,528 @@
+{
+  "queue_size": {
+    "value": 58931,
+    "provenance": "measured",
+    "source": "test-period delinquent snapshot"
+  },
+  "capacity_frac": 0.15,
+  "action_minutes": {
+    "do_not_contact": 0,
+    "reminder": 3,
+    "plan_offer": 12,
+    "restructure": 25
+  },
+  "accounts": [
+    {
+      "loan_id": "F24Q20053175",
+      "exposure": 1757268.66,
+      "arrears_months": 4,
+      "p_worsen": 0.8265,
+      "p_selfcure": 0.2273,
+      "reason_codes": [
+        "currently behind",
+        "delinquency worsening over 3 months",
+        "recent peak delinquency"
+      ],
+      "capacity": "cannot_pay",
+      "willingness": "will_not_pay",
+      "state_conf": 0.179,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "restructure",
+      "action_minutes": 25,
+      "value": 401123.9,
+      "queue_rank": 1,
+      "credit_score": 766,
+      "dti": 45,
+      "orig_ltv": 72,
+      "delinq_trend_3m": 3.0,
+      "delinq_max_3m": 4,
+      "has_transcript": false
+    },
+    {
+      "loan_id": "F25Q30285030",
+      "exposure": 1205000.0,
+      "arrears_months": 1,
+      "p_worsen": 0.3509,
+      "p_selfcure": 0.4758,
+      "reason_codes": [
+        "currently behind",
+        "orig_upb",
+        "balance paying down"
+      ],
+      "capacity": "can_pay",
+      "willingness": "will_pay",
+      "state_conf": 0.211,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "restructure",
+      "action_minutes": 25,
+      "value": 390651.8,
+      "queue_rank": 2,
+      "credit_score": 737,
+      "dti": 41,
+      "orig_ltv": 94,
+      "delinq_trend_3m": 1.0,
+      "delinq_max_3m": 1,
+      "has_transcript": false
+    },
+    {
+      "loan_id": "F25Q10108733",
+      "exposure": 1203130.6,
+      "arrears_months": 1,
+      "p_worsen": 0.3783,
+      "p_selfcure": 0.4758,
+      "reason_codes": [
+        "currently behind",
+        "orig_upb",
+        "cltv"
+      ],
+      "capacity": "unknown",
+      "willingness": "will_pay",
+      "state_conf": 0.0,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "restructure",
+      "action_minutes": 25,
+      "value": 390045.7,
+      "queue_rank": 3,
+      "credit_score": 697,
+      "dti": 35,
+      "orig_ltv": 95,
+      "delinq_trend_3m": 1.0,
+      "delinq_max_3m": 1,
+      "has_transcript": false
+    },
+    {
+      "loan_id": "F25Q30250342",
+      "exposure": 1209000.0,
+      "arrears_months": 3,
+      "p_worsen": 0.8102,
+      "p_selfcure": 0.4529,
+      "reason_codes": [
+        "currently behind",
+        "delinquency worsening over 3 months",
+        "orig_upb"
+      ],
+      "capacity": "unknown",
+      "willingness": "will_not_pay",
+      "state_conf": 0.0,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "restructure",
+      "action_minutes": 25,
+      "value": 389388.0,
+      "queue_rank": 4,
+      "credit_score": 742,
+      "dti": 30,
+      "orig_ltv": 64,
+      "delinq_trend_3m": 3.0,
+      "delinq_max_3m": 3,
+      "has_transcript": false
+    },
+    {
+      "loan_id": "F25Q30021415",
+      "exposure": 1205000.0,
+      "arrears_months": 1,
+      "p_worsen": 0.3745,
+      "p_selfcure": 0.5618,
+      "reason_codes": [
+        "currently behind",
+        "orig_upb",
+        "loan age"
+      ],
+      "capacity": "cannot_pay",
+      "willingness": "will_pay",
+      "state_conf": 0.211,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "restructure",
+      "action_minutes": 25,
+      "value": 385595.4,
+      "queue_rank": 5,
+      "credit_score": 702,
+      "dti": 44,
+      "orig_ltv": 88,
+      "delinq_trend_3m": 1.0,
+      "delinq_max_3m": 1,
+      "has_transcript": false
+    },
+    {
+      "loan_id": "F25Q20167459",
+      "exposure": 1182963.91,
+      "arrears_months": 1,
+      "p_worsen": 0.3509,
+      "p_selfcure": 0.4758,
+      "reason_codes": [
+        "currently behind",
+        "stronger credit profile",
+        "orig_upb"
+      ],
+      "capacity": "can_pay",
+      "willingness": "will_pay",
+      "state_conf": 0.211,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "restructure",
+      "action_minutes": 25,
+      "value": 383507.4,
+      "queue_rank": 6,
+      "credit_score": 772,
+      "dti": 43,
+      "orig_ltv": 95,
+      "delinq_trend_3m": 1.0,
+      "delinq_max_3m": 1,
+      "has_transcript": false
+    },
+    {
+      "loan_id": "F24Q20233019",
+      "exposure": 1412778.79,
+      "arrears_months": 1,
+      "p_worsen": 0.2846,
+      "p_selfcure": 0.7077,
+      "reason_codes": [
+        "loan age",
+        "balance paying down",
+        "weaker credit profile"
+      ],
+      "capacity": "cannot_pay",
+      "willingness": "will_pay",
+      "state_conf": 0.211,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "restructure",
+      "action_minutes": 25,
+      "value": 379867.1,
+      "queue_rank": 7,
+      "credit_score": 675,
+      "dti": 50,
+      "orig_ltv": 75,
+      "delinq_trend_3m": 1.0,
+      "delinq_max_3m": 1,
+      "has_transcript": false
+    },
+    {
+      "loan_id": "F24Q40201905",
+      "exposure": 1176662.8,
+      "arrears_months": 2,
+      "p_worsen": 0.5,
+      "p_selfcure": 0.4529,
+      "reason_codes": [
+        "currently behind",
+        "balance paying down",
+        "recent peak delinquency"
+      ],
+      "capacity": "cannot_pay",
+      "willingness": "will_pay",
+      "state_conf": 0.211,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "restructure",
+      "action_minutes": 25,
+      "value": 378972.3,
+      "queue_rank": 8,
+      "credit_score": 706,
+      "dti": 44,
+      "orig_ltv": 59,
+      "delinq_trend_3m": 0.0,
+      "delinq_max_3m": 2,
+      "has_transcript": false
+    },
+    {
+      "loan_id": "F25Q10177844",
+      "exposure": 1204543.58,
+      "arrears_months": 1,
+      "p_worsen": 0.4425,
+      "p_selfcure": 0.4,
+      "reason_codes": [
+        "currently behind",
+        "orig_upb",
+        "recent peak delinquency"
+      ],
+      "capacity": "cannot_pay",
+      "willingness": "will_pay",
+      "state_conf": 0.342,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "restructure",
+      "action_minutes": 25,
+      "value": 375761.3,
+      "queue_rank": 9,
+      "credit_score": 682,
+      "dti": 50,
+      "orig_ltv": 91,
+      "delinq_trend_3m": 1.0,
+      "delinq_max_3m": 1,
+      "has_transcript": false
+    },
+    {
+      "loan_id": "F25Q40053227",
+      "exposure": 1209000.0,
+      "arrears_months": 2,
+      "p_worsen": 0.5137,
+      "p_selfcure": 0.6121,
+      "reason_codes": [
+        "currently behind",
+        "orig_upb",
+        "delinquency worsening over 3 months"
+      ],
+      "capacity": "can_pay",
+      "willingness": "will_pay",
+      "state_conf": 0.342,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "restructure",
+      "action_minutes": 25,
+      "value": 373128.9,
+      "queue_rank": 10,
+      "credit_score": 766,
+      "dti": 41,
+      "orig_ltv": 72,
+      "delinq_trend_3m": 2.0,
+      "delinq_max_3m": 2,
+      "has_transcript": false
+    },
+    {
+      "loan_id": "F25Q30155365",
+      "exposure": 1206000.0,
+      "arrears_months": 1,
+      "p_worsen": 0.3254,
+      "p_selfcure": 0.6121,
+      "reason_codes": [
+        "currently behind",
+        "orig_upb",
+        "balance paying down"
+      ],
+      "capacity": "unknown",
+      "willingness": "will_pay",
+      "state_conf": 0.0,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "restructure",
+      "action_minutes": 25,
+      "value": 372202.9,
+      "queue_rank": 11,
+      "credit_score": 739,
+      "dti": 45,
+      "orig_ltv": 87,
+      "delinq_trend_3m": 1.0,
+      "delinq_max_3m": 1,
+      "has_transcript": false
+    },
+    {
+      "loan_id": "F24Q40195525",
+      "exposure": 1143404.45,
+      "arrears_months": 1,
+      "p_worsen": 0.4742,
+      "p_selfcure": 0.4758,
+      "reason_codes": [
+        "currently behind",
+        "orig_upb",
+        "loan age"
+      ],
+      "capacity": "cannot_pay",
+      "willingness": "will_pay",
+      "state_conf": 0.211,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "restructure",
+      "action_minutes": 25,
+      "value": 370681.7,
+      "queue_rank": 12,
+      "credit_score": 697,
+      "dti": 47,
+      "orig_ltv": 90,
+      "delinq_trend_3m": 1.0,
+      "delinq_max_3m": 1,
+      "has_transcript": false
+    },
+    {
+      "loan_id": "F24Q40000483",
+      "exposure": 1289.3,
+      "arrears_months": 7,
+      "p_worsen": 0.8265,
+      "p_selfcure": 0.3292,
+      "reason_codes": [
+        "currently behind",
+        "delinquency worsening over 3 months",
+        "recent peak delinquency"
+      ],
+      "capacity": "unknown",
+      "willingness": "will_not_pay",
+      "state_conf": 0.0,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "do_not_contact",
+      "action_minutes": 0,
+      "value": 345.1,
+      "queue_rank": 58125,
+      "credit_score": 754,
+      "dti": 40,
+      "orig_ltv": 80,
+      "delinq_trend_3m": 3.0,
+      "delinq_max_3m": 7,
+      "has_transcript": false
+    },
+    {
+      "loan_id": "F24Q10028797",
+      "exposure": 472483.59,
+      "arrears_months": 1,
+      "p_worsen": 0.0808,
+      "p_selfcure": 1.0,
+      "reason_codes": [
+        "balance paying down",
+        "stronger credit profile",
+        "clean recent history"
+      ],
+      "capacity": "can_pay",
+      "willingness": "will_pay",
+      "state_conf": 0.342,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "do_not_contact",
+      "action_minutes": 0,
+      "value": 0.0,
+      "queue_rank": 58183,
+      "credit_score": 766,
+      "dti": 17,
+      "orig_ltv": 29,
+      "delinq_trend_3m": 1.0,
+      "delinq_max_3m": 1,
+      "has_transcript": false
+    },
+    {
+      "loan_id": "F24Q10000110",
+      "exposure": 168459.0,
+      "arrears_months": 3,
+      "p_worsen": 0.81,
+      "p_selfcure": 0.233,
+      "reason_codes": [
+        "currently behind",
+        "delinquency worsening over 3 months",
+        "recent peak delinquency"
+      ],
+      "capacity": "cannot_pay",
+      "willingness": "will_not_pay",
+      "state_conf": 0.179,
+      "state_certain": false,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness",
+      "action": "plan_offer",
+      "action_minutes": 12,
+      "value": null,
+      "queue_rank": null,
+      "credit_score": null,
+      "dti": null,
+      "orig_ltv": null,
+      "delinq_trend_3m": null,
+      "delinq_max_3m": null,
+      "has_transcript": true
+    }
+  ],
+  "replay": {
+    "account": {
+      "loan_id": "F24Q10000110",
+      "exposure": 168459.0,
+      "arrears_months": 3,
+      "p_worsen": 0.81,
+      "p_selfcure": 0.233,
+      "reason_codes": [
+        "currently behind",
+        "delinquency worsening over 3 months",
+        "recent peak delinquency"
+      ],
+      "capacity": "cannot_pay",
+      "willingness": "will_not_pay",
+      "state_conf": 0.179,
+      "strategy": "DIAGNOSTIC: ask the question that resolves capacity vs willingness"
+    },
+    "turns": [
+      {
+        "speaker": "agent",
+        "text": "Hello, is this Mr. Davies?",
+        "hint": null
+      },
+      {
+        "speaker": "borrower",
+        "text": "Yes, speaking. Who is this?",
+        "hint": {
+          "text": "You don't yet know if they can't pay or won't — ask one question that tells them apart before proposing anything.",
+          "tier": "deterministic",
+          "support": null
+        }
+      },
+      {
+        "speaker": "agent",
+        "text": "This is Sarah calling from Sterling Collections. I'm following up on the outstanding balance for your mortgage with Premier Bank.",
+        "hint": null
+      },
+      {
+        "speaker": "borrower",
+        "text": "Oh. Right. Look, I know I'm behind.",
+        "hint": {
+          "text": "Pin the promise down: ask for an amount, a date, a method. Specific promises are kept far more often than vague ones.",
+          "tier": "deterministic",
+          "support": null
+        }
+      },
+      {
+        "speaker": "agent",
+        "text": "I see here the account is currently three months past due, with a balance of approximately €168,459.",
+        "hint": null
+      },
+      {
+        "speaker": "borrower",
+        "text": "Yeah, I… I know. It's just… things have been really tough lately. I lost my job a few months back, and I'm still trying to get back on my feet.",
+        "hint": {
+          "text": "You don't yet know if they can't pay or won't — ask one question that tells them apart before proposing anything.",
+          "tier": "deterministic",
+          "support": null
+        }
+      },
+      {
+        "speaker": "agent",
+        "text": "I understand that situations can arise, Mr. Davies. Have you been able to make any payments towards the outstanding amount?",
+        "hint": null
+      },
+      {
+        "speaker": "borrower",
+        "text": "I wish I could. I really do. I've been trying to scrape something together, but honestly, I'm barely covering my essential living costs right now. I don't have anything extra.",
+        "hint": {
+          "text": "You don't yet know if they can't pay or won't — ask one question that tells them apart before proposing anything.",
+          "tier": "deterministic",
+          "support": null
+        }
+      },
+      {
+        "speaker": "agent",
+        "text": "We do have some hardship programs available that might be able to assist. Would you be open to discussing those options?",
+        "hint": null
+      },
+      {
+        "speaker": "borrower",
+        "text": "I… I suppose so. I don't know what else to do. I just can't afford to pay the full amount right now.",
+        "hint": null
+      },
+      {
+        "speaker": "agent",
+        "text": "Okay, let's go over some of the details then. Can you confirm your current address for me?",
+        "hint": null
+      }
+    ]
+  },
+  "replay_loan_id": "F24Q10000110",
+  "feature_cols": [
+    "d",
+    "delinq_trend_3m",
+    "delinq_max_3m",
+    "any_delinq_3m",
+    "upb_change_3m",
+    "rising_and_stalled",
+    "delinq_unknown",
+    "loan_age",
+    "credit_score",
+    "orig_ltv",
+    "dti",
+    "cltv",
+    "orig_upb"
+  ]
+}

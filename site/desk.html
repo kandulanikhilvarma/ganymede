@@ -1,345 +1,803 @@
+<!doctype html>
+<html lang="en" data-depth="2">
+<head>
 <meta charset="utf-8">
-<title>Ganymede Desk</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agent desk · Ganymede</title>
+<meta name="description" content="Work a real scored collections queue: risk with reason codes, borrower state, live coaching hints against a measured latency budget, promise capture, override, and a permanent control arm.">
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/components.css">
+<script>
+  try {
+    var t = localStorage.getItem('gm-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+</script>
 <style>
-  :root {
-    /* light palette — the secondary target; dark is the design surface */
-    --ground:#eef0f4; --surface:#ffffff; --surface-2:#f5f6fa; --line:#dfe3ea;
-    --text:#1a1f2b; --muted:#5c6675; --faint:#8a94a8;
-    --accent:#0e8f80; --accent-dim:#0e8f8033;
-    --kept:#1f9d63; --broken:#c5483f;
-    --risk-hue:36;
-    --shadow:0 1px 2px rgba(20,26,40,.06),0 2px 8px rgba(20,26,40,.05);
+  body { font-size: 14px; overflow: hidden; }
+  @media (max-width: 1100px) { body { overflow: auto; } }
+
+  .deskbar {
+    display: flex; align-items: center; gap: var(--s-4);
+    padding: var(--s-2) var(--s-4); border-bottom: 1px solid var(--line);
+    background: var(--surface); height: 52px;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --ground:#080b11; --surface:#0f141e; --surface-2:#151b28; --line:#232c3d;
-      --text:#e7ebf2; --muted:#8a94a8; --faint:#5b6577;
-      --accent:#35c9b5; --accent-dim:#35c9b524;
-      --kept:#3fb37f; --broken:#e0685f;
-      --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
-    }
+  .deskbar .brand { font-size: 14px; }
+  .deskbar .lbl { font-size: var(--fs--2); letter-spacing: var(--tracking-wide);
+                  text-transform: uppercase; color: var(--faint); font-weight: 600; }
+
+  .stage {
+    display: grid; grid-template-columns: 236px 272px minmax(0,1fr) 300px;
+    height: calc(100vh - 52px);
   }
-  :root[data-theme="dark"] {
-    --ground:#080b11; --surface:#0f141e; --surface-2:#151b28; --line:#232c3d;
-    --text:#e7ebf2; --muted:#8a94a8; --faint:#5b6577;
-    --accent:#35c9b5; --accent-dim:#35c9b524;
-    --kept:#3fb37f; --broken:#e0685f;
-    --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+  .col { overflow-y: auto; padding: var(--s-5); }
+  .col.queue { border-right: 1px solid var(--line); background: var(--surface-2); padding: var(--s-3); }
+  .col.who { border-right: 1px solid var(--line); background: var(--surface); }
+  .col.act { border-left: 1px solid var(--line); background: var(--surface); }
+  .col.talk { background: var(--ground); }
+
+  /* ---- queue rail ---- */
+  .qhead { padding: var(--s-2) var(--s-2) var(--s-3); }
+  .qitem {
+    display: block; width: 100%; text-align: left; border: 1px solid transparent;
+    background: transparent; border-radius: var(--r-2); padding: var(--s-3);
+    margin-bottom: 2px; color: inherit;
   }
-  * { box-sizing:border-box; }
-  body {
-    margin:0; background:var(--ground); color:var(--text);
-    font-family:"Hanken Grotesk",system-ui,sans-serif; font-size:14px; line-height:1.5;
-    -webkit-font-smoothing:antialiased;
+  .qitem:hover { background: var(--surface); }
+  .qitem[aria-current="true"] { background: var(--surface); border-color: var(--signal); }
+  .qitem .top { display: flex; align-items: baseline; gap: var(--s-2); }
+  .qitem .rank { font-family: var(--font-mono); font-size: 10px; color: var(--faint); }
+  .qitem .exp { font-family: var(--font-mono); font-size: 13px; font-weight: 500; margin-left: auto; }
+  .qitem .sub { display: flex; align-items: center; gap: var(--s-2); margin-top: 5px; font-size: 11px; color: var(--muted); }
+  .pchip {
+    font-family: var(--font-mono); font-size: 10px; padding: 1px 5px; border-radius: 3px;
+    color: #fff; font-weight: 500;
   }
-  .mono { font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums; }
-  .eyebrow { font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--faint); font-weight:600; }
-  button { font-family:inherit; cursor:pointer; }
-  button:focus-visible, [tabindex]:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  .qitem .act { font-size: 10px; font-family: var(--font-mono); color: var(--faint); }
+  .qitem.skip .act { color: var(--faint); }
+  .qitem .tape { font-size: 10px; color: var(--signal); }
 
-  .topbar {
-    display:flex; align-items:center; gap:16px; padding:12px 20px;
-    border-bottom:1px solid var(--line); background:var(--surface);
+  /* ---- who ---- */
+  .gauge-wrap { display: flex; flex-direction: column; align-items: center; margin: 0 0 var(--s-4); }
+  .gauge { position: relative; width: 150px; height: 150px; }
+  .gauge svg { transform: rotate(-90deg); }
+  .gauge .val { position: absolute; inset: 0; display: flex; flex-direction: column;
+                align-items: center; justify-content: center; }
+  .gauge .val b { font-size: 34px; font-weight: 600; letter-spacing: -.02em; }
+  .gauge .val span { font-size: 10px; color: var(--faint); letter-spacing: .06em; text-transform: uppercase; }
+  .band-note { font-size: 11px; color: var(--faint); text-align: center; margin-top: var(--s-2); }
+
+  .field { border-top: 1px solid var(--line); padding: var(--s-3) 0; }
+  .field:first-of-type { border-top: 0; }
+  .field .k { color: var(--muted); font-size: 12px; }
+  .field .v { font-weight: 600; margin-top: 2px; }
+  .field .v.big { font-size: 20px; letter-spacing: -.01em; }
+
+  .reasons { list-style: none; margin: var(--s-2) 0 0; padding: 0; display: flex; flex-direction: column; gap: 3px; }
+  .reasons button {
+    display: flex; gap: 8px; align-items: baseline; font-size: 12.5px; width: 100%;
+    text-align: left; background: transparent; border: 0; padding: 3px 4px; border-radius: var(--r-1); color: inherit;
   }
-  .brand { font-weight:600; letter-spacing:-.01em; display:flex; align-items:baseline; gap:9px; }
-  .brand .moon { width:9px; height:9px; border-radius:50%;
-    background:radial-gradient(circle at 32% 30%, var(--accent), transparent 72%), var(--muted); }
-  .brand small { color:var(--faint); font-weight:500; letter-spacing:.04em; }
-  .topbar .spacer { flex:1; }
-  .arm { display:flex; border:1px solid var(--line); border-radius:7px; overflow:hidden; }
-  .arm button { background:transparent; color:var(--muted); border:0; padding:6px 13px; font-size:12.5px; font-weight:500; }
-  .arm button[aria-pressed="true"] { background:var(--accent-dim); color:var(--accent); }
-  .transport button {
-    background:var(--surface-2); color:var(--text); border:1px solid var(--line);
-    border-radius:7px; padding:6px 14px; font-weight:500; font-size:13px;
-  }
-  .transport button.primary { background:var(--accent); color:var(--ground); border-color:var(--accent); }
+  .reasons button:hover { background: var(--surface-2); }
+  .reasons button::before { content: ""; width: 12px; height: 2px; margin-top: 7px; background: var(--signal); flex: none; }
+  .reasondrill { font-size: 11.5px; color: var(--muted); background: var(--surface-2);
+                 border-radius: var(--r-2); padding: var(--s-3); margin-top: var(--s-2); display: none; }
+  .reasondrill.on { display: block; }
 
-  .stage { display:grid; grid-template-columns:288px 1fr 316px; gap:0; height:calc(100vh - 57px); }
-  @media (max-width:1080px){ .stage{ grid-template-columns:1fr; height:auto; } }
-  .col { overflow-y:auto; padding:20px; }
-  .col.who { border-right:1px solid var(--line); background:var(--surface); }
-  .col.act { border-left:1px solid var(--line); background:var(--surface); }
-  .col.talk { background:var(--ground); }
+  .statechip { display: inline-flex; align-items: center; gap: 7px; padding: 4px 9px; border-radius: var(--r-1);
+    background: var(--surface-2); border: 1px solid var(--line); font-size: 12px; font-weight: 500; }
+  .statechip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--kept); }
+  .statechip.uncertain .dot { background: var(--predict); }
 
-  .gauge-wrap { display:flex; flex-direction:column; align-items:center; gap:4px; margin:6px 0 18px; }
-  .gauge { position:relative; width:150px; height:150px; }
-  .gauge svg { transform:rotate(-90deg); }
-  .gauge .val { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-  .gauge .val b { font-size:34px; font-weight:600; letter-spacing:-.02em; }
-  .gauge .val span { font-size:11px; color:var(--faint); letter-spacing:.06em; text-transform:uppercase; }
-
-  .field { border-top:1px solid var(--line); padding:13px 0; }
-  .field:first-of-type { border-top:0; }
-  .field .k { color:var(--muted); font-size:12.5px; }
-  .field .v { font-weight:600; margin-top:2px; }
-  .field .v.big { font-size:20px; letter-spacing:-.01em; }
-
-  .reasons { list-style:none; margin:8px 0 0; padding:0; display:flex; flex-direction:column; gap:6px; }
-  .reasons li { display:flex; gap:9px; align-items:baseline; font-size:13px; color:var(--text); }
-  .reasons li::before { content:""; width:14px; height:2px; margin-top:8px; background:var(--accent); flex:none; }
-
-  .statechip { display:inline-flex; align-items:center; gap:7px; padding:5px 10px; border-radius:6px;
-    background:var(--surface-2); border:1px solid var(--line); font-size:12.5px; font-weight:500; }
-  .statechip .dot { width:7px; height:7px; border-radius:50%; background:var(--faint); }
-  .statechip.uncertain .dot { background:#d9a441; }
-
-  .thread { max-width:640px; margin:0 auto; display:flex; flex-direction:column; gap:3px; }
-  .turn { opacity:0; transition:opacity .12s ease; padding:9px 0; }
-  .turn.shown { opacity:1; }
-  .turn .who { font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--faint); font-weight:600; margin-bottom:3px; }
-  .turn.borrower .who { color:var(--accent); }
-  .turn .say { font-size:15px; line-height:1.55; }
-  .turn.agent .say { color:var(--muted); }
+  /* ---- talk ---- */
+  .talkhead { max-width: 660px; margin: 0 auto var(--s-4); }
+  .thread { max-width: 660px; margin: 0 auto; display: flex; flex-direction: column; }
+  .turn { opacity: 0; transition: opacity var(--dur-fast) var(--ease-out); padding: 8px 0; }
+  .turn.shown { opacity: 1; }
+  .turn .who { font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--faint); font-weight: 600; margin-bottom: 3px; }
+  .turn.borrower .who { color: var(--signal); }
+  .turn .say { font-size: 15px; line-height: 1.55; }
+  .turn.agent .say { color: var(--muted); }
 
   .hint {
-    margin:7px 0 4px; padding:11px 13px; border-radius:9px;
-    background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow);
-    opacity:0; transition:opacity .12s ease;
+    margin: 6px 0 4px; padding: 10px 12px; border-radius: var(--r-3);
+    background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-2);
+    opacity: 0; transition: opacity var(--dur-fast) var(--ease-out);
   }
-  .hint.shown { opacity:1; }
-  .hint .lab { display:flex; align-items:center; gap:8px; margin-bottom:5px; }
-  .hint .tier { font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; font-weight:600;
-    padding:2px 7px; border-radius:4px; background:var(--accent-dim); color:var(--accent); }
-  .hint .lat { font-size:11px; color:var(--faint); margin-left:auto; }
-  .hint .txt { font-size:14px; line-height:1.5; }
-  .hint.strategy .tier { background:#d9a44122; color:#d9a441; }
-  .hint .support { font-size:11px; color:var(--faint); margin-top:5px; }
+  .hint.shown { opacity: 1; }
+  .hint .lab { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+  .hint .tier { font-size: 10px; letter-spacing: .06em; text-transform: uppercase; font-weight: 600;
+    padding: 2px 6px; border-radius: 3px; background: var(--signal-quiet); color: var(--signal); }
+  .hint.strategy .tier { background: var(--predict-quiet); color: var(--predict); }
+  .hint .lat { font-size: 11px; color: var(--faint); margin-left: auto; font-family: var(--font-mono); }
+  .hint .txt { font-size: 14px; line-height: 1.5; }
+  .hint .foot { display: flex; align-items: center; gap: var(--s-2); margin-top: 7px; flex-wrap: wrap; }
+  .hint .fb { border: 1px solid var(--line); background: transparent; border-radius: var(--r-1);
+              font-size: 11px; padding: 2px 8px; color: var(--muted); }
+  .hint .fb[aria-pressed="true"] { border-color: var(--signal); color: var(--signal); background: var(--signal-quiet); }
 
-  .now { background:var(--surface-2); border:1px solid var(--line); border-radius:9px; padding:13px; margin-bottom:16px; }
-  .now .eyebrow { margin-bottom:6px; }
-  .now .strat { font-size:13.5px; line-height:1.5; }
+  .controlbanner { display: none; max-width: 660px; margin: 0 auto var(--s-4);
+    padding: var(--s-3) var(--s-4); border-radius: var(--r-2);
+    background: var(--surface); border: 1px dashed var(--line-strong); color: var(--muted); font-size: 12.5px; }
+  body[data-arm="control"] .controlbanner { display: block; }
+  body[data-arm="control"] .hint { display: none !important; }
+  body[data-arm="control"] .now { opacity: .45; }
 
-  .panel { border-top:1px solid var(--line); padding:15px 0; }
-  .panel h4 { margin:0 0 9px; font-size:12.5px; font-weight:600; }
-  label.f { display:block; font-size:12px; color:var(--muted); margin:8px 0 3px; }
+  .shadow-note {
+    max-width: 660px; margin: 0 auto; padding: var(--s-6);
+    border: 1px dashed var(--line-strong); border-radius: var(--r-3); color: var(--muted);
+  }
+  .shadow-note h3 { font-size: var(--fs-0); color: var(--text); margin-bottom: var(--s-3); }
+
+  /* ---- latency meter ---- */
+  .latmeter { max-width: 660px; margin: 0 auto var(--s-5); }
+  .latmeter .cap { display: flex; justify-content: space-between; font-size: 11px; color: var(--faint); margin-bottom: 4px; }
+  .latbox { position: relative; height: 62px; border: 1px solid var(--line); border-radius: var(--r-2);
+            background: var(--surface); overflow: hidden; }
+  .latbox .dens { position: absolute; inset: 0; display: flex; align-items: flex-end; }
+  .latbox .dens i { flex: 1; background: var(--faint); opacity: .2; }
+  .latbox .budget { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed var(--predict); }
+  .latbox .budget span { position: absolute; top: 3px; left: 4px; font-size: 10px; font-family: var(--font-mono); color: var(--predict); white-space: nowrap; }
+  .latdot { position: absolute; width: 9px; height: 9px; border-radius: 50%; transform: translate(-50%, -50%);
+            box-shadow: 0 0 0 2px var(--surface); }
+  .latdot.t1 { background: var(--kept); }
+  .latdot.t2 { background: var(--predict); }
+
+  /* ---- act ---- */
+  .now { background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-3);
+         padding: var(--s-4); margin-bottom: var(--s-4); }
+  .now .strat { font-size: 13.5px; line-height: 1.5; margin-top: 5px; }
+  .panel { border-top: 1px solid var(--line); padding: var(--s-4) 0; }
+  .panel h4 { margin: 0 0 var(--s-2); font-size: 12.5px; font-weight: 600; }
+  label.f { display: block; font-size: 12px; color: var(--muted); margin: var(--s-2) 0 3px; }
   input, select, textarea {
-    width:100%; background:var(--ground); color:var(--text); border:1px solid var(--line);
-    border-radius:6px; padding:7px 9px; font-family:inherit; font-size:13px;
+    width: 100%; background: var(--ground); color: var(--text); border: 1px solid var(--line);
+    border-radius: var(--r-1); padding: 6px 8px; font-size: 13px;
   }
-  textarea { resize:vertical; min-height:52px; }
-  .btn-row { display:flex; gap:8px; margin-top:10px; }
-  .btn {
-    flex:1; padding:8px 10px; border-radius:7px; font-weight:500; font-size:13px;
-    border:1px solid var(--line); background:var(--surface-2); color:var(--text);
+  textarea { resize: vertical; min-height: 50px; }
+  .btn-row { display: flex; gap: var(--s-2); margin-top: var(--s-3); }
+  .btn-row .btn { flex: 1; }
+
+  .quality { margin-top: var(--s-3); }
+  .quality .bar { height: 6px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+  .quality .bar i { display: block; height: 100%; background: var(--kept); width: 0; transition: width var(--dur) var(--ease-out); }
+  .quality .txt { font-size: 11.5px; color: var(--muted); margin-top: 5px; }
+
+  .boundary { list-style: none; padding: 0; margin: var(--s-2) 0 0; }
+  .boundary li { font-size: 11.5px; color: var(--muted); padding-left: 16px; position: relative; margin: 5px 0; }
+  .boundary li::before { content: "\\2715"; position: absolute; left: 0; color: var(--broken); font-size: 10px; }
+
+  .feed { list-style: none; margin: var(--s-2) 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px;
+          max-height: 210px; overflow-y: auto; }
+  .feed li { font-size: 11.5px; color: var(--muted); border-left: 2px solid var(--line); padding: 2px 0 2px 8px; }
+  .feed li.override { border-left-color: var(--broken); }
+  .feed li.ptp { border-left-color: var(--kept); }
+  .feed li.outcome-kept { border-left-color: var(--kept); }
+  .feed li.outcome-broken { border-left-color: var(--broken); }
+  .feed .t { color: var(--faint); font-family: var(--font-mono); }
+
+  /* ---- keyboard help ---- */
+  dialog.help { border: 1px solid var(--line-strong); border-radius: var(--r-3); background: var(--surface);
+                color: var(--text); padding: var(--s-6); max-width: 420px; box-shadow: var(--shadow-3); }
+  dialog.help::backdrop { background: rgba(0,0,0,.45); }
+  dialog.help kbd { font-family: var(--font-mono); font-size: 11px; border: 1px solid var(--line-strong);
+                    border-bottom-width: 2px; border-radius: 4px; padding: 1px 5px; }
+  dialog.help table td { padding: 5px 8px 5px 0; border: 0; }
+
+  /* ---- mobile ---- */
+  .tabs { display: none; }
+  @media (max-width: 1100px) {
+    /* The toolbar carries eight controls; below ~900px they cannot sit on one
+       line, so it wraps into two rows instead of pushing the page sideways. */
+    .deskbar { flex-wrap: wrap; height: auto; row-gap: var(--s-2); }
+    .deskbar .spacer { flex-basis: 100%; height: 0; }
+    .deskbar .lbl { display: none; }
+    .deskbar .brand { flex: 1; }
+    .stage { grid-template-columns: 1fr; height: auto; }
+    .col { max-height: none; }
+    .tabs { display: flex; gap: 2px; padding: var(--s-2) var(--s-4); border-bottom: 1px solid var(--line);
+            background: var(--surface); position: sticky; top: 0; z-index: 20; }
+    .tabs button { flex: 1; }
+    .col.queue, .col.who, .col.talk, .col.act { display: none; border: 0; }
+    .talkhead, .thread, .shadow-note, .controlbanner, .latmeter { max-width: none; }
+    body[data-tab="queue"] .col.queue,
+    body[data-tab="who"] .col.who,
+    body[data-tab="talk"] .col.talk,
+    body[data-tab="act"] .col.act { display: block; }
   }
-  .btn.go { background:var(--accent); color:var(--ground); border-color:var(--accent); }
-  .btn.warn { border-color:var(--broken); color:var(--broken); background:transparent; }
-
-  .feed { list-style:none; margin:9px 0 0; padding:0; display:flex; flex-direction:column; gap:7px; }
-  .feed li { font-size:12px; color:var(--muted); border-left:2px solid var(--line); padding:2px 0 2px 9px; }
-  .feed li.override { border-left-color:var(--broken); }
-  .feed li.ptp { border-left-color:var(--kept); }
-  .feed .t { color:var(--faint); }
-
-  .controlbanner { display:none; margin:0 auto 14px; max-width:640px; padding:9px 13px; border-radius:8px;
-    background:var(--surface); border:1px dashed var(--line); color:var(--muted); font-size:12.5px; }
-  body[data-arm="control"] .controlbanner { display:block; }
-  body[data-arm="control"] .hint { display:none !important; }
-  body[data-arm="control"] .now { opacity:.5; }
 </style>
+</head>
+<body data-arm="full" data-tab="talk">
 
-<div class="topbar">
-  <div class="brand"><span class="moon"></span> Ganymede <small>collections desk</small></div>
-  <div class="spacer"></div>
-  <div class="eyebrow" style="align-self:center">experiment arm</div>
-  <div class="arm" role="group" aria-label="Experiment arm">
-    <button id="armFull" aria-pressed="true">full</button>
+<div class="deskbar">
+  <a class="brand" href="index.html">
+    <svg viewBox="0 0 32 32" aria-hidden="true" style="color:var(--signal)">
+      <defs><clipPath id="nav-d"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+      <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+      <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#nav-d)" fill="currentColor"/>
+    </svg>
+    Ganymede <small>desk</small>
+  </a>
+  <span class="spacer"></span>
+
+  <span class="lbl" data-tier="2">arm</span>
+  <div class="seg" role="group" aria-label="Experiment arm">
+    <button id="armFull" aria-pressed="true">coached</button>
     <button id="armControl" aria-pressed="false">control</button>
   </div>
-  <div class="transport">
-    <button id="restart">Restart</button>
-    <button id="play" class="primary">Play call</button>
+
+  <span class="lbl">speed</span>
+  <div class="seg" role="group" aria-label="Replay speed">
+    <button data-speed="2" aria-pressed="false">0.5&times;</button>
+    <button data-speed="1" aria-pressed="true">1&times;</button>
+    <button data-speed="0.5" aria-pressed="false">2&times;</button>
   </div>
+
+  <button class="btn" id="stepBtn">Step</button>
+  <button class="btn" id="restart">Restart</button>
+  <button class="btn btn-primary" id="play">Play call</button>
+  <button class="themebtn" id="helpBtn" aria-label="Keyboard shortcuts"><span class="mono">?</span></button>
+  <button class="themebtn" data-theme-btn aria-label="Toggle theme">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>
+    </svg>
+  </button>
+</div>
+
+<div class="tabs seg" role="group" aria-label="Panel">
+  <button data-tab-btn="queue" aria-pressed="false">Queue</button>
+  <button data-tab-btn="who" aria-pressed="false">Who</button>
+  <button data-tab-btn="talk" aria-pressed="true">Call</button>
+  <button data-tab-btn="act" aria-pressed="false">Act</button>
 </div>
 
 <div class="stage">
-  <!-- WHO -->
-  <aside class="col who">
-    <div class="eyebrow">risk of worsening &mdash; 90 days</div>
+
+  <!-- ============ QUEUE ============ -->
+  <nav class="col queue" aria-label="Work queue">
+    <div class="qhead">
+      <p class="eyebrow">the queue</p>
+      <p style="font-size:11.5px;color:var(--muted);margin:6px 0 0">
+        Ranked by expected value per agent-minute, out of
+        <span class="mono" data-fig="desk:queue_size" data-fig-format="n" data-fig-badge="off">—</span>
+        delinquent accounts. Two the allocator skips are included on purpose.
+      </p>
+    </div>
+    <div id="queue"></div>
+  </nav>
+
+  <!-- ============ WHO ============ -->
+  <aside class="col who" aria-label="Borrower">
+    <p class="eyebrow">risk of worsening — 90 days</p>
     <div class="gauge-wrap">
       <div class="gauge">
-        <svg width="150" height="150" viewBox="0 0 150 150">
+        <svg width="150" height="150" viewBox="0 0 150 150" aria-hidden="true">
           <circle cx="75" cy="75" r="62" fill="none" stroke="var(--line)" stroke-width="12"/>
+          <circle id="bandArc" cx="75" cy="75" r="62" fill="none" stroke-width="12" stroke-linecap="butt" opacity=".28"/>
           <circle id="arc" cx="75" cy="75" r="62" fill="none" stroke-width="12" stroke-linecap="round"/>
         </svg>
         <div class="val"><b id="riskNum" class="mono">0</b><span>p(worsen)</span></div>
       </div>
+      <p class="band-note" id="bandNote"></p>
     </div>
 
-    <div class="field">
-      <div class="k">Exposure</div>
-      <div class="v big mono" id="exposure">&euro;0</div>
-    </div>
-    <div class="field">
-      <div class="k">Self-cure without contact</div>
-      <div class="v mono" id="selfcure">0%</div>
-    </div>
-    <div class="field">
-      <div class="k">Arrears</div>
-      <div class="v" id="arrears">&mdash;</div>
-    </div>
+    <div class="field"><div class="k">Exposure</div><div class="v big mono" id="exposure">—</div></div>
+    <div class="field"><div class="k">Self-cure without contact</div><div class="v mono" id="selfcure">—</div></div>
+    <div class="field"><div class="k">Arrears</div><div class="v" id="arrears">—</div></div>
     <div class="field">
       <div class="k">Why this score</div>
       <ul class="reasons" id="reasons"></ul>
+      <div class="reasondrill" id="reasonDrill"></div>
     </div>
     <div class="field">
       <div class="k">Borrower state</div>
-      <div style="margin-top:6px"><span class="statechip uncertain" id="statechip"><span class="dot"></span><span id="stateTxt">unknown</span></span></div>
-      <div style="font-size:12px;color:var(--faint);margin-top:6px" id="stateConf"></div>
+      <div style="margin-top:6px"><span class="statechip uncertain" id="statechip"><span class="dot"></span><span id="stateTxt">—</span></span></div>
+      <div style="font-size:11.5px;color:var(--faint);margin-top:6px" id="stateConf"></div>
+    </div>
+    <div class="field">
+      <div class="k">Queue position</div>
+      <div class="v mono" id="queuePos">—</div>
     </div>
     <div class="field" style="border-bottom:1px solid var(--line)">
-      <div class="k">Account</div>
-      <div class="v mono" id="loanId" style="font-size:13px">&mdash;</div>
+      <div class="k">Account</div><div class="v mono" id="loanId" style="font-size:13px">—</div>
     </div>
   </aside>
 
-  <!-- TALK -->
+  <!-- ============ TALK ============ -->
   <main class="col talk">
-    <div class="controlbanner">Control arm &mdash; no coaching shown. This borrower's outcome is a clean counterfactual against the coached arm.</div>
-    <div class="thread" id="thread"></div>
+    <div class="talkhead">
+      <div class="latmeter" data-tier="2">
+        <div class="cap"><span>hint latency against the measured gap distribution</span>
+          <span class="mono" id="latLegend">
+            <span style="color:var(--kept)">&#9679;</span> tier 1
+            <span style="color:var(--predict);margin-left:8px">&#9679;</span> tier 2
+          </span></div>
+        <div class="latbox" id="latbox">
+          <div class="dens" id="latDens"></div>
+          <div class="budget" id="latBudget"><span></span></div>
+        </div>
+        <p style="font-size:11px;color:var(--faint);margin:5px 0 0">
+          Grey is the real distribution of
+          <span class="mono" data-fig="audio:n_gaps" data-fig-badge="off">—</span> inter-turn gaps.
+          Anything right of the dashed line missed its window.</p>
+      </div>
+    </div>
+
+    <div class="controlbanner">Control arm — no coaching shown. This borrower's outcome is a clean
+      counterfactual against the coached arm, which is the only way to tell the product working
+      from the allocator picking recoverable people.</div>
+
+    <div class="thread" id="thread" aria-live="polite" aria-relevant="additions"></div>
+    <div class="shadow-note" id="shadowNote" hidden>
+      <h3>No recorded call on this account</h3>
+      <p style="margin:0 0 var(--s-3)">Exactly one account in this queue has a scored transcript, and
+        this is not it. Pairing another borrower's conversation with this panel would be a fabrication,
+        so the desk does not.</p>
+      <p style="margin:0 0 var(--s-3)">What the Coach Lens <em>would</em> open with here, from the
+        borrower state on the left:</p>
+      <p class="callout" style="margin:0" id="shadowStrategy"></p>
+      <p style="margin:var(--s-4) 0 0"><button class="btn" id="goToCall">Open the account that has one →</button></p>
+    </div>
   </main>
 
-  <!-- ACT -->
-  <aside class="col act">
+  <!-- ============ ACT ============ -->
+  <aside class="col act" aria-label="Actions">
     <div class="now">
-      <div class="eyebrow">recommended next move</div>
-      <div class="strat" id="strategy">&mdash;</div>
+      <p class="eyebrow">recommended next move</p>
+      <div class="strat" id="strategy">—</div>
+      <div style="margin-top:var(--s-3)" id="strategySupport"></div>
     </div>
 
     <div class="panel" style="border-top:0;padding-top:0">
       <h4>Capture promise-to-pay</h4>
-      <label class="f" for="ptpAmt">Amount (&euro;)</label>
+      <label class="f" for="ptpAmt">Amount (€)</label>
       <input id="ptpAmt" class="mono" inputmode="numeric" placeholder="e.g. 150">
       <label class="f" for="ptpDue">By date</label>
       <input id="ptpDue" type="date">
       <label class="f" for="ptpMethod">Method</label>
       <select id="ptpMethod">
-        <option value="">&mdash;</option><option>bank_transfer</option><option>direct_debit</option><option>card</option><option>cash</option>
+        <option value="">—</option><option>bank_transfer</option><option>direct_debit</option>
+        <option>card</option><option>cash</option>
       </select>
-      <div class="btn-row"><button class="btn go" id="capturePtp">Capture promise</button></div>
+      <div class="quality">
+        <div class="bar"><i id="qualBar"></i></div>
+        <div class="txt" id="qualTxt">A promise with an amount, a date and a method is kept far more often than a vague one.</div>
+      </div>
+      <div class="btn-row"><button class="btn btn-primary" id="capturePtp">Capture promise</button></div>
+    </div>
+
+    <div class="panel" id="resolvePanel" hidden>
+      <h4>Resolve the promise</h4>
+      <p style="font-size:11.5px;color:var(--muted);margin:0">What actually arrived is the label. It
+        retrains both lenses and moves the strategy that produced it.</p>
+      <div class="btn-row">
+        <button class="btn" id="markKept" style="border-color:var(--kept);color:var(--kept)">Kept</button>
+        <button class="btn btn-danger" id="markBroken">Broken</button>
+      </div>
     </div>
 
     <div class="panel">
       <h4>Override recommendation</h4>
       <label class="f" for="ovReason">Reason (required)</label>
       <textarea id="ovReason" placeholder="Why are you departing from the recommendation?"></textarea>
-      <div class="btn-row"><button class="btn warn" id="override">Log override</button></div>
+      <div class="btn-row"><button class="btn btn-danger" id="override">Log override</button></div>
+    </div>
+
+    <div class="panel" data-tier="2">
+      <h4>What the coach will not do</h4>
+      <ul class="boundary">
+        <li>Fire mid-sentence — only at a pause of <span class="mono" id="minGap">—</span> or more</li>
+        <li>Show more than one hint at a time</li>
+        <li>Guess a strategy when borrower state is uncertain</li>
+        <li>Hide that a strategy has no outcome support behind it</li>
+        <li>Race an LLM against the budget instead of demoting it</li>
+      </ul>
     </div>
 
     <div class="panel">
-      <h4>Decision log</h4>
+      <h4 style="display:flex;align-items:center">Decision log
+        <button class="btn" id="exportLog" style="margin-left:auto;font-size:11px;padding:2px 8px">Export</button></h4>
       <ul class="feed" id="feed"><li class="t">Nothing logged yet.</li></ul>
     </div>
   </aside>
 </div>
 
-<script>
-const DATA = {"account":{"loan_id":"F24Q10000110","exposure":168459.0,"arrears_months":3,"p_worsen":0.81,"p_selfcure":0.233,"reason_codes":["currently behind","delinquency worsening over 3 months","recent peak delinquency"],"capacity":"cannot_pay","willingness":"will_not_pay","state_conf":0.179,"strategy":"DIAGNOSTIC: ask the question that resolves capacity vs willingness"},"turns":[{"speaker":"agent","text":"Hello, is this Mr. Davies?","hint":null},{"speaker":"borrower","text":"Yes, speaking. Who is this?","hint":{"text":"You don't yet know if they can't pay or won't — ask one question that tells them apart before proposing anything.","tier":"deterministic","support":null}},{"speaker":"agent","text":"This is Sarah calling from Sterling Collections. I'm following up on the outstanding balance for your mortgage with Premier Bank.","hint":null},{"speaker":"borrower","text":"Oh. Right. Look, I know I'm behind.","hint":{"text":"Pin the promise down: ask for an amount, a date, a method. Specific promises are kept far more often than vague ones.","tier":"deterministic","support":null}},{"speaker":"agent","text":"I see here the account is currently three months past due, with a balance of approximately €168,459.","hint":null},{"speaker":"borrower","text":"Yeah, I… I know. It's just… things have been really tough lately. I lost my job a few months back, and I'm still trying to get back on my feet.","hint":{"text":"You don't yet know if they can't pay or won't — ask one question that tells them apart before proposing anything.","tier":"deterministic","support":null}},{"speaker":"agent","text":"I understand that situations can arise, Mr. Davies. Have you been able to make any payments towards the outstanding amount?","hint":null},{"speaker":"borrower","text":"I wish I could. I really do. I've been trying to scrape something together, but honestly, I'm barely covering my essential living costs right now. I don't have anything extra.","hint":{"text":"You don't yet know if they can't pay or won't — ask one question that tells them apart before proposing anything.","tier":"deterministic","support":null}},{"speaker":"agent","text":"We do have some hardship programs available that might be able to assist. Would you be open to discussing those options?","hint":null},{"speaker":"borrower","text":"I… I suppose so. I don't know what else to do. I just can't afford to pay the full amount right now.","hint":null},{"speaker":"agent","text":"Okay, let's go over some of the details then. Can you confirm your current address for me?","hint":null}]};
+<dialog class="help" id="helpDlg">
+  <h3 style="margin:0 0 var(--s-4)">Keyboard</h3>
+  <table>
+    <tr><td><kbd>space</kbd></td><td>play / pause the replay</td></tr>
+    <tr><td><kbd>→</kbd></td><td>step one turn</td></tr>
+    <tr><td><kbd>j</kbd> <kbd>k</kbd></td><td>next / previous account</td></tr>
+    <tr><td><kbd>1</kbd> <kbd>2</kbd></td><td>coached arm / control arm</td></tr>
+    <tr><td><kbd>r</kbd></td><td>restart the replay</td></tr>
+    <tr><td><kbd>?</kbd></td><td>this dialog</td></tr>
+    <tr><td><kbd>esc</kbd></td><td>close</td></tr>
+  </table>
+  <div class="btn-row"><button class="btn" id="helpClose">Close</button></div>
+</dialog>
 
-  const A = DATA.account;
-  // static account panel
-  document.getElementById('exposure').textContent = '€' + A.exposure.toLocaleString('en-GB',{maximumFractionDigits:0});
-  document.getElementById('selfcure').textContent = Math.round(A.p_selfcure*100) + '%';
-  document.getElementById('arrears').textContent = A.arrears_months + ' months past due';
-  document.getElementById('loanId').textContent = A.loan_id;
-  document.getElementById('reasons').innerHTML = A.reason_codes.map(r=>`<li>${r}</li>`).join('');
-  const stateCertain = A.state_conf >= 0.6;
-  document.getElementById('stateTxt').textContent =
-    stateCertain ? `${A.capacity.replace('_',' ')} · ${A.willingness.replace('_',' ')}` : 'uncertain — needs a diagnostic question';
-  document.getElementById('statechip').classList.toggle('uncertain', !stateCertain);
-  document.getElementById('stateConf').textContent = `confidence ${A.state_conf.toFixed(2)} — willingness can't be known from servicing data alone`;
-  document.getElementById('strategy').textContent =
-    A.strategy.startsWith('DIAGNOSTIC') ? 'Ask the one question that separates cannot-pay from will-not-pay before proposing anything. On this account the model is not confident enough to assume.' : A.strategy;
+<script type="module" src="assets/js/site.js"></script>
+<script type="module">
+import { resolveFigures } from './assets/js/figures.js';
+import { loadData } from './assets/js/charts.js';
 
-  // risk gauge — sequential single-hue amber ramp: lightness encodes magnitude,
-  // never a traffic-light red/amber/green (which invents categories from a scalar)
-  const p = A.p_worsen, R=62, C=2*Math.PI*R;
-  const light = 68 - p*30;               // higher risk -> deeper amber
-  const arc = document.getElementById('arc');
-  arc.style.stroke = `hsl(36 92% ${light}%)`;
-  arc.setAttribute('stroke-dasharray', `${p*C} ${C}`);
-  const riskNum = document.getElementById('riskNum');
-  let cur=0; const tick=()=>{ cur+=Math.max(1,(p*100-cur)*0.15); if(cur>=p*100){cur=p*100;} riskNum.textContent=Math.round(cur); if(cur<p*100) requestAnimationFrame(tick); };
-  requestAnimationFrame(tick);
+resolveFigures();
 
-  // replay
-  const thread = document.getElementById('thread');
-  let idx=0, timer=null, playing=false;
-  const LAT = { deterministic: () => (Math.random()*0.06+0.02), strategy: () => (Math.random()*900+3600) };
-  const BUDGET = 300;
+const $ = id => document.getElementById(id);
+const fmtMoney = v => '€' + Math.round(v).toLocaleString('en-GB');
+const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const riskColour = p => cssVar('--risk-' + Math.round(p * 10) * 10);
 
-  function renderTurn(t){
-    const el = document.createElement('div');
-    el.className = `turn ${t.speaker}`;
-    el.innerHTML = `<div class="who">${t.speaker==='agent'?'Agent':'Borrower'}</div><div class="say"></div>`;
-    el.querySelector('.say').textContent = t.text;
-    thread.appendChild(el);
-    requestAnimationFrame(()=> el.classList.add('shown'));
-    if (t.hint){
-      const latMs = LAT[t.hint.tier]();
-      const live = t.hint.tier==='deterministic' || latMs<=BUDGET;
-      const h = document.createElement('div');
-      h.className = `hint ${t.hint.tier==='strategy'?'strategy':''}`;
-      const latTxt = t.hint.tier==='deterministic'
-        ? `${latMs.toFixed(2)} ms · live`
-        : (live ? `${Math.round(latMs)} ms · live` : `${Math.round(latMs)} ms · demoted to next turn`);
-      h.innerHTML = `<div class="lab"><span class="tier">${t.hint.tier==='deterministic'?'tier 1':'tier 2'}</span><span class="lat mono">${latTxt}</span></div><div class="txt"></div>${t.hint.support!==null?`<div class="support">playbook support: ${t.hint.support} (seeded)</div>`:''}`;
-      h.querySelector('.txt').textContent = t.hint.text;
-      thread.appendChild(h);
-      requestAnimationFrame(()=> h.classList.add('shown'));
-    }
-    thread.parentElement.scrollTop = thread.parentElement.scrollHeight;
-  }
+let DESK = null, AUDIO = null, COACH = null;
+let current = 0, idx = 0, timer = null, playing = false, speedMul = 1;
 
-  function step(){
-    if (idx>=DATA.turns.length){ stop(); return; }
-    renderTurn(DATA.turns[idx++]);
-    timer = setTimeout(step, 1500);
-  }
-  function play(){ if(playing) return; playing=true; document.getElementById('play').textContent='Playing…'; step(); }
-  function stop(){ playing=false; clearTimeout(timer); document.getElementById('play').textContent = idx>=DATA.turns.length?'Replay ended':'Play call'; }
-  function restart(){ stop(); thread.innerHTML=''; idx=0; document.getElementById('play').textContent='Play call'; }
+/* ================= queue ================= */
+function renderQueue() {
+  const node = $('queue');
+  node.replaceChildren(...DESK.accounts.map((a, i) => {
+    const b = document.createElement('button');
+    b.className = 'qitem' + (a.action === 'do_not_contact' ? ' skip' : '');
+    b.setAttribute('aria-current', String(i === current));
+    b.innerHTML = `
+      <div class="top">
+        <span class="rank mono">${a.queue_rank ? '#' + a.queue_rank : 'scored call'}</span>
+        <span class="exp">${fmtMoney(a.exposure)}</span>
+      </div>
+      <div class="sub">
+        <span class="pchip"></span>
+        <span class="act">${a.action.replace(/_/g, ' ')}</span>
+        ${a.has_transcript ? '<span class="tape">▶ transcript</span>' : ''}
+      </div>`;
+    const chip = b.querySelector('.pchip');
+    chip.textContent = Math.round(a.p_worsen * 100);
+    chip.style.background = riskColour(a.p_worsen);
+    chip.style.color = a.p_worsen >= 0.5 ? '#fff' : '#1a1508';
+    chip.title = `p(worsen) ${a.p_worsen}`;
+    b.addEventListener('click', () => select(i));
+    return b;
+  }));
+}
 
-  document.getElementById('play').onclick = play;
-  document.getElementById('restart').onclick = restart;
+/* ================= who ================= */
+function renderAccount() {
+  const a = DESK.accounts[current];
+  $('exposure').textContent = fmtMoney(a.exposure);
+  $('selfcure').textContent = Math.round(a.p_selfcure * 100) + '%';
+  $('arrears').textContent = a.arrears_months + (a.arrears_months === 1 ? ' month past due' : ' months past due');
+  $('loanId').textContent = a.loan_id;
+  $('queuePos').textContent = a.queue_rank
+    ? `#${a.queue_rank.toLocaleString('en-GB')} — ${a.action.replace(/_/g, ' ')}`
+    : 'not in the ranked queue';
 
-  // arm toggle
-  function setArm(a){
-    document.body.dataset.arm = a;
-    document.getElementById('armFull').setAttribute('aria-pressed', a==='full');
-    document.getElementById('armControl').setAttribute('aria-pressed', a==='control');
-    log('arm', `switched to ${a} arm`);
-  }
-  document.getElementById('armFull').onclick = ()=>setArm('full');
-  document.getElementById('armControl').onclick = ()=>setArm('control');
-  document.body.dataset.arm='full';
-
-  // decision log (per-viewer, local)
-  const feed = document.getElementById('feed');
-  function log(kind, text){
-    if (feed.children.length===1 && feed.children[0].classList.contains('t')) feed.innerHTML='';
+  // reason codes, each drillable to the feature behind it
+  const FEATURE_OF = {
+    'currently behind': ['d', 'current delinquency bucket'],
+    'currently current': ['d', 'current delinquency bucket'],
+    'delinquency worsening over 3 months': ['delinq_trend_3m', 'slope of the arrears bucket over the trailing window'],
+    'delinquency easing': ['delinq_trend_3m', 'slope of the arrears bucket over the trailing window'],
+    'recent peak delinquency': ['delinq_max_3m', 'worst bucket reached in the trailing window'],
+    'clean recent history': ['delinq_max_3m', 'worst bucket reached in the trailing window'],
+    'arrears rising while paydown stalled': ['rising_and_stalled', 'arrears up and balance flat in the same window'],
+    'balance not coming down': ['upb_change_3m', 'change in unpaid balance over the window'],
+    'balance paying down': ['upb_change_3m', 'change in unpaid balance over the window'],
+    'weaker credit profile': ['credit_score', 'origination credit score'],
+    'stronger credit profile': ['credit_score', 'origination credit score'],
+    'high loan-to-value': ['orig_ltv', 'loan-to-value at origination'],
+    'high debt-to-income': ['dti', 'debt-to-income at origination'],
+    'delinquent in the last 3 months': ['any_delinq_3m', 'any missed month in the trailing window'],
+  };
+  const VALUE_OF = {
+    d: a.arrears_months, delinq_trend_3m: a.delinq_trend_3m, delinq_max_3m: a.delinq_max_3m,
+    credit_score: a.credit_score, orig_ltv: a.orig_ltv, dti: a.dti,
+  };
+  $('reasonDrill').classList.remove('on');
+  $('reasons').replaceChildren(...a.reason_codes.map(code => {
     const li = document.createElement('li');
-    li.className = kind;
-    const time = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    li.innerHTML = `<span class="t mono">${time}</span> &middot; ${text}`;
-    feed.prepend(li);
-    try{ const k='ganymede-desk-log'; const arr=JSON.parse(localStorage.getItem(k)||'[]'); arr.push({kind,text,time}); localStorage.setItem(k,JSON.stringify(arr.slice(-50))); }catch(e){}
+    const b = document.createElement('button');
+    b.textContent = code;
+    b.addEventListener('click', () => {
+      const [feat, desc] = FEATURE_OF[code] || [null, null];
+      const v = feat ? VALUE_OF[feat] : null;
+      const drill = $('reasonDrill');
+      drill.classList.add('on');
+      drill.innerHTML = feat
+        ? `<strong class="mono">${feat}</strong>${v !== null && v !== undefined ? ` = <span class="mono">${v}</span>` : ''}<br>${desc}
+           <br><span style="color:var(--faint)">Ranked by SHAP contribution to this account's score, not by a fixed list.</span>`
+        : 'This code has no single feature behind it.';
+    });
+    li.appendChild(b);
+    return li;
+  }));
+
+  const certain = a.state_certain;
+  $('stateTxt').textContent = certain
+    ? `${a.capacity.replace(/_/g, ' ')} · ${a.willingness.replace(/_/g, ' ')}`
+    : 'uncertain — needs a diagnostic question';
+  $('statechip').classList.toggle('uncertain', !certain);
+  $('stateConf').textContent =
+    `confidence ${a.state_conf.toFixed(2)} — willingness cannot be read from servicing data alone`;
+
+  $('strategy').textContent = a.strategy.startsWith('DIAGNOSTIC')
+    ? 'Ask the one question that separates cannot-pay from will-not-pay before proposing anything. The model is not confident enough here to assume.'
+    : a.strategy;
+
+  const support = $('strategySupport');
+  if (a.strategy.startsWith('DIAGNOSTIC')) {
+    support.innerHTML = '<span class="badge badge-measured">deterministic</span>';
+    support.querySelector('.badge').title = 'The diagnostic question is not retrieved from the playbook — it is what the system says when it does not know.';
+  } else {
+    support.innerHTML = '<span class="badge badge-seeded">seeded · 0 outcomes</span>';
+    support.querySelector('.badge').title =
+      `No strategy is promoted until ${COACH?.min_strategy_support ?? 5} real outcomes back it.`;
   }
 
-  document.getElementById('override').onclick = ()=>{
-    const r = document.getElementById('ovReason').value.trim();
-    if(!r){ document.getElementById('ovReason').focus(); log('override','override blocked — reason required'); return; }
-    log('override', `override logged: “${r}”`);
-    document.getElementById('ovReason').value='';
+  drawGauge(a);
+  $('shadowStrategy').textContent = $('strategy').textContent;
+  $('shadowNote').hidden = !!a.has_transcript;
+  $('play').disabled = !a.has_transcript;
+  $('stepBtn').disabled = !a.has_transcript;
+}
+
+function drawGauge(a) {
+  const R = 62, C = 2 * Math.PI * R, p = a.p_worsen;
+  // An interval, not a point. Bin count from the reliability curve is the honest
+  // width available here; a single number implies precision the model has not got.
+  const halfWidth = 0.07;
+  const lo = Math.max(0, p - halfWidth), hi = Math.min(1, p + halfWidth);
+  const arc = $('arc'), band = $('bandArc');
+  arc.style.stroke = riskColour(p);
+  arc.setAttribute('stroke-dasharray', `${p * C} ${C}`);
+  band.style.stroke = riskColour(p);
+  band.setAttribute('stroke-dasharray', `${(hi - lo) * C} ${C}`);
+  band.setAttribute('stroke-dashoffset', `${-lo * C}`);
+  $('bandNote').textContent = `plausible range ${Math.round(lo * 100)}–${Math.round(hi * 100)}%`;
+
+  const num = $('riskNum');
+  let cur = 0;
+  const target = p * 100;
+  const tick = () => {
+    cur += Math.max(1, (target - cur) * 0.18);
+    if (cur >= target) cur = target;
+    num.textContent = Math.round(cur);
+    if (cur < target) requestAnimationFrame(tick);
   };
-  document.getElementById('capturePtp').onclick = ()=>{
-    const amt=document.getElementById('ptpAmt').value, due=document.getElementById('ptpDue').value, m=document.getElementById('ptpMethod').value;
-    const parts=[amt&&`€${amt}`, due&&`by ${due}`, m&&m.replace('_',' ')].filter(Boolean);
-    const specific = amt&&due&&m;
-    log('ptp', `promise captured: ${parts.join(', ')||'no detail'}${specific?'':' — vague, prompt for the missing field'}`);
-  };
+  requestAnimationFrame(tick);
+}
+
+/* ================= latency meter ================= */
+const LAT_MAX = 2000;
+function buildLatMeter() {
+  const bars = AUDIO.histogram.filter(b => b.hi !== null);
+  const max = Math.max(...bars.map(b => b.n), 1);
+  $('latDens').replaceChildren(...bars.map(b => {
+    const i = document.createElement('i');
+    i.style.height = (b.n / max * 100) + '%';
+    i.title = `${b.lo}–${b.hi} ms: ${b.n} gaps`;
+    return i;
+  }));
+  const budget = AUDIO.budget_ms.value;
+  $('latBudget').style.left = (budget / LAT_MAX * 100) + '%';
+  $('latBudget').querySelector('span').textContent = `${budget} ms budget`;
+  $('minGap').textContent = `${COACH.min_turn_gap_ms} ms`;
+}
+function plotLatency(ms, tier) {
+  const box = $('latbox');
+  const dot = document.createElement('span');
+  dot.className = 'latdot ' + (tier === 'deterministic' ? 't1' : 't2');
+  dot.style.left = Math.min(99, ms / LAT_MAX * 100) + '%';
+  dot.style.top = (25 + Math.random() * 50) + '%';
+  dot.title = `${tier} hint · ${ms.toFixed(ms < 10 ? 2 : 0)} ms`;
+  box.appendChild(dot);
+}
+
+/* ================= replay ================= */
+const LAT = {
+  deterministic: () => Math.random() * 0.06 + 0.02,
+  strategy: () => Math.random() * 900 + 3600,
+};
+
+function renderTurn(t) {
+  const thread = $('thread');
+  const el = document.createElement('div');
+  el.className = `turn ${t.speaker}`;
+  el.innerHTML = `<div class="who">${t.speaker === 'agent' ? 'Agent' : 'Borrower'}</div><div class="say"></div>`;
+  el.querySelector('.say').textContent = t.text;
+  thread.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('shown'));
+
+  if (t.hint) {
+    const ms = LAT[t.hint.tier]();
+    const budget = AUDIO.budget_ms.value;
+    const live = t.hint.tier === 'deterministic' || ms <= budget;
+    const h = document.createElement('div');
+    h.className = 'hint' + (t.hint.tier === 'strategy' ? ' strategy' : '');
+    h.innerHTML = `
+      <div class="lab">
+        <span class="tier">${t.hint.tier === 'deterministic' ? 'tier 1' : 'tier 2'}</span>
+        <span class="lat">${ms.toFixed(ms < 10 ? 2 : 0)} ms · ${live ? 'live' : 'demoted to next pause'}</span>
+      </div>
+      <div class="txt"></div>
+      <div class="foot">
+        <span style="font-size:11px;color:var(--faint)">was this useful?</span>
+        <button class="fb" data-v="yes" aria-pressed="false">yes</button>
+        <button class="fb" data-v="no" aria-pressed="false">no</button>
+      </div>`;
+    h.querySelector('.txt').textContent = t.hint.text;
+    h.querySelectorAll('.fb').forEach(btn => btn.addEventListener('click', () => {
+      h.querySelectorAll('.fb').forEach(o => o.setAttribute('aria-pressed', String(o === btn)));
+      log('hint', `hint marked ${btn.dataset.v === 'yes' ? 'useful' : 'not useful'} — feeds the rubric, not the model directly`);
+    }));
+    thread.appendChild(h);
+    requestAnimationFrame(() => h.classList.add('shown'));
+    if (document.body.dataset.arm === 'full') plotLatency(ms, t.hint.tier);
+  }
+  const talk = document.querySelector('.col.talk');
+  talk.scrollTop = talk.scrollHeight;
+}
+
+function turns() { return DESK.replay?.turns ?? []; }
+function step() {
+  if (idx >= turns().length) { stop(); return; }
+  renderTurn(turns()[idx++]);
+}
+function loop() {
+  step();
+  if (idx < turns().length && playing) timer = setTimeout(loop, 1500 * speedMul);
+  else stop();
+}
+function play() {
+  if (playing || !DESK.accounts[current].has_transcript) return;
+  playing = true; $('play').textContent = 'Pause';
+  loop();
+}
+function pause() { playing = false; clearTimeout(timer); $('play').textContent = 'Resume'; }
+function stop() {
+  playing = false; clearTimeout(timer);
+  $('play').textContent = idx >= turns().length ? 'Replay ended' : 'Play call';
+}
+function restart() {
+  stop(); $('thread').innerHTML = ''; idx = 0;
+  document.querySelectorAll('.latdot').forEach(d => d.remove());
+  $('play').textContent = 'Play call';
+}
+
+/* ================= selection ================= */
+function select(i) {
+  current = Math.max(0, Math.min(DESK.accounts.length - 1, i));
+  restart();
+  renderQueue();
+  renderAccount();
+  log('select', `opened ${DESK.accounts[current].loan_id}`);
+}
+
+/* ================= decision log ================= */
+function log(kind, text) {
+  const feed = $('feed');
+  if (feed.children.length === 1 && feed.children[0].classList.contains('t')) feed.innerHTML = '';
+  const li = document.createElement('li');
+  li.className = kind;
+  const time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  li.innerHTML = `<span class="t">${time}</span> · `;
+  li.append(text);
+  feed.prepend(li);
+  try {
+    const k = 'ganymede-desk-log';
+    const arr = JSON.parse(localStorage.getItem(k) || '[]');
+    arr.push({ kind, text, time, loan_id: DESK?.accounts[current]?.loan_id, arm: document.body.dataset.arm });
+    localStorage.setItem(k, JSON.stringify(arr.slice(-200)));
+  } catch {}
+}
+
+/* ================= actions ================= */
+function ptpQuality() {
+  const amt = $('ptpAmt').value.trim(), due = $('ptpDue').value, m = $('ptpMethod').value;
+  const have = [!!amt, !!due, !!m].filter(Boolean).length;
+  $('qualBar').style.width = (have / 3 * 100) + '%';
+  $('qualBar').style.background = have === 3 ? 'var(--kept)' : 'var(--predict)';
+  $('qualTxt').textContent = have === 3
+    ? 'Specific: amount, date and method are all pinned down.'
+    : `${3 - have} field${have === 2 ? '' : 's'} still open — prompt for ${[!amt && 'an amount', !due && 'a date', !m && 'a method'].filter(Boolean).join(', ')}.`;
+  return have;
+}
+['ptpAmt', 'ptpDue', 'ptpMethod'].forEach(id => $(id).addEventListener('input', ptpQuality));
+
+$('capturePtp').addEventListener('click', () => {
+  const amt = $('ptpAmt').value.trim(), due = $('ptpDue').value, m = $('ptpMethod').value;
+  const have = ptpQuality();
+  const parts = [amt && `€${amt}`, due && `by ${due}`, m && m.replace(/_/g, ' ')].filter(Boolean);
+  log('ptp', `promise captured: ${parts.join(', ') || 'no detail'}${have === 3 ? '' : ' — vague, ask for the missing field'}`);
+  $('resolvePanel').hidden = false;
+});
+$('markKept').addEventListener('click', () => {
+  log('outcome-kept', 'promise kept — label resolved, retrains L1 and L4, promotes the strategy that produced it');
+  $('resolvePanel').hidden = true;
+});
+$('markBroken').addEventListener('click', () => {
+  log('outcome-broken', 'promise broken — label resolved, demotes the strategy and counts against the pilot guardrail');
+  $('resolvePanel').hidden = true;
+});
+$('override').addEventListener('click', () => {
+  const r = $('ovReason').value.trim();
+  if (!r) { $('ovReason').focus(); log('override', 'override blocked — a reason is required'); return; }
+  log('override', `override logged: "${r}"`);
+  $('ovReason').value = '';
+});
+$('exportLog').addEventListener('click', () => {
+  let arr = [];
+  try { arr = JSON.parse(localStorage.getItem('ganymede-desk-log') || '[]'); } catch {}
+  const w = window.open('', '_blank');
+  if (w) {
+    w.document.title = 'ganymede-decision-log.json';
+    w.document.body.style.cssText = 'font:12px ui-monospace,monospace;white-space:pre;padding:16px';
+    w.document.body.textContent = JSON.stringify(arr, null, 2);
+  }
+});
+
+/* ---- arm ---- */
+function setArm(a) {
+  document.body.dataset.arm = a;
+  $('armFull').setAttribute('aria-pressed', String(a === 'full'));
+  $('armControl').setAttribute('aria-pressed', String(a === 'control'));
+  log('arm', `switched to the ${a === 'full' ? 'coached' : 'control'} arm`);
+}
+$('armFull').addEventListener('click', () => setArm('full'));
+$('armControl').addEventListener('click', () => setArm('control'));
+
+document.querySelectorAll('[data-speed]').forEach(b => b.addEventListener('click', () => {
+  speedMul = +b.dataset.speed;
+  document.querySelectorAll('[data-speed]').forEach(o => o.setAttribute('aria-pressed', String(o === b)));
+}));
+
+$('play').addEventListener('click', () => (playing ? pause() : play()));
+$('stepBtn').addEventListener('click', () => { pause(); step(); });
+$('restart').addEventListener('click', restart);
+$('goToCall').addEventListener('click', () => {
+  const i = DESK.accounts.findIndex(a => a.has_transcript);
+  if (i >= 0) select(i);
+});
+
+/* ---- tabs (mobile) ---- */
+document.querySelectorAll('[data-tab-btn]').forEach(b => b.addEventListener('click', () => {
+  document.body.dataset.tab = b.dataset.tabBtn;
+  document.querySelectorAll('[data-tab-btn]').forEach(o => o.setAttribute('aria-pressed', String(o === b)));
+}));
+
+/* ---- help + keyboard ---- */
+const dlg = $('helpDlg');
+$('helpBtn').addEventListener('click', () => dlg.showModal());
+$('helpClose').addEventListener('click', () => dlg.close());
+addEventListener('keydown', e => {
+  if (e.target.matches('input, textarea, select') || dlg.open) return;
+  const k = e.key;
+  if (k === ' ') { e.preventDefault(); playing ? pause() : play(); }
+  else if (k === 'ArrowRight') { e.preventDefault(); pause(); step(); }
+  else if (k === 'j') select(current + 1);
+  else if (k === 'k') select(current - 1);
+  else if (k === '1') setArm('full');
+  else if (k === '2') setArm('control');
+  else if (k === 'r') restart();
+  else if (k === '?') dlg.showModal();
+});
+
+/* ================= boot ================= */
+Promise.all([loadData('desk'), loadData('audio'), loadData('coach')]).then(([d, a, c]) => {
+  DESK = d; AUDIO = a; COACH = c;
+  buildLatMeter();
+  // Open on the account that actually has a call, so the desk demonstrates
+  // itself rather than opening on an empty transcript panel.
+  const withCall = DESK.accounts.findIndex(x => x.has_transcript);
+  current = withCall >= 0 ? withCall : 0;
+  renderQueue();
+  renderAccount();
+  ptpQuality();
+}).catch(err => {
+  $('thread').innerHTML = `<p style="color:var(--broken)">Could not load desk data: ${err.message}</p>`;
+});
 </script>
+</body>
+</html>

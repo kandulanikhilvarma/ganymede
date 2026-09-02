@@ -448,6 +448,129 @@ def stage_state() -> dict:
     }
 
 
+def stage_desk() -> dict:
+    """The queue the agent desk works, and the one real scored call.
+
+    Fourteen accounts drawn from the live queue -- the ones the allocator funds,
+    plus deliberate contrasts it skips -- each carrying its own scores, reason
+    codes, borrower state and recommended action. Only one has a transcript,
+    because only one real call was scored; the desk says so rather than pairing
+    a borrower's panel with somebody else's conversation.
+    """
+    import json
+    import polars as pl
+    from ganymede.allocator import ACTION_MINUTES, allocate
+    from ganymede.config import LAMBDA_HARM
+    from ganymede.features import FEATURE_COLS, build_features, time_split
+    from ganymede.panel import PROCESSED
+    from ganymede.risk import predict, reason_codes, train
+    from ganymede.state import estimate_state, strategy_for
+
+    feats = build_features()
+    train_df, test_df = time_split(feats)
+    snap = test_df.filter(pl.col("d") >= 1).unique(subset=["loan_id"], keep="last")
+
+    b1, i1 = train(train_df, "y_worsen")
+    b2, i2 = train(train_df.filter(pl.col("d") >= 1), "y_selfcure")
+
+    scored = snap.with_columns([
+        pl.Series("p_worsen", predict(b1, i1, snap)),
+        pl.Series("p_selfcure", predict(b2, i2, snap)),
+        pl.col("upb").alias("exposure"),
+    ]).with_row_index("idx")
+
+    alloc = allocate(
+        scored.select(["idx", "loan_id", "exposure", "p_worsen", "p_selfcure"]),
+        int(scored.height * ACTION_MINUTES["plan_offer"] * 0.15), LAMBDA_HARM)
+    decision = {r["idx"]: r for r in alloc.iter_rows(named=True)}
+    rank = {idx: i + 1 for i, idx in enumerate(alloc["idx"].to_list())}
+
+    # Twelve the allocator funds, and two it deliberately skips: a high-probability
+    # trivial-exposure account and a near-certain self-curer. The contrast is the
+    # argument -- a queue of only funded accounts hides the decision being made.
+    funded = alloc.filter(pl.col("action") != "do_not_contact").head(12)["idx"].to_list()
+    skipped = (scored.filter((pl.col("p_worsen") > 0.6) & (pl.col("exposure") > 1000))
+                     .sort("exposure").head(1)["idx"].to_list()
+               + scored.filter(pl.col("exposure") > 100_000)
+                       .sort("p_selfcure", descending=True).head(1)["idx"].to_list())
+    wanted = list(dict.fromkeys(funded + skipped))
+
+    chosen = scored.filter(pl.col("idx").is_in(wanted))
+    codes = reason_codes(b1, chosen, k=3)
+
+    accounts = []
+    for row, rc in zip(chosen.iter_rows(named=True), codes):
+        st = estimate_state(row)
+        d = decision[row["idx"]]
+        accounts.append({
+            "loan_id": row["loan_id"],
+            "exposure": round(float(row["exposure"]), 2),
+            "arrears_months": int(row["d"]),
+            "p_worsen": round(float(row["p_worsen"]), 4),
+            "p_selfcure": round(float(row["p_selfcure"]), 4),
+            "reason_codes": rc,
+            "capacity": st.capacity.value,
+            "willingness": st.willingness.value,
+            "state_conf": st.confidence,
+            "state_certain": st.is_certain,
+            "strategy": strategy_for(st),
+            "action": d["action"],
+            "action_minutes": ACTION_MINUTES[d["action"]],
+            "value": round(float(d["value"]), 1),
+            "queue_rank": rank[row["idx"]],
+            "credit_score": int(row["credit_score"]) if row["credit_score"] is not None else None,
+            "dti": int(row["dti"]) if row["dti"] is not None else None,
+            "orig_ltv": int(row["orig_ltv"]) if row["orig_ltv"] is not None else None,
+            "delinq_trend_3m": float(row["delinq_trend_3m"] or 0),
+            "delinq_max_3m": int(row["delinq_max_3m"] or 0),
+        })
+    accounts.sort(key=lambda a: a["queue_rank"])
+
+    replay = None
+    rp = PROCESSED / "demo_replay.json"
+    if rp.exists():
+        replay = json.loads(rp.read_text(encoding="utf-8"))
+
+    # The scored call belongs to an account the queue does not contain. Add it
+    # rather than pairing its transcript with somebody else's panel: exactly one
+    # account here has a recorded conversation, and the desk should say which.
+    for a in accounts:
+        a["has_transcript"] = False
+    if replay:
+        ra = replay["account"]
+        if not any(a["loan_id"] == ra["loan_id"] for a in accounts):
+            accounts.append({
+                "loan_id": ra["loan_id"],
+                "exposure": ra["exposure"],
+                "arrears_months": ra["arrears_months"],
+                "p_worsen": ra["p_worsen"],
+                "p_selfcure": ra["p_selfcure"],
+                "reason_codes": ra["reason_codes"],
+                "capacity": ra["capacity"],
+                "willingness": ra["willingness"],
+                "state_conf": ra["state_conf"],
+                "state_certain": ra["state_conf"] >= 0.6,
+                "strategy": ra["strategy"],
+                "action": "plan_offer",
+                "action_minutes": ACTION_MINUTES["plan_offer"],
+                "value": None,
+                "queue_rank": None,
+                "credit_score": None, "dti": None, "orig_ltv": None,
+                "delinq_trend_3m": None, "delinq_max_3m": None,
+                "has_transcript": True,
+            })
+
+    return {
+        "queue_size": fig(scored.height, "measured", "test-period delinquent snapshot"),
+        "capacity_frac": 0.15,
+        "action_minutes": ACTION_MINUTES,
+        "accounts": accounts,
+        "replay": replay,
+        "replay_loan_id": (replay or {}).get("account", {}).get("loan_id"),
+        "feature_cols": FEATURE_COLS,
+    }
+
+
 def stage_metrics(bundle: dict) -> dict:
     """The headline table. Assembled from the other stages so it cannot disagree."""
     rows = []
@@ -521,6 +644,7 @@ STAGES = {
     "coach": stage_coach,
     "trajectories": stage_trajectories,
     "state": stage_state,
+    "desk": stage_desk,
 }
 
 
