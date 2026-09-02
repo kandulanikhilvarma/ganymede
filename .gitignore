@@ -1,7 +1,30 @@
-.venv/
+# Python
 __pycache__/
-extracted.txt
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
 
-# personal task materials — not for the public repo
+# Secrets
+.env
+
+# Data (large, not for the repo — see docs/data-quality-baseline.md)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/
+*.parquet
+*.ckpt
+
+# Generated reports
+reports/*.md
+!reports/.gitkeep
+
+# Node / Next (agent desk tooling)
+node_modules/
+.next/
+
+# Personal task materials — not for the public repo
 *.pdf
 extracted.txt
