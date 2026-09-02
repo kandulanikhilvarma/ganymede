@@ -106,6 +106,24 @@ def reason_codes(booster: lgb.Booster, df: pl.DataFrame, k: int = 3) -> list[lis
     return out
 
 
+def reliability(y, p, bins: int = 10) -> list[dict]:
+    """Reliability curve: mean predicted vs observed rate per probability bin.
+    Calibration is the gate an agent's trust actually rests on, so the curve
+    ships with the metrics rather than being redrawn from a notebook."""
+    y, p = np.asarray(y, dtype=float), np.asarray(p, dtype=float)
+    edges = np.linspace(0.0, 1.0, bins + 1)
+    out = []
+    for lo, hi in zip(edges[:-1], edges[1:]):
+        m = (p >= lo) & (p < hi if hi < 1.0 else p <= hi)
+        if not m.any():
+            continue
+        out.append({"bin_lo": round(float(lo), 3), "bin_hi": round(float(hi), 3),
+                    "predicted": round(float(p[m].mean()), 4),
+                    "observed": round(float(y[m].mean()), 4),
+                    "n": int(m.sum())})
+    return out
+
+
 def _metrics(y, p, w, name: str) -> dict:
     # Metrics are computed UNWEIGHTED, on the delinquency-enriched sample. That
     # is the right frame: the Risk Lens ranks accounts already in or near
@@ -125,6 +143,7 @@ def _metrics(y, p, w, name: str) -> dict:
         "model": name, "base_rate": round(base, 4), "auc": round(auc, 4),
         "brier": round(brier, 5), "brier_base": round(brier_base, 5),
         "beats_base": brier < brier_base,
+        "reliability": reliability(y, p),
     }
 
 

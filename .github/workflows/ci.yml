@@ -20,3 +20,13 @@ jobs:
         run: python -m ganymede.invariants --check
       - name: tests
         run: python -m pytest -q
+      - name: design tokens
+        # Regenerates the OKLCH ramps and fails if any named contrast pair drops
+        # below its floor, if the risk ramp stops darkening, or if the committed
+        # tokens.css no longer matches what the generator produces.
+        run: python scripts/gen_palette.py --check
+      - name: site data
+        # The site's numbers must come from the pipeline. Stages whose inputs are
+        # absent here (the panel and the call audio are not redistributed) skip
+        # and say so; the rest are compared against the committed JSON.
+        run: python scripts/build_site_data.py --check

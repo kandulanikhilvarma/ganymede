@@ -114,38 +114,52 @@ def _risk_ranking(accounts: pl.DataFrame, capacity_minutes: int) -> pl.DataFrame
     )
 
 
-def simulate(capacity_frac: float = 0.15, lam: float = LAMBDA_HARM) -> dict:
+def score_accounts() -> pl.DataFrame:
+    """Train L1/L2 on the training split and score the workable queue: the
+    accounts delinquent in the test period, one row each, latest state."""
     feats = build_features()
     train_df, test_df = time_split(feats)
-
-    # snapshot: currently-delinquent accounts in the test period (the workable queue)
     snap = test_df.filter(pl.col("d") >= 1).unique(subset=["loan_id"], keep="last")
 
     b1, i1 = train(train_df, "y_worsen")
     tr_dq = train_df.filter(pl.col("d") >= 1)
     b2, i2 = train(tr_dq, "y_selfcure")
 
-    accounts = snap.with_columns([
+    return snap.with_columns([
         pl.Series("p_worsen", predict(b1, i1, snap)),
         pl.Series("p_selfcure", predict(b2, i2, snap)),
         pl.col("upb").alias("exposure"),
     ]).with_row_index("idx").select(["idx", "loan_id", "exposure", "p_worsen", "p_selfcure"])
 
-    # capacity as a fraction of the minutes it would take to plan_offer everyone
-    capacity = int(accounts.height * ACTION_MINUTES["plan_offer"] * capacity_frac)
 
+def compare(accounts: pl.DataFrame, capacity_frac: float, lam: float = LAMBDA_HARM) -> dict:
+    """One point on the capacity frontier: both strategies at the same budget.
+    Capacity is a fraction of the minutes it would take to plan_offer everyone."""
+    capacity = int(accounts.height * ACTION_MINUTES["plan_offer"] * capacity_frac)
     alloc = allocate(accounts, capacity, lam)
     risk = _risk_ranking(accounts, capacity)
 
     v_alloc = _realised_value(alloc)
     v_risk = _realised_value(risk)
     return {
+        "capacity_frac": round(capacity_frac, 4),
         "accounts": accounts.height, "capacity_minutes": capacity,
         "allocator_value": round(v_alloc, 1), "risk_ranking_value": round(v_risk, 1),
         "lift_pct": round(100 * (v_alloc - v_risk) / abs(v_risk), 1) if v_risk else float("inf"),
         "allocator_contacts": alloc.filter(pl.col("action") != "do_not_contact").height,
         "risk_contacts": risk.filter(pl.col("action") != "do_not_contact").height,
     }
+
+
+def simulate(capacity_frac: float = 0.15, lam: float = LAMBDA_HARM) -> dict:
+    return compare(score_accounts(), capacity_frac, lam)
+
+
+def sweep(fracs: list[float], lam: float = LAMBDA_HARM) -> list[dict]:
+    """The capacity frontier. Scores once and walks the budget, so every point
+    is a real allocator run rather than an interpolation between two."""
+    accounts = score_accounts()
+    return [compare(accounts, f, lam) for f in fracs]
 
 
 def main() -> int:

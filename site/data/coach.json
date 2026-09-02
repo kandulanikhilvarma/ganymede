@@ -1,0 +1,75 @@
+{
+  "min_strategy_support": 5,
+  "min_turn_gap_ms": 200,
+  "strategies": [
+    {
+      "id": "plan_small",
+      "capacity": "cannot_pay",
+      "willingness": "will_pay",
+      "objection": null,
+      "text": "Offer the smallest realistic instalment and let them name what they can manage — do not push a figure they'll break.",
+      "support_count": 0,
+      "provisional": true
+    },
+    {
+      "id": "hardship_first",
+      "capacity": "cannot_pay",
+      "willingness": "will_not_pay",
+      "objection": null,
+      "text": "Re-establish contact and safety before money — acknowledge the situation, then ask one gentle affordability question.",
+      "support_count": 0,
+      "provisional": true
+    },
+    {
+      "id": "firm_consequence",
+      "capacity": "can_pay",
+      "willingness": "will_not_pay",
+      "objection": null,
+      "text": "State the next consequence plainly and calmly, then offer a clear way to avoid it today.",
+      "support_count": 0,
+      "provisional": true
+    },
+    {
+      "id": "remove_friction",
+      "capacity": "can_pay",
+      "willingness": "will_pay",
+      "objection": null,
+      "text": "This is friction, not inability — offer to set up the payment right now on the call and get one confirmation.",
+      "support_count": 0,
+      "provisional": true
+    },
+    {
+      "id": "obj_dispute",
+      "capacity": null,
+      "willingness": null,
+      "objection": "dispute",
+      "text": "Acknowledge the dispute, log it, and separate the disputed portion from what is not in question so a partial payment can still move.",
+      "support_count": 0,
+      "provisional": true
+    },
+    {
+      "id": "obj_cant_afford",
+      "capacity": null,
+      "willingness": null,
+      "objection": "affordability",
+      "text": "Do not argue the amount — walk through income and essential outgoings so the plan is one they can actually service.",
+      "support_count": 0,
+      "provisional": true
+    },
+    {
+      "id": "obj_callback",
+      "capacity": null,
+      "willingness": null,
+      "objection": "deferral",
+      "text": "A vague 'I'll call back' rarely converts — offer a specific short window and confirm a callback time before ending.",
+      "support_count": 0,
+      "provisional": true
+    }
+  ],
+  "all_provisional": {
+    "value": true,
+    "provenance": "seeded",
+    "source": "coach.playbook.SEED",
+    "note": "no strategy has outcome support yet; every one is labelled seeded"
+  }
+}

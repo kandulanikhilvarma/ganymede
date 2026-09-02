@@ -1,0 +1,187 @@
+{
+  "rows": {
+    "value": 1403871,
+    "provenance": "measured",
+    "source": "panel.parquet"
+  },
+  "loans": {
+    "value": 87845,
+    "provenance": "measured",
+    "source": "panel.parquet"
+  },
+  "vintages": {
+    "value": 9,
+    "provenance": "measured",
+    "source": "panel.parquet"
+  },
+  "delinquent_months": {
+    "value": 257804,
+    "provenance": "measured",
+    "source": "panel.parquet"
+  },
+  "period_from": "2024-01-01",
+  "period_to": "2026-03-01",
+  "buckets": [
+    "current",
+    "30",
+    "60",
+    "90",
+    "120+"
+  ],
+  "roll_curve": [
+    {
+      "from": "current",
+      "to": "current",
+      "n": 966932,
+      "rate": 0.90173
+    },
+    {
+      "from": "current",
+      "to": "30",
+      "n": 104190,
+      "rate": 0.09716
+    },
+    {
+      "from": "current",
+      "to": "60",
+      "n": 950,
+      "rate": 0.00089
+    },
+    {
+      "from": "30",
+      "to": "current",
+      "n": 73556,
+      "rate": 0.4994
+    },
+    {
+      "from": "30",
+      "to": "30",
+      "n": 47524,
+      "rate": 0.32266
+    },
+    {
+      "from": "30",
+      "to": "60",
+      "n": 25882,
+      "rate": 0.17572
+    },
+    {
+      "from": "30",
+      "to": "90",
+      "n": 286,
+      "rate": 0.00194
+    },
+    {
+      "from": "60",
+      "to": "current",
+      "n": 6394,
+      "rate": 0.19545
+    },
+    {
+      "from": "60",
+      "to": "30",
+      "n": 3757,
+      "rate": 0.11484
+    },
+    {
+      "from": "60",
+      "to": "60",
+      "n": 7892,
+      "rate": 0.24124
+    },
+    {
+      "from": "60",
+      "to": "90",
+      "n": 14520,
+      "rate": 0.44385
+    },
+    {
+      "from": "60",
+      "to": "120+",
+      "n": 151,
+      "rate": 0.00462
+    },
+    {
+      "from": "90",
+      "to": "current",
+      "n": 2417,
+      "rate": 0.15226
+    },
+    {
+      "from": "90",
+      "to": "30",
+      "n": 473,
+      "rate": 0.0298
+    },
+    {
+      "from": "90",
+      "to": "60",
+      "n": 857,
+      "rate": 0.05399
+    },
+    {
+      "from": "90",
+      "to": "90",
+      "n": 2198,
+      "rate": 0.13847
+    },
+    {
+      "from": "90",
+      "to": "120+",
+      "n": 9929,
+      "rate": 0.62549
+    },
+    {
+      "from": "120+",
+      "to": "current",
+      "n": 8968,
+      "rate": 0.18748
+    },
+    {
+      "from": "120+",
+      "to": "30",
+      "n": 2987,
+      "rate": 0.06244
+    },
+    {
+      "from": "120+",
+      "to": "60",
+      "n": 157,
+      "rate": 0.00328
+    },
+    {
+      "from": "120+",
+      "to": "90",
+      "n": 235,
+      "rate": 0.00491
+    },
+    {
+      "from": "120+",
+      "to": "120+",
+      "n": 35488,
+      "rate": 0.74188
+    }
+  ],
+  "bucket_share": [
+    {
+      "bucket": "current",
+      "n": 1135761
+    },
+    {
+      "bucket": "30",
+      "n": 158976
+    },
+    {
+      "bucket": "60",
+      "n": 35738
+    },
+    {
+      "bucket": "90",
+      "n": 17381
+    },
+    {
+      "bucket": "120+",
+      "n": 45709
+    }
+  ]
+}

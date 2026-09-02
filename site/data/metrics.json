@@ -1,0 +1,107 @@
+{
+  "provenance_legend": {
+    "measured": "Observed directly from real data.",
+    "backtested": "Real data, held-out time split.",
+    "simulated": "Real data plus an explicitly modelled assumption.",
+    "seeded": "Derived from practice, with zero outcome support so far.",
+    "pending": "Needs a pilot to earn. Deliberately not estimated."
+  },
+  "rows": [
+    {
+      "label": "L1 trajectory AUC",
+      "value": 0.6218,
+      "provenance": "backtested",
+      "source": "risk.backtest()"
+    },
+    {
+      "label": "L1 Brier vs base",
+      "value": "0.21145 vs 0.2184",
+      "provenance": "backtested",
+      "source": "risk.backtest()"
+    },
+    {
+      "label": "L2 self-cure AUC",
+      "value": 0.6742,
+      "provenance": "backtested",
+      "source": "risk.backtest()"
+    },
+    {
+      "label": "Recovered value vs risk-ranking",
+      "value": 59.1,
+      "provenance": "simulated",
+      "source": "allocator.compare at 15% capacity",
+      "unit": "%",
+      "note": "uplift shape is modelled from the literature, not measured; the magnitude is not a promise until a control arm produces it"
+    },
+    {
+      "label": "Contacts used (allocator vs risk-ranking)",
+      "value": "4243 vs 8839",
+      "provenance": "simulated",
+      "source": "allocator.compare at 15% capacity"
+    },
+    {
+      "label": "Latency budget",
+      "value": 300,
+      "provenance": "measured",
+      "source": "config.LATENCY_BUDGET_MS, set from the p25 of real gaps",
+      "unit": "ms"
+    },
+    {
+      "label": "Median inter-turn gap",
+      "value": 479,
+      "provenance": "measured",
+      "source": "audio.vad.analyse",
+      "unit": "ms"
+    },
+    {
+      "label": "Inter-turn gaps observed",
+      "value": 328,
+      "provenance": "measured",
+      "source": "audio.vad.analyse"
+    },
+    {
+      "label": "Panel rows",
+      "value": 1403871,
+      "provenance": "measured",
+      "source": "panel.parquet"
+    },
+    {
+      "label": "Loans",
+      "value": 87845,
+      "provenance": "measured",
+      "source": "panel.parquet"
+    },
+    {
+      "label": "Self-cure rate, train to test",
+      "value": "0.6032 to 0.7165",
+      "provenance": "measured",
+      "source": "monitors.drift.check_rate_drift"
+    },
+    {
+      "label": "Recovery lift in production",
+      "value": null,
+      "provenance": "pending",
+      "source": "needs stage-2 pilot",
+      "note": "cannot be estimated from simulation; the control arm measures it"
+    },
+    {
+      "label": "Agent override rate",
+      "value": null,
+      "provenance": "pending",
+      "source": "needs stage-2 pilot"
+    },
+    {
+      "label": "PTP-kept lift from coaching",
+      "value": null,
+      "provenance": "pending",
+      "source": "needs stage-2 pilot"
+    },
+    {
+      "label": "Conversation features beating tabular",
+      "value": null,
+      "provenance": "pending",
+      "source": "blocked by invariant I1",
+      "note": "evals/metrics.py refuses to compute lift on synthetic records"
+    }
+  ]
+}

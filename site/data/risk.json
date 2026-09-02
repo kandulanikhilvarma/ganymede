@@ -1,0 +1,357 @@
+{
+  "models": {
+    "L1_trajectory": {
+      "auc": {
+        "value": 0.6218,
+        "provenance": "backtested",
+        "source": "risk.backtest()"
+      },
+      "brier": {
+        "value": 0.21145,
+        "provenance": "backtested",
+        "source": "risk.backtest()"
+      },
+      "brier_base": {
+        "value": 0.2184,
+        "provenance": "backtested",
+        "source": "risk.backtest()"
+      },
+      "base_rate": {
+        "value": 0.3222,
+        "provenance": "measured",
+        "source": "held-out split"
+      },
+      "gate": {
+        "metric": "brier",
+        "target": true,
+        "passed": true
+      },
+      "reliability": [
+        {
+          "bin_lo": 0.0,
+          "bin_hi": 0.1,
+          "predicted": 0.0683,
+          "observed": 0.1467,
+          "n": 34363
+        },
+        {
+          "bin_lo": 0.1,
+          "bin_hi": 0.2,
+          "predicted": 0.1542,
+          "observed": 0.2125,
+          "n": 147707
+        },
+        {
+          "bin_lo": 0.2,
+          "bin_hi": 0.3,
+          "predicted": 0.2577,
+          "observed": 0.332,
+          "n": 271656
+        },
+        {
+          "bin_lo": 0.3,
+          "bin_hi": 0.4,
+          "predicted": 0.3426,
+          "observed": 0.3153,
+          "n": 105081
+        },
+        {
+          "bin_lo": 0.4,
+          "bin_hi": 0.5,
+          "predicted": 0.4546,
+          "observed": 0.3492,
+          "n": 37741
+        },
+        {
+          "bin_lo": 0.5,
+          "bin_hi": 0.6,
+          "predicted": 0.5312,
+          "observed": 0.4231,
+          "n": 27952
+        },
+        {
+          "bin_lo": 0.6,
+          "bin_hi": 0.7,
+          "predicted": 0.6657,
+          "observed": 0.5189,
+          "n": 13881
+        },
+        {
+          "bin_lo": 0.7,
+          "bin_hi": 0.8,
+          "predicted": 0.7155,
+          "observed": 0.565,
+          "n": 8965
+        },
+        {
+          "bin_lo": 0.8,
+          "bin_hi": 0.9,
+          "predicted": 0.8345,
+          "observed": 0.69,
+          "n": 24110
+        },
+        {
+          "bin_lo": 0.9,
+          "bin_hi": 1.0,
+          "predicted": 0.9111,
+          "observed": 0.7704,
+          "n": 6010
+        }
+      ],
+      "note": null
+    },
+    "L2_selfcure": {
+      "auc": {
+        "value": 0.6742,
+        "provenance": "backtested",
+        "source": "risk.backtest()"
+      },
+      "brier": {
+        "value": 0.2379,
+        "provenance": "backtested",
+        "source": "risk.backtest()"
+      },
+      "brier_base": {
+        "value": 0.20311,
+        "provenance": "backtested",
+        "source": "risk.backtest()"
+      },
+      "base_rate": {
+        "value": 0.7165,
+        "provenance": "measured",
+        "source": "held-out split"
+      },
+      "gate": {
+        "metric": "auc",
+        "target": 0.6,
+        "passed": true
+      },
+      "reliability": [
+        {
+          "bin_lo": 0.0,
+          "bin_hi": 0.1,
+          "predicted": 0.0,
+          "observed": 0.3714,
+          "n": 35
+        },
+        {
+          "bin_lo": 0.1,
+          "bin_hi": 0.2,
+          "predicted": 0.1268,
+          "observed": 0.5042,
+          "n": 9401
+        },
+        {
+          "bin_lo": 0.2,
+          "bin_hi": 0.3,
+          "predicted": 0.2406,
+          "observed": 0.5632,
+          "n": 25495
+        },
+        {
+          "bin_lo": 0.3,
+          "bin_hi": 0.4,
+          "predicted": 0.3598,
+          "observed": 0.6319,
+          "n": 24540
+        },
+        {
+          "bin_lo": 0.4,
+          "bin_hi": 0.5,
+          "predicted": 0.4498,
+          "observed": 0.6916,
+          "n": 24929
+        },
+        {
+          "bin_lo": 0.5,
+          "bin_hi": 0.6,
+          "predicted": 0.5656,
+          "observed": 0.7358,
+          "n": 19404
+        },
+        {
+          "bin_lo": 0.6,
+          "bin_hi": 0.7,
+          "predicted": 0.6277,
+          "observed": 0.7751,
+          "n": 14204
+        },
+        {
+          "bin_lo": 0.7,
+          "bin_hi": 0.8,
+          "predicted": 0.7337,
+          "observed": 0.8194,
+          "n": 28824
+        },
+        {
+          "bin_lo": 0.8,
+          "bin_hi": 0.9,
+          "predicted": 0.844,
+          "observed": 0.9026,
+          "n": 12571
+        },
+        {
+          "bin_lo": 0.9,
+          "bin_hi": 1.0,
+          "predicted": 0.9548,
+          "observed": 0.9605,
+          "n": 8631
+        }
+      ],
+      "note": "self-cure rate drifts 0.60->0.72 (Phase 8 monitor recalibrates)"
+    }
+  },
+  "split_cutoff": "2025-07-01",
+  "drift": {
+    "self_cure_train": {
+      "value": 0.6032,
+      "provenance": "measured",
+      "source": "train split"
+    },
+    "self_cure_test": {
+      "value": 0.7165,
+      "provenance": "measured",
+      "source": "test split"
+    },
+    "rate_alert_threshold": 0.1,
+    "psi_alert_threshold": 0.25,
+    "alert": true,
+    "psi_p_worsen_feature": {
+      "value": 0.1058,
+      "provenance": "measured",
+      "source": "monitors.drift.psi on delinquency bucket"
+    },
+    "monthly_self_cure": [
+      {
+        "month": "2024-02",
+        "rate": 1.0,
+        "n": 6
+      },
+      {
+        "month": "2024-03",
+        "rate": 0.9065,
+        "n": 310
+      },
+      {
+        "month": "2024-04",
+        "rate": 0.8606,
+        "n": 710
+      },
+      {
+        "month": "2024-05",
+        "rate": 0.827,
+        "n": 1191
+      },
+      {
+        "month": "2024-06",
+        "rate": 0.7946,
+        "n": 1899
+      },
+      {
+        "month": "2024-07",
+        "rate": 0.7457,
+        "n": 2446
+      },
+      {
+        "month": "2024-08",
+        "rate": 0.6731,
+        "n": 2830
+      },
+      {
+        "month": "2024-09",
+        "rate": 0.6553,
+        "n": 3684
+      },
+      {
+        "month": "2024-10",
+        "rate": 0.6241,
+        "n": 4946
+      },
+      {
+        "month": "2024-11",
+        "rate": 0.6457,
+        "n": 6731
+      },
+      {
+        "month": "2024-12",
+        "rate": 0.644,
+        "n": 7615
+      },
+      {
+        "month": "2025-01",
+        "rate": 0.5917,
+        "n": 7416
+      },
+      {
+        "month": "2025-02",
+        "rate": 0.6178,
+        "n": 9139
+      },
+      {
+        "month": "2025-03",
+        "rate": 0.5675,
+        "n": 8960
+      },
+      {
+        "month": "2025-04",
+        "rate": 0.5477,
+        "n": 9572
+      },
+      {
+        "month": "2025-05",
+        "rate": 0.5298,
+        "n": 10396
+      },
+      {
+        "month": "2025-06",
+        "rate": 0.5372,
+        "n": 11919
+      },
+      {
+        "month": "2025-07",
+        "rate": 0.5164,
+        "n": 12437
+      },
+      {
+        "month": "2025-08",
+        "rate": 0.5293,
+        "n": 14796
+      },
+      {
+        "month": "2025-09",
+        "rate": 0.5096,
+        "n": 15414
+      },
+      {
+        "month": "2025-10",
+        "rate": 0.4966,
+        "n": 16414
+      },
+      {
+        "month": "2025-11",
+        "rate": 0.5763,
+        "n": 21711
+      },
+      {
+        "month": "2025-12",
+        "rate": 0.5381,
+        "n": 20851
+      },
+      {
+        "month": "2026-01",
+        "rate": 1.0,
+        "n": 21134
+      },
+      {
+        "month": "2026-02",
+        "rate": 1.0,
+        "n": 23591
+      },
+      {
+        "month": "2026-03",
+        "rate": 1.0,
+        "n": 21686
+      }
+    ]
+  }
+}
