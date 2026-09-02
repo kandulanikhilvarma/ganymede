@@ -6,7 +6,7 @@ scikit-learn>=1.4
 numpy>=1.26
 
 # LLM (OpenRouter via OpenAI-compatible client)
-openai>=1.40
+openai>=3.6.0
 python-dotenv>=1.0
 
 # Evaluation
