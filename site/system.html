@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="en" data-depth="2">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How it works · Ganymede</title>
+<meta name="description" content="The Ganymede architecture: where the system acts in a borrower's life, how data flows from servicing panel to retrained model, and the fourteen invariants that fail the build when a known defect returns.">
+<link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://ganymede-kandula.vercel.app/system">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ganymede">
+<meta property="og:title" content="Ganymede — how it works">
+<meta property="og:description" content="The Ganymede architecture: where the system acts in a borrower's life, how data flows from servicing panel to retrained model, and the fourteen invariants that fail the build when a known defect returns.">
+<meta property="og:url" content="https://ganymede-kandula.vercel.app/system">
+<meta property="og:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ganymede — how it works">
+<meta name="twitter:description" content="The Ganymede architecture: where the system acts in a borrower's life, how data flows from servicing panel to retrained model, and the fourteen invariants that fail the build when a known defect returns.">
+<meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Newsreader:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/components.css">
+<script>
+  try {
+    var t = localStorage.getItem('gm-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+    var d = localStorage.getItem('gm-depth');
+    if (d) document.documentElement.setAttribute('data-depth', d);
+  } catch (e) {}
+</script>
+<style>
+  .shell { max-width: 1080px; margin: 0 auto; padding: 0 var(--s-6) var(--s-12); }
+  header.top { padding: var(--s-10) 0 var(--s-7); }
+  header.top h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); margin: var(--s-4) 0 var(--s-4); max-width: 17ch; }
+
+  .sec { margin-top: var(--s-11); padding-top: var(--s-7); border-top: 1px solid var(--line-strong); }
+  .sec > h2 {
+    font-family: var(--font-display); font-weight: 400; font-size: clamp(1.6rem, 3vw, 2.1rem);
+    letter-spacing: var(--tracking-tight); margin-bottom: var(--s-3);
+  }
+  .sec .n { display: block; font-family: var(--font-mono); font-size: var(--fs--1); color: var(--signal); margin-bottom: var(--s-2); }
+
+  .plot { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-3); padding: var(--s-5); margin-top: var(--s-5); }
+  figcaption { font-size: var(--fs--1); color: var(--muted); margin-top: var(--s-4); max-width: 74ch; }
+
+  /* state machine */
+  .fsm { display: grid; gap: var(--s-3); }
+  .fsmrow { display: flex; gap: var(--s-3); flex-wrap: wrap; align-items: stretch; }
+  .node {
+    flex: 1 1 150px; min-width: 130px; text-align: left; background: var(--surface-2);
+    border: 1px solid var(--line); border-radius: var(--r-2); padding: var(--s-3) var(--s-4);
+    color: inherit;
+  }
+  .node b { display: block; font-size: var(--fs--1); font-weight: 600; }
+  .node span { display: block; font-size: 11px; color: var(--faint); margin-top: 2px; font-family: var(--font-mono); }
+  .node[aria-pressed="true"] { border-color: var(--signal); background: var(--signal-quiet); }
+  .node.terminal { border-style: dashed; }
+  .node.entry { border-color: var(--predict); }
+  .fsmdetail {
+    margin-top: var(--s-4); padding: var(--s-5); border-radius: var(--r-3);
+    background: var(--surface); border: 1px solid var(--line); min-height: 110px;
+  }
+  .fsmdetail h3 { font-size: var(--fs-0); margin-bottom: var(--s-2); }
+  .fsmdetail p { font-size: var(--fs--1); color: var(--muted); margin: 0 0 var(--s-2); }
+
+  /* flow */
+  .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--s-4); }
+  .stagebox { border: 1px solid var(--line); border-radius: var(--r-3); padding: var(--s-4); background: var(--surface); }
+  .stagebox .eyebrow { color: var(--signal); }
+  .stagebox b { display: block; font-size: var(--fs--1); font-weight: 600; margin: var(--s-2) 0 var(--s-2); }
+  .stagebox p { font-size: 12px; color: var(--muted); margin: 0; }
+  .stagebox code { font-family: var(--font-mono); font-size: 11px; color: var(--faint); display: block; margin-top: var(--s-2); }
+
+  .inv { margin-top: var(--s-5); }
+  .inv details {
+    border: 1px solid var(--line); border-radius: var(--r-2); margin-bottom: var(--s-2);
+    background: var(--surface); overflow: hidden;
+  }
+  .inv summary {
+    padding: var(--s-3) var(--s-4); cursor: pointer; display: flex; gap: var(--s-3);
+    align-items: baseline; font-size: var(--fs--1); list-style: none;
+  }
+  .inv summary::-webkit-details-marker { display: none; }
+  .inv summary .id { font-family: var(--font-mono); color: var(--signal); font-weight: 500; flex: none; width: 34px; }
+  .inv details[open] summary { border-bottom: 1px solid var(--line); }
+  .inv .how { padding: var(--s-3) var(--s-4) var(--s-4) calc(var(--s-4) + 34px + var(--s-3));
+              font-size: var(--fs--1); color: var(--muted); }
+  .inv .how code { font-family: var(--font-mono); color: var(--text); }
+
+  .runbox {
+    font-family: var(--font-mono); font-size: var(--fs--1); background: var(--surface-2);
+    border: 1px solid var(--line); border-radius: var(--r-2); padding: var(--s-4);
+    overflow-x: auto; margin-top: var(--s-5);
+  }
+  .runbox div { white-space: pre; }
+  .runbox .c { color: var(--faint); }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="topnav">
+  <a class="brand" href="index.html">
+    <svg viewBox="0 0 32 32" aria-hidden="true" style="color:var(--signal)">
+      <defs><clipPath id="nav-d"><circle cx="16" cy="16" r="14"/></clipPath></defs>
+      <circle cx="16" cy="16" r="14" fill="currentColor" opacity=".18"/>
+      <path d="M16 2C8.4 8.6 23.6 21.4 16 30L31 30L31 2Z" clip-path="url(#nav-d)" fill="currentColor"/>
+    </svg>
+    Ganymede
+  </a>
+  <div class="navlinks">
+    <a href="index.html">Start</a>
+    <a href="system.html">How it works</a>
+    <a href="evidence.html">Evidence</a>
+    <a href="queue.html">Allocator</a>
+    <a href="desk.html">Desk</a>
+    <a href="case.html">The case</a>
+    <a href="glossary.html">Glossary</a>
+    <a href="design.html">Design</a>
+  </div>
+  <span class="spacer"></span>
+  <button class="themebtn" data-theme-btn aria-label="Toggle theme">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>
+    </svg>
+  </button>
+  <button class="themebtn navtoggle" data-nav-toggle aria-expanded="false" aria-label="Open menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16"/>
+    </svg>
+  </button>
+</nav>
+
+<main id="main" class="shell">
+  <header class="top">
+    <p class="eyebrow">How it works</p>
+    <h1 class="display">Two lenses, one loop.</h1>
+    <p class="lede">Risk picks the conversation, Coach shapes it, and the outcome of that
+      conversation is the label that retrains both. Split them and each half degrades into
+      something worse: a queue nobody knows how to work, or advice with no idea who it is
+      talking to.</p>
+  </header>
+
+  <!-- ================= where it acts ================= -->
+  <section class="sec">
+    <span class="n">01</span>
+    <h2>Where the system acts</h2>
+    <p>Conventional collections enters at <strong>delinquent</strong>. Ganymede enters one state
+      earlier — and <em>drifting &rarr; current with no contact</em> is the transition most systems
+      never notice they are being paid for. Select a state to see what happens there.</p>
+    <div class="plot">
+      <div class="fsm" id="fsm"></div>
+      <div class="fsmdetail" id="fsmDetail"></div>
+    </div>
+  </section>
+
+  <!-- ================= flow ================= -->
+  <section class="sec">
+    <span class="n">02</span>
+    <h2>How the data moves</h2>
+    <p>Servicing panel and contact events feed the models; the allocator turns scores into an
+      assignment; the desk surfaces hints; every decision is logged with its arm and propensity and
+      resolved back into training.</p>
+    <div class="plot">
+      <div class="flow">
+        <div class="stagebox">
+          <span class="eyebrow">source</span>
+          <b>Borrower trajectory panel</b>
+          <p>One row per loan per month with real calendar dates — arrears bucket, balance,
+            origination facts.</p>
+          <code>panel.py</code>
+        </div>
+        <div class="stagebox">
+          <span class="eyebrow">features</span>
+          <b>Trajectory windows</b>
+          <p>Trailing arrears slope and peak, balance movement, and the cross-signal terms. A
+            timing feature from a source without calendar dates raises rather than warns.</p>
+          <code>features.py · I13</code>
+        </div>
+        <div class="stagebox">
+          <span class="eyebrow">models</span>
+          <b>L1 trajectory · L2 self-cure</b>
+          <p>Gradient-boosted, isotonically calibrated, with SHAP-derived reason codes. L3
+            contactability waits for pilot contact data.</p>
+          <code>risk.py</code>
+        </div>
+        <div class="stagebox">
+          <span class="eyebrow">decision</span>
+          <b>Allocator</b>
+          <p>Expected value per agent-minute under capacity. The only component allowed to produce
+            a queue.</p>
+          <code>allocator.py · I9 · I10</code>
+        </div>
+        <div class="stagebox">
+          <span class="eyebrow">conversation</span>
+          <b>Coach Lens</b>
+          <p>Borrower state branches the strategy; uncertain state yields the diagnostic question.
+            Two tiers, one hint at a time, rate-limited.</p>
+          <code>coach/ · I5 · I7 · I11</code>
+        </div>
+        <div class="stagebox">
+          <span class="eyebrow">loop</span>
+          <b>Outcome resolver</b>
+          <p>Promise against payment. The label retrains both lenses and promotes or demotes the
+            strategy that produced it.</p>
+          <code>outcomes.py · monitors/ · I12</code>
+        </div>
+      </div>
+      <figcaption>Every arrow in that chain is a real module in the package, and the
+        <a href="evidence.html">evidence page</a> names the command that reproduces each figure it
+        produces.</figcaption>
+    </div>
+  </section>
+
+  <!-- ================= invariants ================= -->
+  <section class="sec">
+    <span class="n">03</span>
+    <h2>Fourteen invariants, not fourteen notes</h2>
+    <p>A first review found fourteen ways this system could go wrong. Written down as a list of
+      past mistakes, that list gets read once and never again. Each is restated as a constraint
+      with an enforcement mechanism, so it lives in the codebase.</p>
+    <blockquote class="callout"><strong>The standing rule.</strong> A defect is not closed when it
+      is fixed. It is closed when an invariant is written and something automated fails if that
+      invariant breaks.</blockquote>
+    <div class="inv" id="invList"></div>
+    <div class="runbox">
+      <div><span class="c"># the gates, each passes or fails</span></div>
+      <div>python -m ganymede.invariants --check</div>
+      <div>python -m pytest -q</div>
+      <div>python -m ganymede.panel     --verify   <span class="c"># data pipeline</span></div>
+      <div>python -m ganymede.risk      --backtest <span class="c"># calibration beats base rate</span></div>
+      <div>python -m ganymede.allocator --simulate <span class="c"># value beats risk-ranking</span></div>
+      <div>python scripts/gen_palette.py    --check <span class="c"># colour contrast + ramp monotonicity</span></div>
+      <div>python scripts/build_site_data.py --check <span class="c"># this site's numbers vs the pipeline</span></div>
+    </div>
+    <p data-tier="2" style="margin-top:var(--s-5)">Two of those gates are new, and they exist for
+      the same reason as the other twelve: the design system and the site's figures are places a
+      known defect could quietly return. A contrast ratio that drops below its floor, a risk ramp
+      that stops encoding magnitude, or a headline number that drifts from the pipeline now fails
+      the build rather than waiting for someone to notice.</p>
+  </section>
+
+  <!-- ================= data ================= -->
+  <section class="sec">
+    <span class="n">04</span>
+    <h2>What it is built on</h2>
+    <p><strong>Freddie Mac Single-Family Loan-Level</strong> is the trajectory backbone — real
+      dates, real delinquency transitions, used under Freddie Mac's data terms.
+      <strong>Home Credit Default Risk</strong> supplies feature enrichment under its Kaggle terms.
+      Neither is redistributed here; the repository references them and rebuilds from a local copy.</p>
+    <p>The <span data-term="panel">panel</span> holds
+      <span class="mono" data-fig="panel:rows" data-fig-format="n">—</span> monthly rows across
+      <span class="mono" data-fig="panel:loans" data-fig-format="n" data-fig-badge="off">—</span>
+      loans and <span class="mono" data-fig="panel:vintages" data-fig-badge="off">—</span> vintages,
+      of which <span class="mono" data-fig="panel:delinquent_months" data-fig-format="n" data-fig-badge="off">—</span>
+      are delinquent account-months — the class the Risk Lens is actually ranking within.</p>
+    <p data-tier="2">The conversation side has no equivalent public source. Transcripts are
+      generated, conditioned on real trajectories, and flagged
+      <code class="mono">is_synthetic</code> at the schema level. That flag is what lets invariant
+      I1 refuse a predictive-lift claim it cannot honestly support, rather than relying on whoever
+      writes the eval remembering the distinction.</p>
+    <p style="margin-top:var(--s-6)"><a href="evidence.html">Every figure and its method &rarr;</a>
+      &nbsp;·&nbsp; <a href="glossary.html">The vocabulary &rarr;</a></p>
+  </section>
+</main>
+
+<footer class="site">
+  <div class="shell" style="padding-bottom:0">
+    Ganymede · <a href="https://github.com/kandulanikhilvarma/ganymede">source</a> ·
+    a research prototype, not fit for production lending decisions without a pilot and appropriate
+    data-protection controls.
+  </div>
+</footer>
+
+<script type="module" src="assets/js/site.js"></script>
+<script type="module">
+import { resolveFigures } from './assets/js/figures.js';
+import { wireTerms } from './assets/js/site.js';
+resolveFigures();
+
+const $ = id => document.getElementById(id);
+
+/* ---- the state machine ---- */
+const STATES = [
+  { id: 'current', label: 'Current', sub: 'paying', row: 0,
+    h: 'Nothing to do, and that matters',
+    p: ['The overwhelming majority of a book sits here. Any system that generates work from this state is manufacturing cost.',
+        'L1 scores the trajectory continuously, so the transition out of this state is noticed rather than discovered a month later.'] },
+  { id: 'drifting', label: 'Drifting', sub: 'trajectory bends · L1', row: 0, entry: true,
+    h: 'Where Ganymede enters',
+    p: ['L1 detects that the path is changing — arrears direction, peak, balance movement — before a payment is formally missed.',
+        'This is the state conventional collections cannot act in, because it has not triggered a delinquency rule yet. It is also where a conversation is cheapest and most effective.'] },
+  { id: 'delinquent', label: 'Delinquent', sub: 'payment missed', row: 1,
+    h: 'Where everyone else enters',
+    p: ['The allocator now decides whether an agent-minute spent here earns more than the same minute spent elsewhere.',
+        'Most accounts in this state will self-cure. Scoring that explicitly is what turns silence into a decision rather than an omission.'] },
+  { id: 'intreatment', label: 'In treatment', sub: 'allocator selected · agent contacts', row: 1,
+    h: 'The conversation',
+    p: ['Borrower state branches the strategy. When the quadrant is uncertain — which it usually is, because willingness cannot be read from servicing data — the Coach supplies the diagnostic question instead of guessing.',
+        'Hints fire only at real turn boundaries, one at a time, inside a measured latency budget.'] },
+  { id: 'promise', label: 'Promise open', sub: 'PTP captured · L4', row: 2,
+    h: 'A commitment with three fields',
+    p: ['An amount, a date, and a method. Promises missing any of the three are kept far less often, so promise quality is a coached behaviour rather than a reporting metric.',
+        'The open promise is also the thing that makes the loop closable: it creates an expected event to resolve against.'] },
+  { id: 'cured', label: 'Cured', sub: 'promise kept', row: 3, terminal: true,
+    h: 'The label the whole system is built to produce',
+    p: ['Kept promises retrain L1 and L4 and promote the strategy that produced them above the support threshold.',
+        'Note what is not claimed: that the coaching caused it. Only the control arm can separate the product working from the allocator selecting recoverable people.'] },
+  { id: 'chargedoff', label: 'Charged off', sub: 'options exhausted', row: 3, terminal: true,
+    h: 'The outcome everything upstream exists to avoid',
+    p: ['A broken promise routes back to delinquent rather than here; charge-off is reached when the options are genuinely exhausted.',
+        'Broken-promise rate is a pilot guardrail with a hard stop, not a line in a monthly deck — a system that raises promise capture while raising broken promises has moved a number without moving money.'] },
+];
+
+$('fsm').replaceChildren(...[0, 1, 2, 3].map(r => {
+  const row = document.createElement('div');
+  row.className = 'fsmrow';
+  STATES.filter(s => s.row === r).forEach(s => {
+    const b = document.createElement('button');
+    b.className = 'node' + (s.terminal ? ' terminal' : '') + (s.entry ? ' entry' : '');
+    b.setAttribute('aria-pressed', String(s.id === 'drifting'));
+    b.innerHTML = `<b></b><span></span>`;
+    b.querySelector('b').textContent = s.label;
+    b.querySelector('span').textContent = s.sub;
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.node').forEach(n => n.setAttribute('aria-pressed', 'false'));
+      b.setAttribute('aria-pressed', 'true');
+      showState(s);
+    });
+    row.appendChild(b);
+  });
+  return row;
+}));
+
+function showState(s) {
+  const d = $('fsmDetail');
+  d.innerHTML = '<h3></h3>' + s.p.map(() => '<p></p>').join('');
+  d.querySelector('h3').textContent = s.h;
+  d.querySelectorAll('p').forEach((el, i) => { el.textContent = s.p[i]; });
+}
+showState(STATES.find(s => s.id === 'drifting'));
+
+/* ---- invariants ---- */
+const INVARIANTS = [
+  ['I1', 'Synthetic conversations never support a predictive-lift claim', 'A <code>Conversation.is_synthetic</code> flag, and <code>evals/metrics.py</code> refuses to compute lift on any set containing a synthetic record. Synthetic data validates plumbing, latency, hint format and UI — not prediction.'],
+  ['I2', 'Every conversation carries an experiment arm assigned before it starts', '<code>schema.py</code> makes <code>arm</code> non-nullable, and the invariant check fails if a later edit makes it optional. Without the arm there is no way to attribute an outcome.'],
+  ['I3', 'Every decision logs the acting policy and its propensity', 'Non-nullable <code>propensity</code>; the retrain path aborts if any row in the window lacks a usable one. Off-policy evaluation is impossible without it, so the allocator could not be assessed before shipping.'],
+  ['I4', 'The latency budget is a measured number, never a chosen one', 'It lives in <code>config.py</code>, sourced from the Phase 0 gap distribution, and any component reading it before it is set fails loudly rather than assuming a value.'],
+  ['I5', 'A strategy is never promoted below minimum support, and every hint shows its support count', '<code>playbook.py</code> gates promotion; the hint renderer requires a support field. Thin evidence is displayed as thin rather than hidden.'],
+  ['I6', 'No component in the label path ships without a gold set and an accuracy bar', 'The PTP extractor was blocked from downstream use until it cleared its bar. A wrong label is worse than a missing one.'],
+  ['I7', 'Strategy selection branches on borrower state, never on risk score alone', '<code>compose.py</code> requires a <code>BorrowerState</code>; an uncertain state yields a diagnostic question rather than a guessed strategy.'],
+  ['I8', 'ContactEvent is channel-agnostic — nothing assumes voice', 'Schema-level. The async compose path uses the same playbook, so email and SMS are not a rewrite.'],
+  ['I9', 'Accounts are ranked by expected value, never by probability', '<code>allocator.py</code> is the only queue producer. No sort-by-score path exists anywhere in the package.'],
+  ['I10', '"Do not contact" is a first-class action with money attached', 'It is in the action enum with a value in the objective, and self-cure precision is tracked. Silence has to earn its place, and frequently does.'],
+  ['I11', 'Conversation outcome outranks hint usefulness, and hints per conversation are capped', 'A rate limiter in <code>compose.py</code>; <code>metrics.py</code> reports outcome first. Hint spam splits the agent\'s attention while a person is mid-sentence.'],
+  ['I12', 'Input, score and outcome distributions are monitored', '<code>monitors/drift.py</code> exits non-zero on breach. The self-cure regime shift is exactly what this caught.'],
+  ['I13', 'No timing feature is derived from a dataset without calendar dates', '<code>panel.py</code> tags each source with <code>has_calendar_dates</code>; <code>features.py</code> raises if a timing feature reads a source tagged false.'],
+  ['I14', 'The riskiest open assumption is tested in the current phase, not a later one', 'Phase order is reviewed at every gate, and a phase cannot start while an earlier phase\'s assumption is untested. This is why the latency spike came before the coaching layer.'],
+];
+
+$('invList').replaceChildren(...INVARIANTS.map(([id, what, how]) => {
+  const d = document.createElement('details');
+  d.innerHTML = `<summary><span class="id">${id}</span><span></span></summary><div class="how">${how}</div>`;
+  d.querySelector('summary span:last-child').textContent = what;
+  return d;
+}));
+
+wireTerms();
+</script>
+</body>
+</html>
