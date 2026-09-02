@@ -72,6 +72,27 @@
       "source": "panel.parquet"
     },
     {
+      "label": "Accounts routed to a diagnostic question",
+      "value": 0.9752,
+      "provenance": "measured",
+      "source": "state.estimate_state over the queue",
+      "note": "willingness cannot be read from servicing data, so most accounts get the diagnostic question rather than a guessed strategy"
+    },
+    {
+      "label": "PTP extractor field accuracy",
+      "value": 0.934,
+      "provenance": "measured",
+      "source": "python -m ganymede.coach.ptp_eval (docs/phase6-conversations.md)",
+      "note": "gold-set run against a live model; bar 0.80. Not recomputed per build."
+    },
+    {
+      "label": "LLM judge vs human agreement",
+      "value": 0.917,
+      "provenance": "measured",
+      "source": "python -m ganymede.evals.report --report (docs/phase8-evals.md)",
+      "note": "LLM judge vs human labels; mixed-pool alpha 0.886 sits under the within-judge ceiling of 1.0. Not recomputed per build."
+    },
+    {
       "label": "Self-cure rate, train to test",
       "value": "0.6032 to 0.7165",
       "provenance": "measured",

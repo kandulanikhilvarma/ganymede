@@ -300,6 +300,60 @@ def stage_audio() -> dict:
     }
 
 
+def stage_trajectories() -> dict:
+    """Real borrower paths for the hero backdrop.
+
+    The atmospheric layer on the home page is not a gradient: it is a few
+    hundred actual delinquency trajectories from the panel, most of them quiet,
+    a handful bending. The picture is the argument -- the Risk Lens exists to
+    notice the few that bend, before they break.
+    """
+    import polars as pl
+    from ganymede.panel import PANEL_PATH
+
+    if not PANEL_PATH.exists():
+        raise FileNotFoundError("panel.parquet missing")
+
+    WINDOW = 24
+    p = pl.read_parquet(PANEL_PATH, columns=["loan_id", "period_date", "delinq"])
+    seq = (p.sort(["loan_id", "period_date"])
+            .group_by("loan_id", maintain_order=True)
+            .agg([pl.col("delinq").alias("d"), pl.len().alias("n")])
+            .filter(pl.col("n") >= WINDOW)
+            # deterministic order, so the backdrop does not churn between builds
+            .with_columns(pl.col("loan_id").hash(seed=7).alias("h"))
+            .sort("h"))
+
+    # "Quiet" is at most one missed month across two years, not a spotless
+    # record: this panel samples delinquent histories in full and current ones
+    # as short stubs, so no loan is both perfectly clean and long-lived. Drawing
+    # a spotless field would mean inventing loans that are not in the data.
+    quiet, bending = [], []
+    for row in seq.iter_rows(named=True):
+        d = [int(v) for v in row["d"]]
+        bad = sum(1 for v in d if v >= 1)
+        peak = max(d)
+        if bad <= 1 and len(quiet) < 240:
+            quiet.append(d[:WINDOW])
+        elif peak >= 2 and len(bending) < 80:
+            first_bad = next(i for i, v in enumerate(d) if v >= 1)
+            lo = max(0, min(first_bad - 6, len(d) - WINDOW))
+            bending.append(d[lo:lo + WINDOW])
+        if len(quiet) >= 240 and len(bending) >= 80:
+            break
+
+    return {
+        "window_months": WINDOW,
+        "quiet": quiet,
+        "bending": bending,
+        "max_bucket": max((max(t) for t in bending + quiet), default=1),
+        "quiet_rule": "at most one delinquent month in 24",
+        "bending_rule": "reaches 60+ days past due; window starts six months before the first miss",
+        "source": fig("panel.parquet", "measured",
+                      "hash-ordered deterministic sample of 24-month windows"),
+    }
+
+
 def stage_coach() -> dict:
     """The playbook, its support counts, and the boundary the coach will not cross."""
     from ganymede.coach.boundary import MIN_TURN_GAP_MS
@@ -316,14 +370,81 @@ def stage_coach() -> dict:
         "provisional": s.is_provisional,
     } for s in SEED]
 
+    # These two call an external model, so they are recorded from their gate run
+    # rather than recomputed on every build: a live call would spend credits on
+    # each site rebuild and make --check non-deterministic. Reproduce with the
+    # commands named in `source`.
+    recorded = {
+        "ptp_field_accuracy": fig(
+            0.934, "measured", "python -m ganymede.coach.ptp_eval (docs/phase6-conversations.md)",
+            note="gold-set run against a live model; bar 0.80. Not recomputed per build."),
+        "ptp_bar": 0.80,
+        "judge_agreement": fig(
+            0.917, "measured", "python -m ganymede.evals.report --report (docs/phase8-evals.md)",
+            note="LLM judge vs human labels; mixed-pool alpha 0.886 sits under the "
+                 "within-judge ceiling of 1.0. Not recomputed per build."),
+        "judge_alpha_mixed": 0.886,
+    }
+
     return {
         "min_strategy_support": MIN_STRATEGY_SUPPORT,
         "min_turn_gap_ms": MIN_TURN_GAP_MS,
+        "recorded": recorded,
         "strategies": strategies,
         "all_provisional": fig(
             all(s["provisional"] for s in strategies), "seeded",
             "coach.playbook.SEED",
             note="no strategy has outcome support yet; every one is labelled seeded"),
+    }
+
+
+def stage_state() -> dict:
+    """Borrower state over the real queue: how often the data settles the quadrant.
+
+    Capacity is estimable from a payment trajectory; willingness is not, without
+    a conversation. This stage measures how often that bites, which is the whole
+    reason the product has a second lens.
+    """
+    from ganymede.allocator import score_accounts
+    from ganymede.features import FEATURE_COLS, build_features, time_split
+    from ganymede.schema import Capacity, Willingness
+    from ganymede.state import estimate_state, strategy_for
+    import polars as pl
+
+    feats = build_features()
+    _, test_df = time_split(feats)
+    snap = (test_df.filter(pl.col("d") >= 1)
+                   .unique(subset=["loan_id"], keep="last")
+                   .select(["loan_id", *FEATURE_COLS]))
+
+    counts, certain, confs = {}, 0, []
+    for row in snap.iter_rows(named=True):
+        st = estimate_state(row)
+        key = f"{st.capacity.value} x {st.willingness.value}"
+        counts[key] = counts.get(key, 0) + 1
+        confs.append(st.confidence)
+        if st.is_certain:
+            certain += 1
+
+    n = snap.height
+    confs.sort()
+    return {
+        "accounts": fig(n, "measured", "test-period delinquent snapshot"),
+        "confident_quadrant": fig(round(certain / n, 4), "measured",
+                                  "state.estimate_state over the queue"),
+        "routes_to_diagnostic": fig(
+            round(1 - certain / n, 4), "measured", "state.estimate_state over the queue",
+            note="willingness cannot be read from servicing data, so most accounts "
+                 "get the diagnostic question rather than a guessed strategy"),
+        "median_confidence": fig(round(confs[n // 2], 3), "measured", "state.estimate_state"),
+        "quadrants": [{"quadrant": k, "n": v, "share": round(v / n, 4)}
+                      for k, v in sorted(counts.items(), key=lambda kv: -kv[1])],
+        "strategies": {
+            f"{c.value} x {w.value}": strategy_for(
+                type("S", (), {"capacity": c, "willingness": w, "is_certain": True})())
+            for c in (Capacity.CAN_PAY, Capacity.CANNOT_PAY)
+            for w in (Willingness.WILL_PAY, Willingness.WILL_NOT_PAY)
+        },
     }
 
 
@@ -362,6 +483,19 @@ def stage_metrics(bundle: dict) -> dict:
         add("Panel rows", p["rows"]["value"], "measured", "panel.parquet")
         add("Loans", p["loans"]["value"], "measured", "panel.parquet")
 
+    st = bundle.get("state", {})
+    if st:
+        add("Accounts routed to a diagnostic question", st["routes_to_diagnostic"]["value"],
+            "measured", st["routes_to_diagnostic"]["source"],
+            note=st["routes_to_diagnostic"]["note"])
+
+    co = bundle.get("coach", {}).get("recorded", {})
+    if co:
+        add("PTP extractor field accuracy", co["ptp_field_accuracy"]["value"], "measured",
+            co["ptp_field_accuracy"]["source"], note=co["ptp_field_accuracy"]["note"])
+        add("LLM judge vs human agreement", co["judge_agreement"]["value"], "measured",
+            co["judge_agreement"]["source"], note=co["judge_agreement"]["note"])
+
     d = bundle.get("risk", {}).get("drift", {})
     if d:
         add("Self-cure rate, train to test",
@@ -385,6 +519,8 @@ STAGES = {
     "allocator": stage_allocator,
     "audio": stage_audio,
     "coach": stage_coach,
+    "trajectories": stage_trajectories,
+    "state": stage_state,
 }
 
 

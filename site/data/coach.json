@@ -1,6 +1,22 @@
 {
   "min_strategy_support": 5,
   "min_turn_gap_ms": 200,
+  "recorded": {
+    "ptp_field_accuracy": {
+      "value": 0.934,
+      "provenance": "measured",
+      "source": "python -m ganymede.coach.ptp_eval (docs/phase6-conversations.md)",
+      "note": "gold-set run against a live model; bar 0.80. Not recomputed per build."
+    },
+    "ptp_bar": 0.8,
+    "judge_agreement": {
+      "value": 0.917,
+      "provenance": "measured",
+      "source": "python -m ganymede.evals.report --report (docs/phase8-evals.md)",
+      "note": "LLM judge vs human labels; mixed-pool alpha 0.886 sits under the within-judge ceiling of 1.0. Not recomputed per build."
+    },
+    "judge_alpha_mixed": 0.886
+  },
   "strategies": [
     {
       "id": "plan_small",

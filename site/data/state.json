@@ -1,0 +1,76 @@
+{
+  "accounts": {
+    "value": 58931,
+    "provenance": "measured",
+    "source": "test-period delinquent snapshot"
+  },
+  "confident_quadrant": {
+    "value": 0.0248,
+    "provenance": "measured",
+    "source": "state.estimate_state over the queue"
+  },
+  "routes_to_diagnostic": {
+    "value": 0.9752,
+    "provenance": "measured",
+    "source": "state.estimate_state over the queue",
+    "note": "willingness cannot be read from servicing data, so most accounts get the diagnostic question rather than a guessed strategy"
+  },
+  "median_confidence": {
+    "value": 0.179,
+    "provenance": "measured",
+    "source": "state.estimate_state"
+  },
+  "quadrants": [
+    {
+      "quadrant": "unknown x will_pay",
+      "n": 20261,
+      "share": 0.3438
+    },
+    {
+      "quadrant": "can_pay x will_pay",
+      "n": 13932,
+      "share": 0.2364
+    },
+    {
+      "quadrant": "cannot_pay x will_pay",
+      "n": 11685,
+      "share": 0.1983
+    },
+    {
+      "quadrant": "cannot_pay x will_not_pay",
+      "n": 5743,
+      "share": 0.0975
+    },
+    {
+      "quadrant": "unknown x will_not_pay",
+      "n": 3821,
+      "share": 0.0648
+    },
+    {
+      "quadrant": "can_pay x will_not_pay",
+      "n": 2997,
+      "share": 0.0509
+    },
+    {
+      "quadrant": "can_pay x unknown",
+      "n": 279,
+      "share": 0.0047
+    },
+    {
+      "quadrant": "unknown x unknown",
+      "n": 184,
+      "share": 0.0031
+    },
+    {
+      "quadrant": "cannot_pay x unknown",
+      "n": 29,
+      "share": 0.0005
+    }
+  ],
+  "strategies": {
+    "can_pay x will_pay": "remove friction, autopay, one nudge",
+    "can_pay x will_not_pay": "state consequences, firm, escalation path",
+    "cannot_pay x will_pay": "affordability first, small realistic plan, do not over-promise",
+    "cannot_pay x will_not_pay": "re-establish contact safely, then hardship assessment"
+  }
+}
