@@ -60,7 +60,7 @@
   --slate-300:#c4c7c2;
   --slate-400:#a6ada8;
   --slate-500:#89928e;
-  --slate-600:#6b7675;
+  --slate-600:#636f6d;
   --slate-700:#4c595a;
   --slate-800:#313d42;
   --slate-900:#18232a;
@@ -79,6 +79,18 @@
   --risk-80:#723207;
   --risk-90:#522008;
   --risk-100:#3c1407;
+  /* label colour on each risk cell, picked for contrast */
+  --on-risk-0:#0b111a;
+  --on-risk-10:#0b111a;
+  --on-risk-20:#0b111a;
+  --on-risk-30:#0b111a;
+  --on-risk-40:#0b111a;
+  --on-risk-50:#0b111a;
+  --on-risk-60:#ffffff;
+  --on-risk-70:#ffffff;
+  --on-risk-80:#ffffff;
+  --on-risk-90:#ffffff;
+  --on-risk-100:#ffffff;
 
   /* ---- type ------------------------------------------------------------
      Fraunces carries the argument, Geist carries the readout. The contrast
@@ -138,6 +150,7 @@
   --broken:#f9a79a;
   --broken-quiet:#511f1d;
   --focus:#4cbcac;
+  --field:#636f6d;
   --shadow-1:0 1px 2px rgba(0,0,0,.45);
   --shadow-2:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.32);
   --shadow-3:0 2px 6px rgba(0,0,0,.45),0 16px 40px rgba(0,0,0,.42);
@@ -154,10 +167,10 @@
   --line-strong:#a6ada8;
   --text:#18232a;
   --muted:#4c595a;
-  --faint:#6b7675;
+  --faint:#636f6d;
   --signal:#006e60;
   --signal-strong:#075348;
-  --signal-quiet:#a9e5dc;
+  --signal-quiet:#d1f3ee;
   --on-signal:#f8f7f4;
   --predict:#723207;
   --predict-quiet:#f4d19f;
@@ -166,6 +179,7 @@
   --broken:#953f39;
   --broken-quiet:#ffc6bb;
   --focus:#008a7a;
+  --field:#636f6d;
   --shadow-1:0 1px 2px rgba(20,26,40,.06);
   --shadow-2:0 1px 2px rgba(20,26,40,.06),0 2px 8px rgba(20,26,40,.05);
   --shadow-3:0 2px 4px rgba(20,26,40,.06),0 12px 32px rgba(20,26,40,.10);
