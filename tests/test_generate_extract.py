@@ -1,14 +1,12 @@
 """Generation and extraction with a fake engine — offline, no API cost.
 The live PTP-vs-gold check lives behind GANYMEDE_LIVE_LLM in test_ptp_live."""
 
-import os
 from datetime import date
 
-import pytest
 
 from ganymede.coach.extract import extract_promise
 from ganymede.generate import generate_conversation
-from ganymede.llm import LLMEngine, Role
+from ganymede.llm import LLMEngine
 from ganymede.schema import Capacity, Willingness
 
 

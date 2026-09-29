@@ -2,7 +2,6 @@
 overruns demote. Offline via a fake engine; no API cost."""
 
 import time
-from datetime import date
 
 from ganymede.coach.boundary import deliver, is_hint_eligible
 from ganymede.coach.checklist import checklist_hint

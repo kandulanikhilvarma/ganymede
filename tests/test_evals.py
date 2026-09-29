@@ -3,7 +3,7 @@
 import numpy as np
 
 from ganymede.evals.metrics import assemble, hint_usefulness, lift_on_set
-from ganymede.monitors.drift import check_drift, check_rate_drift, psi
+from ganymede.monitors.drift import check_rate_drift, psi
 
 
 def test_i1_guard_refuses_lift_on_synthetic():

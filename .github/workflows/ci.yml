@@ -2,24 +2,47 @@ name: ci
 
 on:
   push:
+    branches: [master]
   pull_request:
+
+# The job only reads the repo. Nothing here needs a write token.
+permissions:
+  contents: read
+
+# A newer push to the same branch makes the running check moot.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # the floor requires-python promises, and the version it is developed on
+        python-version: ["3.11", "3.13"]
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
       - name: install
         run: |
           pip install -r requirements.txt
           pip install -e ".[dev]"
+      - name: lint
+        run: ruff check .
       - name: invariants
         run: python -m ganymede.invariants --check
       - name: tests
-        run: python -m pytest -q
+        # The floor sits a little under the measured 67% so it catches a real
+        # drop, not noise. Raise it as coverage rises.
+        run: python -m pytest -q --cov=ganymede --cov-fail-under=65
       - name: design tokens
         # Regenerates the OKLCH ramps and fails if any named contrast pair drops
         # below its floor, if the risk ramp stops darkening, or if the committed

@@ -108,7 +108,8 @@ def _risk_ranking(accounts: pl.DataFrame, capacity_minutes: int) -> pl.DataFrame
     spent, chosen = 0, []
     for r in ranked.iter_rows(named=True):
         if spent + minutes <= capacity_minutes:
-            chosen.append(r["idx"]); spent += minutes
+            chosen.append(r["idx"])
+            spent += minutes
     return ranked.with_columns(
         pl.when(pl.col("idx").is_in(chosen)).then(pl.lit("plan_offer")).otherwise(pl.lit("do_not_contact")).alias("action")
     )

@@ -55,7 +55,7 @@ def contrast(fg: str, bg: str) -> float:
 
 
 def ramp(lightness: list[float], chroma: list[float], hue: list[float]) -> dict[int, str]:
-    return {s: oklch_to_hex(l, c, h) for s, l, c, h in zip(STEPS, lightness, chroma, hue)}
+    return {s: oklch_to_hex(lum, c, h) for s, lum, c, h in zip(STEPS, lightness, chroma, hue)}
 
 
 def _lerp(a: float, b: float, n: int = 11) -> list[float]:
