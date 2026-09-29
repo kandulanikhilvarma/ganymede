@@ -45,7 +45,7 @@
     background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-3);
     padding: var(--s-5); margin-bottom: var(--s-9);
   }
-  .legendbox div p { margin: var(--s-2) 0 0; font-size: var(--fs--1); color: var(--muted); }
+  .legendbox div p { margin: var(--s-2) 0 0; font-size: var(--fs--1); color: var(--muted); min-height: 3.2em; }
 
   figure.ev { margin: 0 0 var(--s-11); scroll-margin-top: 76px; }
   figure.ev > header { display: flex; align-items: baseline; gap: var(--s-3); flex-wrap: wrap; margin-bottom: var(--s-3); }
@@ -69,8 +69,13 @@
   .matrix .rh { color: var(--muted); text-align: right; padding-right: var(--s-2); align-self: center; }
   .matrix .cell {
     aspect-ratio: 1.9; border-radius: var(--r-1); display: flex; align-items: center;
-    justify-content: center; color: #fff; font-size: var(--fs-micro);
+    justify-content: center; font-size: var(--fs-micro);
   }
+  /* Reserve each chart's box before its data arrives (CLS was 0.116). The ratios
+     are the viewBox sizes the draw calls below pass to lineChart/barChart. */
+  #relPlot { aspect-ratio: 860 / 380; }
+  #gapPlot, #driftPlot { aspect-ratio: 860 / 320; }
+  #frontierPlot { aspect-ratio: 860 / 340; }
   .matrix .cell.zero { background: var(--surface-2); color: var(--faint); }
 
   table.metrics { min-width: 620px; }
@@ -97,7 +102,7 @@
     Ganymede
   </a>
   <div class="navlinks">
-    <a href="index.html">Start</a>
+    <a href="index.html">Start here</a>
     <a href="system.html">How it works</a>
     <a href="evidence.html">Evidence</a>
     <a href="queue.html">Allocator</a>
@@ -126,7 +131,15 @@
     <p class="lede">These charts are drawn from JSON the pipeline regenerates, not from images exported once and left to rot. Each figure carries the kind of evidence behind it, because &ldquo;measured&rdquo; and &ldquo;simulated&rdquo; are not the same claim, and a results page that blurs the two is doing something dishonest.</p>
   </header>
 
-  <div class="legendbox" id="legend"></div>
+  <!-- The five kinds are fixed by build_site_data.PROVENANCE; only their wording
+       comes from JSON, so the box has its final shape before the fetch (CLS). -->
+  <div class="legendbox" id="legend">
+    <div><span class="badge badge-measured">measured</span><p data-prov="measured"></p></div>
+    <div><span class="badge badge-backtested">backtested</span><p data-prov="backtested"></p></div>
+    <div><span class="badge badge-simulated">simulated</span><p data-prov="simulated"></p></div>
+    <div><span class="badge badge-seeded">seeded</span><p data-prov="seeded"></p></div>
+    <div><span class="badge badge-pending">pending</span><p data-prov="pending"></p></div>
+  </div>
 
   <!-- ============ calibration ============ -->
   <figure class="ev" id="calibration">
@@ -161,7 +174,7 @@
       <span style="margin-left:auto" data-badge-slot></span>
     </header>
     <p class="lead">Every <span data-term="turn-boundary">inter-turn gap</span> in a real ten-minute
-      call. Drag the budget line: bars to its left are boundaries too narrow for a hint arriving at that latency, so the hint lands after the moment it addressed has passed.</p>
+      call. Move the latency slider: bars left of the line are boundaries too narrow for a hint arriving at that latency, so the hint lands after the moment it addressed has passed.</p>
     <div class="plot">
       <div class="controls">
         <label for="budgetRange">hint latency</label>
@@ -294,7 +307,7 @@
       <span>Ganymede</span>
     </div>
     <nav class="footnav" aria-label="Footer">
-      <a href="index.html">Start</a>
+      <a href="index.html">Start here</a>
       <a href="system.html">How it works</a>
       <a href="evidence.html">Evidence</a>
       <a href="queue.html">Allocator</a>
@@ -314,7 +327,7 @@
 <script type="module" src="assets/js/site.js"></script>
 <script type="module">
 import { resolveFigures, loadFile, badgeFor } from './assets/js/figures.js';
-import { lineChart, barChart, loadData, el } from './assets/js/charts.js';
+import { lineChart, barChart, loadData, loadFailed, el } from './assets/js/charts.js';
 
 resolveFigures();
 const $ = id => document.getElementById(id);
@@ -322,11 +335,10 @@ const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(
 
 /* ---- provenance legend, straight from the build script's own wording ---- */
 loadFile('metrics').then(m => {
-  $('legend').replaceChildren(...Object.entries(m.provenance_legend).map(([k, v]) => {
-    const d = document.createElement('div');
-    d.innerHTML = `<span class="badge badge-${k}">${k}</span><p>${v}</p>`;
-    return d;
-  }));
+  for (const [k, v] of Object.entries(m.provenance_legend)) {
+    const slot = $('legend').querySelector(`[data-prov="${k}"]`);
+    if (slot) slot.textContent = v;
+  }
 
   // table + filters
   const rows = m.rows;
@@ -357,7 +369,7 @@ loadFile('metrics').then(m => {
     });
     return b;
   }));
-}).catch(() => {});
+}).catch(loadFailed('legend'));
 
 /* ---- calibration ---- */
 loadData('risk').then(r => {
@@ -427,7 +439,7 @@ loadData('risk').then(r => {
   };
   drawDrift();
   addEventListener('resize', () => { draw(); drawDrift(); }, { passive: true });
-}).catch(() => {});
+}).catch(loadFailed('driftPlot'));
 
 /* ---- gap histogram with a draggable budget ---- */
 loadData('audio').then(a => {
@@ -440,6 +452,8 @@ loadData('audio').then(a => {
     const share = gaps.filter(g => g >= budget).length / gaps.length;
     $('budgetVal').textContent = budget + ' ms';
     $('budgetShare').textContent = Math.round(share * 100) + '%';
+    range.setAttribute('aria-valuetext',
+      `${budget} ms, ${Math.round(share * 100)}% of real boundaries wide enough`);
     const idx = bars.findIndex(b => budget >= b.lo && budget < b.hi);
     barChart($('gapPlot'), {
       w: 860, h: 320, pad: { t: 22, r: 20, b: 44, l: 56 },
@@ -458,7 +472,7 @@ loadData('audio').then(a => {
   range.value = String(a.budget_ms.value);
   drawGaps();
   addEventListener('resize', drawGaps, { passive: true });
-}).catch(() => {});
+}).catch(loadFailed('gapPlot'));
 
 /* ---- roll matrix ---- */
 loadData('panel').then(p => {
@@ -484,7 +498,7 @@ loadData('panel').then(p => {
       if (t) {
         const stop = Math.min(100, Math.round(t.rate * 10) * 10);
         d.style.background = cssVar('--risk-' + stop);
-        d.style.color = stop >= 50 ? '#fff' : '#1a1508';
+        d.style.color = `var(--on-risk-${stop})`;
         d.textContent = (t.rate * 100).toFixed(t.rate < 0.01 ? 2 : 0) + '%';
         d.title = `${from} → ${to}: ${(t.rate * 100).toFixed(2)}% (${t.n.toLocaleString('en-GB')} account-months)`;
       } else {
@@ -494,7 +508,7 @@ loadData('panel').then(p => {
     }
   }
   node.replaceChildren(...cells.map(c => c instanceof Node ? c : c));
-}).catch(() => {});
+}).catch(loadFailed('rollMatrix'));
 
 /* ---- frontier ---- */
 loadData('allocator').then(a => {
@@ -524,7 +538,7 @@ loadData('allocator').then(a => {
   };
   draw();
   addEventListener('resize', draw, { passive: true });
-}).catch(() => {});
+}).catch(loadFailed('frontierPlot'));
 </script>
 </body>
 </html>

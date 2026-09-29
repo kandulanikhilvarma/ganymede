@@ -87,10 +87,12 @@
   .qlist .exp { font-family: var(--font-mono); font-size: var(--fs--1); font-weight: 500; text-align: right; }
   .qlist .meta { grid-column: 1 / -1; display: flex; gap: var(--s-3); font-size: var(--fs--2); color: var(--muted); align-items: center; }
   .qlist li.only { background: var(--signal-quiet); }
+  .qlist li.only .id { color: var(--muted); }   /* faint drops to 4.0:1 on the quiet fill */
+  .qlist .onlytag { font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--text); }
   .qcol.risk .qlist li.only { background: var(--predict-quiet); }
   .qlist .tag { font-family: var(--font-mono); font-size: var(--fs-micro); padding: 1px 5px; border-radius: 3px; }
   .empty { padding: var(--s-6); color: var(--faint); font-size: var(--fs--1); text-align: center; }
-  .pchip { font-family: var(--font-mono); font-size: var(--fs-micro); padding: 1px 5px; border-radius: 3px; color: #fff; font-weight: 500; }
+  .pchip { font-family: var(--font-mono); font-size: var(--fs-micro); padding: 1px 5px; border-radius: 3px; font-weight: 500; }
 
   .versus { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-5); margin-top: var(--s-5); }
   @media (max-width: 760px) { .versus { grid-template-columns: 1fr; } }
@@ -116,7 +118,7 @@
     Ganymede
   </a>
   <div class="navlinks">
-    <a href="index.html">Start</a>
+    <a href="index.html">Start here</a>
     <a href="system.html">How it works</a>
     <a href="evidence.html">Evidence</a>
     <a href="queue.html">Allocator</a>
@@ -183,8 +185,8 @@
   <section class="sec">
     <span class="n">01</span>
     <h2>Who each strategy actually calls</h2>
-    <p>Fifty-two accounts from the live queue, at the capacity you set. Highlighted rows are the
-      ones <em>only</em> this strategy funds. The disagreements are the whole argument.</p>
+    <p>Fifty-two accounts from the live queue, at the capacity you set. Highlighted rows, marked
+      <em>only here</em>, are the ones this strategy alone funds. The disagreements are the whole argument.</p>
 
     <div class="queues">
       <div class="qcol alloc">
@@ -247,7 +249,7 @@
       <span>Ganymede</span>
     </div>
     <nav class="footnav" aria-label="Footer">
-      <a href="index.html">Start</a>
+      <a href="index.html">Start here</a>
       <a href="system.html">How it works</a>
       <a href="evidence.html">Evidence</a>
       <a href="queue.html">Allocator</a>
@@ -267,7 +269,7 @@
 <script type="module" src="assets/js/site.js"></script>
 <script type="module">
 import { resolveFigures } from './assets/js/figures.js';
-import { lineChart, loadData, el } from './assets/js/charts.js';
+import { lineChart, loadData, loadFailed, el } from './assets/js/charts.js';
 
 resolveFigures();
 
@@ -283,7 +285,7 @@ function row(a, funded, only) {
   const li = document.createElement('li');
   if (only) li.classList.add('only');
   li.innerHTML = `
-    <span class="id">${a.loan_id}</span>
+    <span class="id">${a.loan_id}${only ? ' <span class="onlytag">· only here</span>' : ''}</span>
     <span class="exp">${money(a.exposure)}</span>
     <span class="meta">
       <span class="pchip"></span>
@@ -293,7 +295,7 @@ function row(a, funded, only) {
   const chip = li.querySelector('.pchip');
   chip.textContent = Math.round(a.p_worsen * 100);
   chip.style.background = riskColour(a.p_worsen);
-  chip.style.color = a.p_worsen >= 0.5 ? '#fff' : '#1a1508';
+  chip.style.color = `var(--on-risk-${Math.round(a.p_worsen * 10) * 10})`;
   chip.title = `p(worsen) ${a.p_worsen}`;
   return li;
 }
@@ -309,6 +311,9 @@ function render(frac) {
   $('roLift').textContent = (point.lift_pct > 0 ? '+' : '') + point.lift_pct + '%';
   $('roContacts').textContent =
     `${compact(point.allocator_contacts)} / ${compact(point.risk_contacts)}`;
+  // The slider's value is an index into the sweep; say what it means instead.
+  $('cap').setAttribute('aria-valuetext',
+    `${Math.round(point.capacity_frac * 100)}% capacity, allocator edge ${$('roLift').textContent}`);
 
   const f = point.capacity_frac;
   const inA = a => a.enters_allocator_at !== null && a.enters_allocator_at <= f + 1e-9;
@@ -414,7 +419,7 @@ loadData('allocator').then(a => {
   render(a.default_capacity_frac);
   addEventListener('resize', () => drawFrontier(), { passive: true });
 }).catch(err => {
-  $('frontier').innerHTML = `<p style="color:var(--broken)">Could not load allocator data: ${err.message}</p>`;
+  loadFailed('frontier')(err);
 });
 </script>
 </body>

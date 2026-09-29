@@ -237,8 +237,20 @@ export function badge(record) {
   return span;
 }
 
-export async function loadData(name) {
-  const res = await fetch(`data/${name}.json`);
-  if (!res.ok) throw new Error(`${name}.json: ${res.status}`);
-  return res.json();
+// One fetch per file per page: figures.js already caches, and a separate
+// uncached path here fetched panel, allocator, risk and audio twice on index.
+// Callers only filter/map the result, never mutate it, so sharing is safe.
+export { loadFile as loadData } from './figures.js';
+
+/* A chart whose data failed to load says so, instead of leaving a blank box. */
+export function loadFailed(node) {
+  return err => {
+    console.error(err);
+    const target = typeof node === 'string' ? document.getElementById(node) : node;
+    if (!target) return;
+    const p = document.createElement('p');
+    p.className = 'load-error';
+    p.textContent = 'This figure could not load its data. Reload the page to try again.';
+    target.replaceChildren(p);
+  };
 }

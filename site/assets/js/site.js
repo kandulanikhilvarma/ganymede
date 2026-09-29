@@ -53,16 +53,32 @@ async function loadTerms() {
   return TERMS;
 }
 
-function hideTip() { if (tipEl) { tipEl.remove(); tipEl = null; } }
+// WCAG 1.4.13: the tip must stay while the pointer moves onto it, so leaving
+// the term only schedules the hide, and entering the tip cancels it.
+let tipOwner = null, hideTimer = 0;
+
+function hideTip() {
+  clearTimeout(hideTimer);
+  if (tipOwner) tipOwner.removeAttribute('aria-describedby');
+  if (tipEl) { tipEl.remove(); tipEl = null; }
+  tipOwner = null;
+}
+function hideTipSoon() { clearTimeout(hideTimer); hideTimer = setTimeout(hideTip, 200); }
 
 async function showTip(el) {
+  clearTimeout(hideTimer);
   const terms = await loadTerms();
   const entry = terms[el.dataset.term];
   if (!entry) return;
   hideTip();
+  tipOwner = el;
   tipEl = document.createElement('div');
   tipEl.className = 'tip';
+  tipEl.id = 'gm-tip';
   tipEl.setAttribute('role', 'tooltip');
+  tipEl.addEventListener('mouseenter', () => clearTimeout(hideTimer));
+  tipEl.addEventListener('mouseleave', hideTipSoon);
+  el.setAttribute('aria-describedby', 'gm-tip');
   tipEl.innerHTML = '<span class="t"></span><span class="d"></span>';
   tipEl.querySelector('.t').textContent = entry.term;
   tipEl.querySelector('.d').textContent = entry.short;
@@ -83,7 +99,7 @@ function wireTerms(scope = document) {
     el.tabIndex = 0;
     el.addEventListener('mouseenter', () => showTip(el));
     el.addEventListener('focus', () => showTip(el));
-    el.addEventListener('mouseleave', hideTip);
+    el.addEventListener('mouseleave', hideTipSoon);
     el.addEventListener('blur', hideTip);
   });
 }
@@ -92,14 +108,34 @@ addEventListener('scroll', hideTip, { passive: true });
 addEventListener('keydown', e => { if (e.key === 'Escape') hideTip(); });
 
 /* ---- nav --------------------------------------------------------------- */
-const here = location.pathname.split('/').pop() || 'index.html';
+// Production serves clean URLs (/system) while the links say system.html, and
+// the local server serves the .html form. Compare page names, not strings.
+const page = path => path.split('/').pop().replace(/\.html$/, '') || 'index';
+const here = page(location.pathname);
 document.querySelectorAll('.navlinks a').forEach(a => {
-  if (a.getAttribute('href') === here) a.setAttribute('aria-current', 'page');
+  if (page(new URL(a.href).pathname) === here) a.setAttribute('aria-current', 'page');
 });
-document.querySelector('[data-nav-toggle]')?.addEventListener('click', e => {
-  const nav = e.currentTarget.closest('.topnav');
-  const open = nav.classList.toggle('open');
-  e.currentTarget.setAttribute('aria-expanded', String(open));
-});
+
+const toggle = document.querySelector('[data-nav-toggle]');
+function setMenu(open) {
+  toggle.closest('.topnav').classList.toggle('open', open);
+  toggle.setAttribute('aria-expanded', String(open));
+  toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+}
+if (toggle) {
+  const links = toggle.closest('.topnav').querySelector('.navlinks');
+  if (links) {
+    links.id ||= 'navlinks';
+    toggle.setAttribute('aria-controls', links.id);
+    links.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
+  }
+  toggle.addEventListener('click', () => setMenu(toggle.getAttribute('aria-expanded') !== 'true'));
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+      setMenu(false);
+      toggle.focus();
+    }
+  });
+}
 
 export { wireTerms, setTheme, setDepth };

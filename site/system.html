@@ -88,6 +88,9 @@
     align-items: baseline; font-size: var(--fs--1); list-style: none;
   }
   .inv summary::-webkit-details-marker { display: none; }
+  .inv summary::after { content: "+"; margin-left: auto; color: var(--faint); font-family: var(--font-mono); }
+  .inv details[open] summary::after { content: "2"; }
+  .inv summary:focus-visible { outline-offset: -3px; border-radius: 0; }
   .inv summary .id { font-family: var(--font-mono); color: var(--signal); font-weight: 500; flex: none; width: 34px; }
   .inv details[open] summary { border-bottom: 1px solid var(--line); }
   .inv .how { padding: var(--s-3) var(--s-4) var(--s-4) calc(var(--s-4) + 34px + var(--s-3));
@@ -116,7 +119,7 @@
     Ganymede
   </a>
   <div class="navlinks">
-    <a href="index.html">Start</a>
+    <a href="index.html">Start here</a>
     <a href="system.html">How it works</a>
     <a href="evidence.html">Evidence</a>
     <a href="queue.html">Allocator</a>
@@ -274,7 +277,7 @@
       <span>Ganymede</span>
     </div>
     <nav class="footnav" aria-label="Footer">
-      <a href="index.html">Start</a>
+      <a href="index.html">Start here</a>
       <a href="system.html">How it works</a>
       <a href="evidence.html">Evidence</a>
       <a href="queue.html">Allocator</a>

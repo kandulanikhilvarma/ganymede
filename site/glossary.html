@@ -87,7 +87,7 @@
     Ganymede
   </a>
   <div class="navlinks">
-    <a href="index.html">Start</a>
+    <a href="index.html">Start here</a>
     <a href="system.html">How it works</a>
     <a href="evidence.html">Evidence</a>
     <a href="queue.html">Allocator</a>
@@ -124,7 +124,7 @@
   <div class="searchrow">
     <input type="search" id="q" placeholder="Filter. Try &ldquo;promise&rdquo; or &ldquo;drift&rdquo;"
            aria-label="Filter glossary terms" autocomplete="off">
-    <span class="count" id="count">—</span>
+    <span class="count" id="count" role="status">—</span>
   </div>
 
   <div id="entries"></div>
@@ -142,7 +142,7 @@
       <span>Ganymede</span>
     </div>
     <nav class="footnav" aria-label="Footer">
-      <a href="index.html">Start</a>
+      <a href="index.html">Start here</a>
       <a href="system.html">How it works</a>
       <a href="evidence.html">Evidence</a>
       <a href="queue.html">Allocator</a>
@@ -167,10 +167,21 @@ if (moonNode) ganymede(moonNode, { seed: 41, grooves: 26, craters: 14, phase: 0.
 
 const $ = id => document.getElementById(id);
 
-const terms = await fetch('data/glossary.json').then(r => r.json()).catch(() => ({}));
+// A failed load used to become an empty object, and the page then said
+// "Nothing matches that." Say what actually happened.
+let loadError = null;
+const terms = await fetch('data/glossary.json')
+  .then(r => { if (!r.ok) throw new Error(`glossary.json: ${r.status}`); return r.json(); })
+  .catch(err => { loadError = err; console.error(err); return {}; });
+if (loadError) {
+  const p = document.createElement('p');
+  p.className = 'load-error';
+  p.textContent = 'The glossary could not load. Reload the page to try again.';
+  $('entries').replaceChildren(p);
+}
 const list = Object.entries(terms).sort((a, b) => a[1].term.localeCompare(b[1].term));
 
-$('entries').replaceChildren(...list.map(([slug, t]) => {
+if (!loadError) $('entries').replaceChildren(...list.map(([slug, t]) => {
   const s = document.createElement('section');
   s.className = 'entry';
   s.id = slug;
