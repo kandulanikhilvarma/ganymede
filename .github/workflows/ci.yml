@@ -23,7 +23,7 @@ jobs:
         # the floor requires-python promises, and the version it is developed on
         python-version: ["3.11", "3.13"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
       - uses: actions/setup-python@v5
