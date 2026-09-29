@@ -402,7 +402,7 @@ function buildVersus() {
 
   $('versus').replaceChildren(
     card(bigMissed, 'risk-ranking never calls this one',
-      `A large book at modest probability. Risk-ranking sorts by probability, so this account sits far enough down the list that it is <span class="no">never reached</span>. Not at 60% capacity, not anywhere in the sweep. The allocator funds it almost immediately, because the money at stake dwarfs the difference in probability.`),
+      `A large book at modest probability. Risk-ranking sorts by probability, so this account sits far enough down the list that it is <span class="no">never reached</span>. Not at ${Math.round(A.sweep_to * 100)}% capacity, not anywhere in the sweep. The allocator funds it from ${bigMissed ? Math.round(bigMissed.enters_allocator_at * 100) : ''}% capacity, because the money at stake outweighs the difference in probability.`),
     card(smallCalled, 'risk-ranking calls this one first',
       `High probability, trivial exposure. Risk-ranking funds it at <span class="no">${smallCalled ? Math.round(smallCalled.enters_risk_at * 100) : ''}% capacity</span>; the allocator <span class="yes">never does</span>, because twelve agent-minutes cost more than the whole uplift is worth. This is the expensive mistake, made thousands of times a day.`),
   );
@@ -416,10 +416,22 @@ loadData('allocator').then(a => {
   const fracs = a.frontier.map(p => p.capacity_frac);
   const slider = $('cap');
   slider.max = String(fracs.length - 1);
-  slider.value = String(fracs.indexOf(a.default_capacity_frac));
-  slider.addEventListener('input', () => render(fracs[+slider.value]));
+  // ?cap=5 opens the studio at 5% capacity, and the address follows the
+  // slider, so a scenario can be linked rather than described.
+  const nearest = pct => fracs.reduce((best, f, i) =>
+    Math.abs(f * 100 - pct) < Math.abs(fracs[best] * 100 - pct) ? i : best, 0);
+  const asked = parseFloat(new URLSearchParams(location.search).get('cap'));
+  const start = Number.isFinite(asked) ? nearest(asked) : fracs.indexOf(a.default_capacity_frac);
+  slider.value = String(start);
+  slider.addEventListener('input', () => {
+    const f = fracs[+slider.value];
+    render(f);
+    const url = new URL(location.href);
+    url.searchParams.set('cap', String(Math.round(f * 100)));
+    history.replaceState(null, '', url);
+  });
   buildVersus();
-  render(a.default_capacity_frac);
+  render(fracs[start]);
   addEventListener('resize', () => drawFrontier(), { passive: true });
 }).catch(err => {
   loadFailed('frontier')(err);
