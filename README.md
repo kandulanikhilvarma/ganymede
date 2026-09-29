@@ -10,9 +10,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-0e8f80.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/python-3.11%2B-3572A5.svg)
-![Tests](https://img.shields.io/badge/tests-70%20passing-1f9d63.svg)
-![Invariants](https://img.shields.io/badge/design%20invariants-I1--I14%20enforced-c07f1c.svg)
-![Gates](https://img.shields.io/badge/build%20gates-5%20green-0e8f80.svg)
+[![ci](https://github.com/kandulanikhilvarma/ganymede/actions/workflows/ci.yml/badge.svg)](https://github.com/kandulanikhilvarma/ganymede/actions/workflows/ci.yml)
+![Invariants](https://img.shields.io/badge/design%20invariants-I1--I14-c07f1c.svg)
 
 ![Ganymede. Predict the wobble, shape the call, keep the book.](site/assets/img/og.png)
 
@@ -37,9 +36,9 @@ Four things on the site respond to you rather than just describing themselves.
 
 | | What to do | What it shows |
 |---|---|---|
-| [**Allocator studio**](https://ganymede-kandula.vercel.app/queue) | Drag the capacity slider | Both queues re-rank. Every position on that slider is a real allocator run, not an interpolation between two |
+| [**Allocator studio**](https://ganymede-kandula.vercel.app/queue?cap=5) | Drag the capacity slider | Both queues re-rank. Every position on that slider is a real allocator run, not an interpolation between two. The address follows the slider, so `?cap=5` links a scenario |
 | [**Agent desk**](https://ganymede-kandula.vercel.app/desk) | Press play, then switch to the control arm | Hints firing at real turn boundaries, and the counterfactual with coaching switched off |
-| [**Evidence**](https://ganymede-kandula.vercel.app/evidence) | Drag the latency budget line | How many real turn boundaries a hint at that speed would actually fit inside |
+| [**Evidence**](https://ganymede-kandula.vercel.app/evidence) | Move the latency slider, then open "Show the numbers" | How many real turn boundaries a hint at that speed would actually fit inside, and the table behind every chart |
 | [**Start here**](https://ganymede-kandula.vercel.app/) | Scroll the walkthrough | One borrower from trajectory bend to retrained model, in six decisions |
 
 ---
@@ -300,7 +299,7 @@ scripts/
   make_og.py         the social card, drawn from real trajectories
   make_charts.py     the README figures
 docs/                per-phase results, the written case, figures
-tests/               invariant + component tests (70 passing)
+tests/               invariant, component and site-integrity tests
 ```
 
 </details>
@@ -309,19 +308,24 @@ tests/               invariant + component tests (70 passing)
 
 ## Quickstart
 
+Python 3.11 or newer. From a clean clone:
+
 ```bash
-pip install -r requirements.txt
+pip install -e ".[dev,llm,charts,audio]"
 ```
 
-Five gates, each passes or fails:
+Six gates, each passes or fails. CI runs all six on Python 3.11 and 3.13:
 
 ```bash
+ruff check .                                  # lint
 python -m ganymede.invariants     --check     # I1-I14
-python -m pytest -q                           # 70 tests
-python scripts/gen_palette.py     --check     # contrast pairs + ramp monotonicity
+python -m pytest -q                           # unit, eval and site-integrity tests
+python scripts/gen_palette.py     --check     # 37 contrast pairs + ramp monotonicity
 python scripts/fetch_fonts.py     --check     # vendored faces + preload freshness
 python scripts/build_site_data.py --check     # site figures against the pipeline
 ```
+
+On a clean clone the last gate skips the stages whose inputs are not redistributed (the panel and the call audio) and says so.
 
 And the pipeline itself, which needs the source data present:
 
@@ -333,7 +337,15 @@ python -m ganymede.allocator --simulate  # value-ranking beats risk-ranking
 
 Serve the site locally with `python -m http.server 4173 --directory site`.
 
-LLM-dependent paths (generation, coaching, judging) need an `OPENROUTER_API_KEY` in a local `.env`. The audio, modelling, and site paths run without it.
+Copy `.env.example` to `.env` for the LLM paths. Nothing else reads it:
+
+| Variable | Needed for | Default |
+|---|---|---|
+| `OPENROUTER_API_KEY` | generation, coaching, judging | none; those paths raise without it |
+| `GANYMEDE_LLM_BACKEND` | choosing the LLM client | `openrouter` (the only one) |
+| `GANYMEDE_LIVE_LLM` | the three live-LLM tests, which cost API calls | unset, so they skip |
+
+The audio, modelling, and site paths run without any of them.
 
 ---
 
