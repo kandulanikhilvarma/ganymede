@@ -16,8 +16,15 @@ from __future__ import annotations
 import json
 from datetime import date
 
+from pydantic import ValidationError
+
 from ..llm import LLMEngine, Role, get_engine
 from ..schema import Promise
+
+
+class ExtractionError(ValueError):
+    """The model's reply could not be read as a promise. Callers count these;
+    they are never folded into "no promise", which is a real label."""
 
 _SYSTEM = (
     "You extract a promise-to-pay from a debt-collection conversation. "
@@ -48,7 +55,12 @@ def _parse_json(text: str) -> dict:
     if text.startswith("```"):
         text = text.split("```")[1].removeprefix("json").strip()
     start, end = text.find("{"), text.rfind("}")
-    return json.loads(text[start : end + 1])
+    if start < 0 or end < start:
+        raise ExtractionError(f"no JSON object in reply: {text[:80]!r}")
+    try:
+        return json.loads(text[start : end + 1])
+    except json.JSONDecodeError as exc:
+        raise ExtractionError(f"unreadable JSON in reply: {exc}") from exc
 
 
 def extract_promise(
@@ -74,10 +86,14 @@ def extract_promise(
             due = date.fromisoformat(d["due"])
         except (ValueError, TypeError):
             due = None
-    return Promise(
-        borrower_id=borrower_id,
-        amount=d.get("amount"),
-        due=due,
-        method=d.get("method"),
-        extractor_confidence=float(d.get("confidence", 0.5)),
-    )
+    conf = d.get("confidence")
+    try:
+        return Promise(
+            borrower_id=borrower_id,
+            amount=d.get("amount"),
+            due=due,
+            method=d.get("method"),
+            extractor_confidence=0.5 if conf is None else float(conf),
+        )
+    except (ValidationError, TypeError, ValueError) as exc:
+        raise ExtractionError(f"reply does not fit a Promise: {exc}") from exc

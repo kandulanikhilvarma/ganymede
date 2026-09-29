@@ -117,7 +117,12 @@ def _parse_perf(raw: bytes) -> pl.DataFrame:
 def build(loans_per_quarter: int = 5000, seed: int = 7) -> pl.DataFrame:
     """Build the sampled panel across all quarters found in data/raw."""
     frames = []
-    for qzip in _find_quarter_zips():
+    zips = _find_quarter_zips()
+    if not zips:
+        raise FileNotFoundError(
+            f"no historical_data_*.zip under {DATA_RAW}. Download the Freddie Mac "
+            "Single-Family Loan-Level quarterly files there first.")
+    for qzip in zips:
         vintage = qzip.stem.replace("historical_data_", "")
         orig_df = perf_df = None
         for name, raw in _iter_quarter_txt(qzip):
@@ -207,9 +212,16 @@ def main() -> int:
     ap.add_argument("--verify", action="store_true")
     ap.add_argument("--loans-per-quarter", type=int, default=5000)
     args = ap.parse_args()
+    if not (args.build or args.verify):   # a bare run used to print nothing and pass
+        ap.print_help()
+        return 2
 
     if args.build:
-        panel = build(loans_per_quarter=args.loans_per_quarter)
+        try:
+            panel = build(loans_per_quarter=args.loans_per_quarter)
+        except FileNotFoundError as exc:
+            print(exc)
+            return 2
         print(f"built panel: {panel.height} monthly rows, "
               f"{panel['loan_id'].n_unique()} loans, "
               f"{panel['vintage'].n_unique()} vintages -> {PANEL_PATH}")

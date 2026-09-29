@@ -199,8 +199,15 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--backtest", action="store_true")
     args = ap.parse_args()
+    if not args.backtest:                 # a bare run used to print nothing and pass
+        ap.print_help()
+        return 2
     if args.backtest:
-        results = backtest()
+        try:
+            results = backtest()
+        except FileNotFoundError as exc:
+            print(exc)
+            return 2
         print(f"{'model':16} {'base':>7} {'auc':>7} {'brier':>9} {'brier_base':>11} {'gate':>6}  pass")
         ok = True
         for r in results:

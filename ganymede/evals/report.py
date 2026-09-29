@@ -50,6 +50,9 @@ def main() -> int:
     ap.add_argument("--report", action="store_true")
     ap.add_argument("--no-risk", action="store_true")
     args = ap.parse_args()
+    if not args.report:                   # a bare run used to print nothing and pass
+        ap.print_help()
+        return 2
     if args.report:
         result = run(with_risk=not args.no_risk)
         text = _fmt(result)

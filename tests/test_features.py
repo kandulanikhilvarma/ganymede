@@ -46,3 +46,12 @@ def test_time_split_is_disjoint():
     tr, te = time_split(f, cutoff="2025-02-01")
     assert tr.height + te.height == f.height
     assert tr["period_date"].max() < te["period_date"].min()
+
+
+def test_missing_panel_says_how_to_build_it(monkeypatch, tmp_path):
+    import pytest
+
+    import ganymede.features as features
+    monkeypatch.setattr(features, "PANEL_PATH", tmp_path / "panel.parquet")
+    with pytest.raises(FileNotFoundError, match="ganymede.panel --build"):
+        build_features()

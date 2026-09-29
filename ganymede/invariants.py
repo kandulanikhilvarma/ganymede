@@ -71,6 +71,12 @@ def run_static() -> list[str]:
 
 
 def main() -> int:
+    import argparse
+    ap = argparse.ArgumentParser(description="Run the static design-invariant checks.")
+    # CI and the README pass --check. It was silently ignored; now it is the
+    # documented (and only) mode, and a mistyped flag is an error.
+    ap.add_argument("--check", action="store_true", help="run the checks (the default)")
+    ap.parse_args()
     violations = run_static()
     if violations:
         print("INVARIANT VIOLATIONS:")

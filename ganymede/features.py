@@ -25,6 +25,10 @@ FORWARD = 3  # forward horizon for labels, months
 
 
 def build_features(panel: pl.DataFrame | None = None) -> pl.DataFrame:
+    if panel is None and not PANEL_PATH.exists():
+        raise FileNotFoundError(
+            f"{PANEL_PATH} not found. Download the Freddie Mac quarterly files into "
+            "data/raw/ and run `python -m ganymede.panel --build` first.")
     p = panel if panel is not None else pl.read_parquet(PANEL_PATH)
     p = p.sort(["loan_id", "period_date"])
 

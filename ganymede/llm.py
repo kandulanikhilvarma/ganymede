@@ -61,7 +61,11 @@ class OpenRouterEngine(LLMEngine):
         key = os.environ.get("OPENROUTER_API_KEY")
         if not key:
             raise RuntimeError("OPENROUTER_API_KEY not set (check .env)")
-        self._client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=key)
+        # The client default is a 600 s read timeout with 2 retries, so one hung
+        # call could stall a batch for half an hour. No role here needs more than
+        # a few seconds of generation.
+        self._client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=key,
+                              timeout=30.0, max_retries=3)
         self._models = models or OPENROUTER_MODELS
 
     def complete(self, role: Role, prompt: str, *, system: str | None = None,

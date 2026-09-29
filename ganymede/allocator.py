@@ -168,8 +168,15 @@ def main() -> int:
     ap.add_argument("--capacity-frac", type=float, default=0.15)
     ap.add_argument("--lam", type=float, default=LAMBDA_HARM)
     args = ap.parse_args()
+    if not args.simulate:                 # a bare run used to print nothing and pass
+        ap.print_help()
+        return 2
     if args.simulate:
-        r = simulate(args.capacity_frac, args.lam)
+        try:
+            r = simulate(args.capacity_frac, args.lam)
+        except FileNotFoundError as exc:
+            print(exc)
+            return 2
         for k, v in r.items():
             print(f"  {k}: {v}")
         if r["allocator_value"] <= r["risk_ranking_value"]:

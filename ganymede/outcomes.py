@@ -82,12 +82,23 @@ def main() -> int:
     ap.add_argument("--verify", action="store_true")
     ap.add_argument("--n", type=int, default=12)
     args = ap.parse_args()
+    if not args.verify:                   # a bare run used to print nothing and pass
+        ap.print_help()
+        return 2
     if args.verify:
         from .coach.extract import extract_promise
         from .generate import generate_batch
+        from .coach.extract import ExtractionError
         convs = generate_batch(args.n)
-        promises = [extract_promise(c["transcript"], c["borrower_id"]) for c in convs]
+        promises, unreadable = [], []
+        for c in convs:
+            try:
+                promises.append(extract_promise(c["transcript"], c["borrower_id"]))
+            except ExtractionError as exc:
+                promises.append(None)
+                unreadable.append(f"{c['borrower_id']}: extractor reply unreadable ({exc})")
         problems, outcomes = verify(convs, promises)
+        problems = unreadable + problems
         from collections import Counter
         dist = Counter(o.promise_status.value for o in outcomes)
         print(f"  conversations: {len(convs)}  promises: {sum(p is not None for p in promises)}")
