@@ -26,7 +26,7 @@ llm = ["openai>=1.40"]
 charts = ["matplotlib>=3.8"]
 # Transcoding source recordings to 16 kHz mono. The VAD itself is in-house over
 # `wave` and numpy, so faster-whisper and silero-vad are not dependencies either.
-audio = ["imageio-ffmpeg>=0.5"]
+audio = ["imageio-ffmpeg>=0.6.0"]
 
 [build-system]
 requires = ["hatchling"]
