@@ -2,7 +2,8 @@
 
 Scores field-level accuracy: promise-vs-no-promise, amount, due-date presence,
 and method. The extractor may not be used downstream until it clears the bar —
-enforced in tests/test_ptp.py, which fails the Phase 6 gate otherwise.
+enforced in tests/test_ptp_live.py (behind GANYMEDE_LIVE_LLM), which fails the
+Phase 6 gate otherwise.
 
 Date scoring is presence + exact match when the truth has a date; near-miss on
 resolving relative dates ("this Friday") is scored on presence so one calendar
