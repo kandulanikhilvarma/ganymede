@@ -54,3 +54,27 @@ def test_reason_codes_are_human_strings():
     for row_codes in codes:
         for c in row_codes:
             assert isinstance(c, str) and " " in c  # a phrase, not a raw feature name
+
+
+def test_reliability_bins_cover_every_prediction_once():
+    import numpy as np
+
+    from ganymede.risk import reliability
+    p = np.array([0.0, 0.05, 0.15, 0.95, 1.0])
+    y = np.array([0, 0, 1, 1, 1])
+    bins = reliability(y, p)
+    assert sum(b["n"] for b in bins) == len(p)          # 1.0 lands in the last bin
+    assert bins[-1]["observed"] == 1.0
+
+
+def test_metrics_gate_logic():
+    import numpy as np
+
+    from ganymede.risk import _metrics, _passes
+    y = np.array([0, 0, 1, 1] * 25)
+    good = _metrics(y, np.where(y == 1, 0.8, 0.2), None, "L1_trajectory")
+    flat = _metrics(y, np.full(len(y), 0.5), None, "L2_selfcure")
+    assert _passes(good) and good["beats_base"]
+    assert not _passes(flat)                               # AUC 0.5 < 0.60
+    one_class = _metrics(np.zeros(10), np.full(10, 0.1), None, "L2_selfcure")
+    assert one_class["auc"] != one_class["auc"]            # NaN, not a crash
