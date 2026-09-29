@@ -64,6 +64,14 @@
 .btn-danger { background: transparent; border-color: var(--broken); color: var(--broken); }
 .btn-danger:hover { background: var(--broken-quiet); }
 
+/* ---- the numbers behind a chart ------------------------------------------ */
+.datatable { margin-top: var(--s-3); font-size: var(--fs--1); }
+.datatable summary { cursor: pointer; color: var(--muted); font-family: var(--font-mono); font-size: var(--fs--2); }
+.datatable summary:hover { color: var(--text); }
+.datatable table { margin-top: var(--s-3); }
+.datatable caption { text-align: left; color: var(--faint); font-size: var(--fs--2); padding-bottom: var(--s-2); }
+.datatable td:not(:first-child), .datatable th:not(:first-child) { text-align: right; font-family: var(--font-mono); }
+
 /* ---- a figure whose data did not arrive ---------------------------------- */
 .load-error {
   margin: 0; padding: var(--s-4); border: 1px dashed var(--line-strong); border-radius: var(--r-2);

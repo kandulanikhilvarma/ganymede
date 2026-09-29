@@ -330,7 +330,7 @@
 <script type="module" src="assets/js/site.js"></script>
 <script type="module">
 import { resolveFigures, loadFile, badgeFor } from './assets/js/figures.js';
-import { lineChart, barChart, loadData, loadFailed, el } from './assets/js/charts.js';
+import { lineChart, barChart, loadData, loadFailed, dataTable, el } from './assets/js/charts.js';
 
 resolveFigures();
 const $ = id => document.getElementById(id);
@@ -442,6 +442,16 @@ loadData('risk').then(r => {
   };
   drawDrift();
   addEventListener('resize', () => { draw(); drawDrift(); }, { passive: true });
+
+  $('relPlot').closest('.plot').after(dataTable(
+    'Predicted against observed rate, by probability bin',
+    ['model', 'bin', 'predicted', 'observed', 'accounts'],
+    [['L1 trajectory', r.models.L1_trajectory.reliability], ['L2 self-cure', r.models.L2_selfcure.reliability]]
+      .flatMap(([name, bins]) => bins.map(b =>
+        [name, `${b.bin_lo}–${b.bin_hi}`, b.predicted, b.observed, b.n.toLocaleString('en-GB')]))));
+  $('driftPlot').closest('.plot').after(dataTable(
+    'Self-cure rate by month', ['month', 'self-cure rate', 'delinquent accounts'],
+    m.map(d => [d.month, (d.rate * 100).toFixed(1) + '%', d.n.toLocaleString('en-GB')])));
 }).catch(loadFailed('driftPlot'));
 
 /* ---- gap histogram with a draggable budget ---- */
@@ -475,6 +485,9 @@ loadData('audio').then(a => {
   range.value = String(a.budget_ms.value);
   drawGaps();
   addEventListener('resize', drawGaps, { passive: true });
+  $('gapPlot').closest('.plot').after(dataTable(
+    'Inter-turn gaps in one real call, by 100 ms bin', ['gap', 'boundaries'],
+    a.histogram.map(b => [b.hi === null ? `${b.lo} ms and over` : `${b.lo}–${b.hi} ms`, b.n])));
 }).catch(loadFailed('gapPlot'));
 
 /* ---- roll matrix ---- */
@@ -541,6 +554,12 @@ loadData('allocator').then(a => {
   };
   draw();
   addEventListener('resize', draw, { passive: true });
+  $('frontierPlot').closest('.plot').after(dataTable(
+    'Recovered value by capacity, both strategies',
+    ['capacity', 'allocator', 'risk-ranking', 'edge', 'contacts (allocator / risk)'],
+    f.map(p => [Math.round(p.capacity_frac * 100) + '%', compact(p.allocator_value),
+                compact(p.risk_ranking_value), (p.lift_pct > 0 ? '+' : '') + p.lift_pct + '%',
+                `${p.allocator_contacts.toLocaleString('en-GB')} / ${p.risk_contacts.toLocaleString('en-GB')}`])));
 }).catch(loadFailed('frontierPlot'));
 </script>
 </body>

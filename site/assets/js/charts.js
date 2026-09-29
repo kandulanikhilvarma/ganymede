@@ -242,6 +242,28 @@ export function badge(record) {
 // Callers only filter/map the result, never mutate it, so sharing is safe.
 export { loadFile as loadData } from './figures.js';
 
+/* The numbers behind a chart, as a table under a disclosure. SVG point titles
+   only reach a mouse; this reaches a keyboard, a phone and a screen reader,
+   and it is the same data the chart drew, not a copy. */
+export function dataTable(caption, head, rows) {
+  const d = document.createElement('details');
+  d.className = 'datatable';
+  const s = document.createElement('summary');
+  s.textContent = 'Show the numbers';
+  const wrap = document.createElement('div');
+  wrap.className = 'scroll-x';
+  const t = document.createElement('table');
+  const cap = t.createCaption();
+  cap.textContent = caption;
+  const hr = t.createTHead().insertRow();
+  head.forEach(h => { const th = document.createElement('th'); th.scope = 'col'; th.textContent = h; hr.appendChild(th); });
+  const body = t.createTBody();
+  rows.forEach(r => { const tr = body.insertRow(); r.forEach(v => { tr.insertCell().textContent = String(v); }); });
+  wrap.appendChild(t);
+  d.append(s, wrap);
+  return d;
+}
+
 /* A chart whose data failed to load says so, instead of leaving a blank box. */
 export function loadFailed(node) {
   return err => {
