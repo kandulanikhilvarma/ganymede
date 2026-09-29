@@ -10,9 +10,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-0e8f80.svg)](LICENSE)
 ![Python](https://img.shields.io/badge/python-3.11%2B-3572A5.svg)
-![Tests](https://img.shields.io/badge/tests-70%20passing-1f9d63.svg)
-![Invariants](https://img.shields.io/badge/design%20invariants-I1--I14%20enforced-c07f1c.svg)
-![Gates](https://img.shields.io/badge/build%20gates-5%20green-0e8f80.svg)
+[![ci](https://github.com/kandulanikhilvarma/ganymede/actions/workflows/ci.yml/badge.svg)](https://github.com/kandulanikhilvarma/ganymede/actions/workflows/ci.yml)
+![Invariants](https://img.shields.io/badge/design%20invariants-I1--I14-c07f1c.svg)
 
 ![Ganymede. Predict the wobble, shape the call, keep the book.](site/assets/img/og.png)
 
@@ -37,9 +36,9 @@ Four things on the site respond to you rather than just describing themselves.
 
 | | What to do | What it shows |
 |---|---|---|
-| [**Allocator studio**](https://ganymede-kandula.vercel.app/queue) | Drag the capacity slider | Both queues re-rank. Every position on that slider is a real allocator run, not an interpolation between two |
+| [**Allocator studio**](https://ganymede-kandula.vercel.app/queue?cap=5) | Drag the capacity slider | Both queues re-rank. Every position on that slider is a real allocator run, not an interpolation between two. The address follows the slider, so `?cap=5` links a scenario |
 | [**Agent desk**](https://ganymede-kandula.vercel.app/desk) | Press play, then switch to the control arm | Hints firing at real turn boundaries, and the counterfactual with coaching switched off |
-| [**Evidence**](https://ganymede-kandula.vercel.app/evidence) | Drag the latency budget line | How many real turn boundaries a hint at that speed would actually fit inside |
+| [**Evidence**](https://ganymede-kandula.vercel.app/evidence) | Move the latency slider, then open "Show the numbers" | How many real turn boundaries a hint at that speed would actually fit inside, and the table behind every chart |
 | [**Start here**](https://ganymede-kandula.vercel.app/) | Scroll the walkthrough | One borrower from trajectory bend to retrained model, in six decisions |
 
 ---
@@ -69,27 +68,27 @@ Backtested, simulated, or measured. No invented numbers.
 
 ### Value-ranking beats risk-ranking, and most where it matters
 
-The allocator maximises **expected recovered value per agent-minute**: uplift over self-cure, weighted by exposure, under a capacity constraint. At 15% of full-coverage capacity it recovers **+59%** more than risk-ranking using roughly half the contacts. At 2% capacity the edge is **+193%**. At 60% it converges to **+2.4%**, because with enough agents to call everybody the ordering stops mattering.
+The allocator maximises **expected recovered value per agent-minute**: uplift over self-cure, weighted by exposure, under a capacity constraint. At 15% of full-coverage capacity it recovers **+72.5%** more than risk-ranking using roughly half the contacts. At 2% capacity the edge is **+240%**. At 60% it converges to **+4.1%**, because with enough agents to call everybody the ordering stops mattering.
 
-![Allocator against risk-ranking: 59% more recovered value with half the contacts](docs/img/allocator.png)
+![Allocator against risk-ranking: 72% more recovered value with under half the contacts](docs/img/allocator.png)
 
 
 | Agent capacity | Allocator | Risk-ranking | Edge | Contacts used |
 |---|---:|---:|---:|---|
-| 2% | 153.9M | 52.5M | **+193.1%** | 568 vs 1,178 |
-| 5% | 344.4M | 150.6M | **+128.7%** | 1,416 vs 2,946 |
-| 15% | 865.1M | 543.6M | **+59.1%** | 4,243 vs 8,839 |
-| 30% | 1.48B | 1.11B | **+33.3%** | 8,486 vs 17,679 |
-| 60% | 2.39B | 2.33B | **+2.4%** | 16,973 vs 35,358 |
+| 2% | 106.2M | 31.2M | **+240.4%** | 395 vs 822 |
+| 5% | 237.9M | 85.6M | **+177.9%** | 987 vs 2,057 |
+| 15% | 602.3M | 349.2M | **+72.5%** | 2,962 vs 6,172 |
+| 30% | 1.03B | 745.6M | **+38.8%** | 5,925 vs 12,344 |
+| 60% | 1.68B | 1.61B | **+4.1%** | 11,850 vs 24,688 |
 
 Two real rows carry the argument on their own.
 
 | Account | Exposure | p(worsen) | Self-cure | Allocator funds it | Risk-ranking funds it |
 |---|---:|---:|---:|---|---|
-| `F25Q20015405` | €1,929,000 | 0.18 | 0.91 | at 8% capacity | **never** |
-| `F24Q40000483` | €1,289 | 0.83 | 0.33 | **never** | at 5% capacity |
+| `F25Q20015405` | €1,929,000 | 0.15 | 0.96 | at 54% capacity | **never** |
+| `F24Q40000483` | €1,289 | 0.80 | 0.32 | **never** | at 11% capacity |
 
-Risk-ranking sorts by probability, so it calls the €1,289 account early and never reaches the €1.93M one anywhere in the sweep. Twelve agent-minutes cost more than the whole uplift on the small account is worth. [Move the slider yourself.](https://ganymede-kandula.vercel.app/queue)
+Risk-ranking sorts by probability, so it calls the €1,289 account early and never reaches the €1.93M one anywhere in the sweep. The minutes a contact costs are worth more than the whole uplift on the small account. [Move the slider yourself.](https://ganymede-kandula.vercel.app/queue)
 
 
 ### The risk score is calibrated, so the number means what it says
@@ -104,11 +103,11 @@ Measured from **328 real inter-turn gaps** in a 10-minute call. The median gap i
 
 ![Inter-turn gap histogram with the 300ms tier-1 budget and 479ms median marked](docs/img/gap_hist.png)
 
-### Models drift, and the monitor exists to catch it
+### Drift is measured, not assumed
 
-Self-cure rate rose from 0.60 to 0.72 across the backtest window. The ranking held. Absolute calibration lagged, because no model calibrates to a regime shift it never saw. That is exactly what the outcome loop and drift monitor are for.
+Self-cure rate moved from 0.59 to 0.52 across the backtest window, inside the monitor's 0.10 alert band. An earlier build reported a rise from 0.60 to 0.72. That came from forward labels leaking across loan boundaries, now fixed and pinned by a test ([D15](docs/defects.md)). Every headline number on this page moved with that fix, and moved in the open.
 
-![Self-cure rate drift from 0.60 to 0.72 across the time split](docs/img/selfcure_drift.png)
+![Self-cure rate across the time split, 0.59 to 0.52](docs/img/selfcure_drift.png)
 
 ---
 
@@ -244,7 +243,7 @@ Fourteen failures found in review were converted from a postmortem list into **i
 | I9 | Accounts are ranked by expected value, never by probability | `allocator.py` is the only queue producer. No sort-by-score path exists |
 | I10 | "Do not contact" is a first-class action with money attached | In the action enum with a value in the objective, self-cure precision tracked |
 | I11 | Conversation outcome outranks hint usefulness, and hints are capped | Rate limiter in `compose.py`, `metrics.py` reports outcome first |
-| I12 | Input, score and outcome distributions are monitored | `monitors/drift.py` exits non-zero on breach. It caught the self-cure regime shift |
+| I12 | Input, score and outcome distributions are monitored | `monitors/drift.py` computes PSI and rate drift, and every site build publishes the rate check with its alert flag |
 | I13 | No timing feature from a dataset without calendar dates | `panel.py` tags each source, `features.py` raises on one tagged false |
 | I14 | The riskiest open assumption is tested now, not later | Phase order reviewed at every gate. This is why the latency spike preceded the coaching layer |
 
@@ -300,7 +299,7 @@ scripts/
   make_og.py         the social card, drawn from real trajectories
   make_charts.py     the README figures
 docs/                per-phase results, the written case, figures
-tests/               invariant + component tests (70 passing)
+tests/               invariant, component and site-integrity tests
 ```
 
 </details>
@@ -309,19 +308,24 @@ tests/               invariant + component tests (70 passing)
 
 ## Quickstart
 
+Python 3.11 or newer. From a clean clone:
+
 ```bash
-pip install -r requirements.txt
+pip install -e ".[dev,llm,charts,audio]"
 ```
 
-Five gates, each passes or fails:
+Six gates, each passes or fails. CI runs all six on Python 3.11 and 3.13:
 
 ```bash
+ruff check .                                  # lint
 python -m ganymede.invariants     --check     # I1-I14
-python -m pytest -q                           # 70 tests
-python scripts/gen_palette.py     --check     # contrast pairs + ramp monotonicity
+python -m pytest -q                           # unit, eval and site-integrity tests
+python scripts/gen_palette.py     --check     # 37 contrast pairs + ramp monotonicity
 python scripts/fetch_fonts.py     --check     # vendored faces + preload freshness
 python scripts/build_site_data.py --check     # site figures against the pipeline
 ```
+
+On a clean clone the last gate skips the stages whose inputs are not redistributed (the panel and the call audio) and says so.
 
 And the pipeline itself, which needs the source data present:
 
@@ -333,7 +337,15 @@ python -m ganymede.allocator --simulate  # value-ranking beats risk-ranking
 
 Serve the site locally with `python -m http.server 4173 --directory site`.
 
-LLM-dependent paths (generation, coaching, judging) need an `OPENROUTER_API_KEY` in a local `.env`. The audio, modelling, and site paths run without it.
+Copy `.env.example` to `.env` for the LLM paths. Nothing else reads it:
+
+| Variable | Needed for | Default |
+|---|---|---|
+| `OPENROUTER_API_KEY` | generation, coaching, judging | none; those paths raise without it |
+| `GANYMEDE_LLM_BACKEND` | choosing the LLM client | `openrouter` (the only one) |
+| `GANYMEDE_LIVE_LLM` | the three live-LLM tests, which cost API calls | unset, so they skip |
+
+The audio, modelling, and site paths run without any of them.
 
 ---
 

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Allocator studio · Ganymede</title>
+<meta name="theme-color" content="#0b111a">
 <meta name="description" content="Move the capacity slider and watch two queues re-rank: expected value per agent-minute against conventional risk-ranking. Every position is a real allocator run.">
 <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://ganymede-kandula.vercel.app/queue">
@@ -15,10 +16,12 @@
 <meta property="og:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ganymede: predict the wobble, shape the call, keep the book.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Ganymede · allocator studio">
 <meta name="twitter:description" content="Move the capacity slider and watch two queues re-rank: expected value per agent-minute against conventional risk-ranking. Every position is a real allocator run.">
 <meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
+<meta name="twitter:image:alt" content="Ganymede: predict the wobble, shape the call, keep the book.">
 <!-- font-preload -->
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/geist-latin-19f9c925.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/fraunces-latin-7234ed86.woff2">
@@ -87,10 +90,12 @@
   .qlist .exp { font-family: var(--font-mono); font-size: var(--fs--1); font-weight: 500; text-align: right; }
   .qlist .meta { grid-column: 1 / -1; display: flex; gap: var(--s-3); font-size: var(--fs--2); color: var(--muted); align-items: center; }
   .qlist li.only { background: var(--signal-quiet); }
+  .qlist li.only .id { color: var(--muted); }   /* faint drops to 4.0:1 on the quiet fill */
+  .qlist .onlytag { font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--text); }
   .qcol.risk .qlist li.only { background: var(--predict-quiet); }
   .qlist .tag { font-family: var(--font-mono); font-size: var(--fs-micro); padding: 1px 5px; border-radius: 3px; }
   .empty { padding: var(--s-6); color: var(--faint); font-size: var(--fs--1); text-align: center; }
-  .pchip { font-family: var(--font-mono); font-size: var(--fs-micro); padding: 1px 5px; border-radius: 3px; color: #fff; font-weight: 500; }
+  .pchip { font-family: var(--font-mono); font-size: var(--fs-micro); padding: 1px 5px; border-radius: 3px; font-weight: 500; }
 
   .versus { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-5); margin-top: var(--s-5); }
   @media (max-width: 760px) { .versus { grid-template-columns: 1fr; } }
@@ -116,7 +121,7 @@
     Ganymede
   </a>
   <div class="navlinks">
-    <a href="index.html">Start</a>
+    <a href="index.html">Start here</a>
     <a href="system.html">How it works</a>
     <a href="evidence.html">Evidence</a>
     <a href="queue.html">Allocator</a>
@@ -183,8 +188,8 @@
   <section class="sec">
     <span class="n">01</span>
     <h2>Who each strategy actually calls</h2>
-    <p>Fifty-two accounts from the live queue, at the capacity you set. Highlighted rows are the
-      ones <em>only</em> this strategy funds. The disagreements are the whole argument.</p>
+    <p>Fifty-two accounts from the live queue, at the capacity you set. Highlighted rows, marked
+      <em>only here</em>, are the ones this strategy alone funds. The disagreements are the whole argument.</p>
 
     <div class="queues">
       <div class="qcol alloc">
@@ -247,7 +252,7 @@
       <span>Ganymede</span>
     </div>
     <nav class="footnav" aria-label="Footer">
-      <a href="index.html">Start</a>
+      <a href="index.html">Start here</a>
       <a href="system.html">How it works</a>
       <a href="evidence.html">Evidence</a>
       <a href="queue.html">Allocator</a>
@@ -267,7 +272,7 @@
 <script type="module" src="assets/js/site.js"></script>
 <script type="module">
 import { resolveFigures } from './assets/js/figures.js';
-import { lineChart, loadData, el } from './assets/js/charts.js';
+import { lineChart, loadData, loadFailed, el } from './assets/js/charts.js';
 
 resolveFigures();
 
@@ -283,7 +288,7 @@ function row(a, funded, only) {
   const li = document.createElement('li');
   if (only) li.classList.add('only');
   li.innerHTML = `
-    <span class="id">${a.loan_id}</span>
+    <span class="id">${a.loan_id}${only ? ' <span class="onlytag">· only here</span>' : ''}</span>
     <span class="exp">${money(a.exposure)}</span>
     <span class="meta">
       <span class="pchip"></span>
@@ -293,7 +298,7 @@ function row(a, funded, only) {
   const chip = li.querySelector('.pchip');
   chip.textContent = Math.round(a.p_worsen * 100);
   chip.style.background = riskColour(a.p_worsen);
-  chip.style.color = a.p_worsen >= 0.5 ? '#fff' : '#1a1508';
+  chip.style.color = `var(--on-risk-${Math.round(a.p_worsen * 10) * 10})`;
   chip.title = `p(worsen) ${a.p_worsen}`;
   return li;
 }
@@ -309,6 +314,9 @@ function render(frac) {
   $('roLift').textContent = (point.lift_pct > 0 ? '+' : '') + point.lift_pct + '%';
   $('roContacts').textContent =
     `${compact(point.allocator_contacts)} / ${compact(point.risk_contacts)}`;
+  // The slider's value is an index into the sweep; say what it means instead.
+  $('cap').setAttribute('aria-valuetext',
+    `${Math.round(point.capacity_frac * 100)}% capacity, allocator edge ${$('roLift').textContent}`);
 
   const f = point.capacity_frac;
   const inA = a => a.enters_allocator_at !== null && a.enters_allocator_at <= f + 1e-9;
@@ -394,7 +402,7 @@ function buildVersus() {
 
   $('versus').replaceChildren(
     card(bigMissed, 'risk-ranking never calls this one',
-      `A large book at modest probability. Risk-ranking sorts by probability, so this account sits far enough down the list that it is <span class="no">never reached</span>. Not at 60% capacity, not anywhere in the sweep. The allocator funds it almost immediately, because the money at stake dwarfs the difference in probability.`),
+      `A large book at modest probability. Risk-ranking sorts by probability, so this account sits far enough down the list that it is <span class="no">never reached</span>. Not at ${Math.round(A.sweep_to * 100)}% capacity, not anywhere in the sweep. The allocator funds it from ${bigMissed ? Math.round(bigMissed.enters_allocator_at * 100) : ''}% capacity, because the money at stake outweighs the difference in probability.`),
     card(smallCalled, 'risk-ranking calls this one first',
       `High probability, trivial exposure. Risk-ranking funds it at <span class="no">${smallCalled ? Math.round(smallCalled.enters_risk_at * 100) : ''}% capacity</span>; the allocator <span class="yes">never does</span>, because twelve agent-minutes cost more than the whole uplift is worth. This is the expensive mistake, made thousands of times a day.`),
   );
@@ -408,13 +416,25 @@ loadData('allocator').then(a => {
   const fracs = a.frontier.map(p => p.capacity_frac);
   const slider = $('cap');
   slider.max = String(fracs.length - 1);
-  slider.value = String(fracs.indexOf(a.default_capacity_frac));
-  slider.addEventListener('input', () => render(fracs[+slider.value]));
+  // ?cap=5 opens the studio at 5% capacity, and the address follows the
+  // slider, so a scenario can be linked rather than described.
+  const nearest = pct => fracs.reduce((best, f, i) =>
+    Math.abs(f * 100 - pct) < Math.abs(fracs[best] * 100 - pct) ? i : best, 0);
+  const asked = parseFloat(new URLSearchParams(location.search).get('cap'));
+  const start = Number.isFinite(asked) ? nearest(asked) : fracs.indexOf(a.default_capacity_frac);
+  slider.value = String(start);
+  slider.addEventListener('input', () => {
+    const f = fracs[+slider.value];
+    render(f);
+    const url = new URL(location.href);
+    url.searchParams.set('cap', String(Math.round(f * 100)));
+    history.replaceState(null, '', url);
+  });
   buildVersus();
-  render(a.default_capacity_frac);
+  render(fracs[start]);
   addEventListener('resize', () => drawFrontier(), { passive: true });
 }).catch(err => {
-  $('frontier').innerHTML = `<p style="color:var(--broken)">Could not load allocator data: ${err.message}</p>`;
+  loadFailed('frontier')(err);
 });
 </script>
 </body>

@@ -117,7 +117,6 @@ def stage_panel() -> dict:
 
 def stage_risk() -> dict:
     """L1/L2 backtest with the reliability curve, plus the self-cure drift."""
-    import numpy as np
     import polars as pl
     from ganymede.features import build_features, time_split
     from ganymede.monitors.drift import PSI_ALERT, RATE_ALERT, check_rate_drift, psi
@@ -139,7 +138,7 @@ def stage_risk() -> dict:
             "note": r.get("note"),
         }
 
-    # Drift: the self-cure regime shift the backtest note refers to, measured.
+    # Drift: how far the self-cure rate moves between the train and test windows.
     feats = build_features()
     train_df, test_df = time_split(feats)
     tr = train_df.filter(pl.col("d") >= 1)["y_selfcure"].to_numpy()
@@ -220,7 +219,7 @@ def stage_allocator() -> dict:
         frontier.append({
             "capacity_frac": f, "capacity_minutes": cap, "accounts": n,
             "allocator_value": round(v_a, 1), "risk_ranking_value": round(v_r, 1),
-            "lift_pct": round(100 * (v_a - v_r) / abs(v_r), 1) if v_r else float("inf"),
+            "lift_pct": round(100 * (v_a - v_r) / abs(v_r), 1) if v_r else None,
             "allocator_contacts": len(a_funded), "risk_contacts": len(r_funded),
         })
         if abs(f - default_frac) < 1e-9:
@@ -296,11 +295,6 @@ def stage_audio() -> dict:
         hist.append({"lo": lo, "hi": hi, "n": int(((gaps_ms >= lo) & (gaps_ms < hi)).sum())})
     hist.append({"lo": edges[-1], "hi": None, "n": int((gaps_ms >= edges[-1]).sum())})
 
-    # A coarse waveform envelope for the desk's replay strip.
-    win = max(1, len(samples) // 900)
-    env = np.abs(samples[: (len(samples) // win) * win].reshape(-1, win)).max(axis=1)
-    env = (env / (env.max() or 1.0)).round(3)
-
     # The enforced budget is the measured p25 rounded up to a round number. Both
     # are shipped: the site should not silently present the rounding as the
     # measurement, nor the measurement as the thing the code actually enforces.
@@ -322,8 +316,6 @@ def stage_audio() -> dict:
         "min_turn_gap_ms": MIN_GAP_MS,
         "histogram": hist,
         "gaps_ms": [round(float(g), 1) for g in gaps_ms],
-        "segments": [{"start_s": round(s.start_s, 3), "end_s": round(s.end_s, 3)} for s in segs],
-        "envelope": env.tolist(),
         "share_gaps_fitting_budget": fig(
             round(float((gaps_ms >= budget).mean()), 4), "measured",
             "share of real turn boundaries wide enough for a hint at the budget"),
@@ -443,7 +435,6 @@ def stage_state() -> dict:
     a conversation. This stage measures how often that bites, which is the whole
     reason the product has a second lens.
     """
-    from ganymede.allocator import score_accounts
     from ganymede.features import FEATURE_COLS, build_features, time_split
     from ganymede.schema import Capacity, Willingness
     from ganymede.state import estimate_state, strategy_for
@@ -705,15 +696,20 @@ def main() -> int:
     args = ap.parse_args()
 
     wanted = [s.strip() for s in args.only.split(",") if s.strip()] or list(STAGES)
-    bundle, skipped, stale = {}, [], []
+    unknown = set(wanted) - set(STAGES) - {"metrics"}
+    if unknown:
+        ap.error(f"unknown stage(s): {', '.join(sorted(unknown))}; "
+                 f"choose from {', '.join([*STAGES, 'metrics'])}")
+    bundle, skipped, stale, crashed = {}, [], [], []
 
-    for name in wanted:
+    for name in (w for w in wanted if w in STAGES):
         try:
             bundle[name] = STAGES[name]()
         except Exception as exc:                      # a missing input is not a build failure
             skipped.append((name, f"{type(exc).__name__}: {exc}"))
             if not isinstance(exc, (FileNotFoundError, ImportError)):
-                traceback.print_exc()
+                traceback.print_exc()                 # but a crash is, even in --check
+                crashed.append(name)
             continue
         if not write(name, bundle[name], args.check):
             stale.append(name)
@@ -725,7 +721,7 @@ def main() -> int:
     # survived would compare a six-row table against the committed eighteen and
     # call the committed one stale. Skip it instead, and say why.
     metrics_wanted = set(wanted) == set(STAGES) or "metrics" in wanted
-    if metrics_wanted and skipped:
+    if metrics_wanted and set(bundle) != set(STAGES):
         print("  SKIPPED metrics: assembled from stages that could not run here")
     elif metrics_wanted:
         m = stage_metrics(bundle)
@@ -736,6 +732,9 @@ def main() -> int:
     for name, why in skipped:
         print(f"  SKIPPED {name}: {why}")
 
+    if crashed:
+        print(f"\nstage(s) crashed: {', '.join(crashed)}")
+        return 1
     if args.check and stale:
         print(f"\nsite data is stale: {', '.join(stale)} -- run `python scripts/build_site_data.py`")
         return 1

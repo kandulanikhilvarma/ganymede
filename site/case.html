@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>The argument · Ganymede</title>
+<meta name="theme-color" content="#0b111a">
 <meta name="description" content="Why Ganymede recovers more money per agent-minute: what the evidence shows, how it reaches the floor, and the figures it will not estimate before it has earned them.">
 <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://ganymede-kandula.vercel.app/case">
@@ -15,10 +16,12 @@
 <meta property="og:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ganymede: predict the wobble, shape the call, keep the book.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The Ganymede argument">
 <meta name="twitter:description" content="Why Ganymede recovers more money per agent-minute, how it reaches the floor, and the figures it will not estimate before it has earned them.">
 <meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
+<meta name="twitter:image:alt" content="Ganymede: predict the wobble, shape the call, keep the book.">
 <!-- font-preload -->
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/geist-latin-19f9c925.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/fraunces-latin-7234ed86.woff2">
@@ -109,7 +112,7 @@
     Ganymede
   </a>
   <div class="navlinks">
-    <a href="index.html">Start</a>
+    <a href="index.html">Start here</a>
     <a href="system.html">How it works</a>
     <a href="evidence.html">Evidence</a>
     <a href="queue.html">Allocator</a>
@@ -131,7 +134,7 @@
   </button>
 </nav>
 
-<header class="masthead aura">
+<header id="main" tabindex="-1" class="masthead aura">
   <div class="masthead-in">
     <div>
       <p class="eyebrow">The argument</p>
@@ -166,7 +169,7 @@
     </div>
   </aside>
 
-  <main id="main">
+  <main>
     <article>
       <h2 id="results"><span class="n">01</span>What the evidence says</h2>
       <p>Every figure here is regenerated from the pipeline each time the site builds, and each one
@@ -242,14 +245,14 @@
         (<span class="mono" data-fig="audio:gap_p25_ms" data-fig-format="ms" data-fig-badge="off">—</span>)
         rounded up, not a number chosen for convenience.</p>
 
-      <h3>Models drift, and the monitor catches it</h3>
-      <p>Self-cure rate rose from
+      <h3>Drift is measured, not assumed</h3>
+      <p>Self-cure rate moved from
         <span class="mono" data-fig="risk:drift.self_cure_train">—</span> to
         <span class="mono" data-fig="risk:drift.self_cure_test" data-fig-badge="off">—</span>
-        across the backtest window. The ranking held. Absolute
-        <span data-term="calibration">calibration</span> lagged, because no model calibrates to a
-        regime shift it never saw. That is precisely what the outcome loop and
-        <span data-term="drift">drift monitor</span> exist for.</p>
+        across the backtest window. No model keeps its
+        <span data-term="calibration">calibration</span> through a regime it never saw, so the
+        outcome loop and the <span data-term="drift">drift monitor</span> recompute this move on
+        every build rather than trusting the last one.</p>
 
       <div class="phasebreak">
         <div id="phases"></div>
@@ -385,7 +388,7 @@
       <span>Ganymede</span>
     </div>
     <nav class="footnav" aria-label="Footer">
-      <a href="index.html">Start</a>
+      <a href="index.html">Start here</a>
       <a href="system.html">How it works</a>
       <a href="evidence.html">Evidence</a>
       <a href="queue.html">Allocator</a>

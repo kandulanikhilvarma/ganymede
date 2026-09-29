@@ -108,7 +108,8 @@ def _risk_ranking(accounts: pl.DataFrame, capacity_minutes: int) -> pl.DataFrame
     spent, chosen = 0, []
     for r in ranked.iter_rows(named=True):
         if spent + minutes <= capacity_minutes:
-            chosen.append(r["idx"]); spent += minutes
+            chosen.append(r["idx"])
+            spent += minutes
     return ranked.with_columns(
         pl.when(pl.col("idx").is_in(chosen)).then(pl.lit("plan_offer")).otherwise(pl.lit("do_not_contact")).alias("action")
     )
@@ -145,7 +146,7 @@ def compare(accounts: pl.DataFrame, capacity_frac: float, lam: float = LAMBDA_HA
         "capacity_frac": round(capacity_frac, 4),
         "accounts": accounts.height, "capacity_minutes": capacity,
         "allocator_value": round(v_alloc, 1), "risk_ranking_value": round(v_risk, 1),
-        "lift_pct": round(100 * (v_alloc - v_risk) / abs(v_risk), 1) if v_risk else float("inf"),
+        "lift_pct": round(100 * (v_alloc - v_risk) / abs(v_risk), 1) if v_risk else None,
         "allocator_contacts": alloc.filter(pl.col("action") != "do_not_contact").height,
         "risk_contacts": risk.filter(pl.col("action") != "do_not_contact").height,
     }
@@ -168,8 +169,15 @@ def main() -> int:
     ap.add_argument("--capacity-frac", type=float, default=0.15)
     ap.add_argument("--lam", type=float, default=LAMBDA_HARM)
     args = ap.parse_args()
+    if not args.simulate:                 # a bare run used to print nothing and pass
+        ap.print_help()
+        return 2
     if args.simulate:
-        r = simulate(args.capacity_frac, args.lam)
+        try:
+            r = simulate(args.capacity_frac, args.lam)
+        except FileNotFoundError as exc:
+            print(exc)
+            return 2
         for k, v in r.items():
             print(f"  {k}: {v}")
         if r["allocator_value"] <= r["risk_ranking_value"]:

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Design system · Ganymede</title>
+<meta name="theme-color" content="#0b111a">
 <meta name="description" content="The Ganymede design language: a semantic colour system where every family carries one decision meaning, and every number on the site wears its evidence.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
@@ -16,10 +17,12 @@
 <meta property="og:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ganymede: predict the wobble, shape the call, keep the book.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Ganymede · design system">
 <meta name="twitter:description" content="The Ganymede design language: a semantic colour system where every family carries one decision meaning, and every number on the site wears its evidence.">
 <meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
+<meta name="twitter:image:alt" content="Ganymede: predict the wobble, shape the call, keep the book.">
 <!-- font-preload -->
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/geist-latin-19f9c925.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/fraunces-latin-7234ed86.woff2">
@@ -120,7 +123,7 @@
     Ganymede
   </a>
   <div class="navlinks">
-    <a href="index.html">Start</a>
+    <a href="index.html">Start here</a>
     <a href="system.html">How it works</a>
     <a href="evidence.html">Evidence</a>
     <a href="queue.html">Allocator</a>
@@ -391,7 +394,7 @@
       <span>Ganymede</span>
     </div>
     <nav class="footnav" aria-label="Footer">
-      <a href="index.html">Start</a>
+      <a href="index.html">Start here</a>
       <a href="system.html">How it works</a>
       <a href="evidence.html">Evidence</a>
       <a href="queue.html">Allocator</a>
@@ -413,14 +416,20 @@
   const STEPS = [50,100,200,300,400,500,600,700,800,900,950];
   const css = getComputedStyle(document.documentElement);
   const tok = n => css.getPropertyValue(n).trim();
+  // Black or white, whichever has more contrast on this swatch (WCAG luminance).
+  const labelOn = hex => {
+    const lin = c => (c /= 255) <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+    const [r, g, b] = [1, 3, 5].map(i => lin(parseInt(hex.slice(i, i + 2), 16)));
+    const L = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    return (L + 0.05) / 0.05 >= 1.05 / (L + 0.05) ? '#000' : '#fff';
+  };
 
   function paintRamp(id, family) {
     const el = document.getElementById(id);
     if (!el) return;
     el.innerHTML = STEPS.map(s => {
       const c = tok(`--${family}-${s}`);
-      const dark = s >= 500;
-      return `<div style="background:${c}"><span style="color:${dark ? '#fff' : '#000'}">${s}</span></div>`;
+      return `<div style="background:${c}"><span style="color:${labelOn(c)}">${s}</span></div>`;
     }).join('');
   }
   ['ice','ember','kept','broken','slate'].forEach(f => paintRamp('ramp-' + f, f));
@@ -437,7 +446,7 @@
     const p = +range.value;
     const stop = Math.round(p / 10) * 10;
     chip.style.background = tok('--risk-' + stop);
-    chip.style.color = stop >= 50 ? '#fff' : '#1a1508';
+    chip.style.color = `var(--on-risk-${stop})`;
     chip.style.borderColor = 'transparent';
     val.textContent = p;
   }

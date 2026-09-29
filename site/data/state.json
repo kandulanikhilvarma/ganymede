@@ -1,70 +1,70 @@
 {
   "accounts": {
-    "value": 58931,
+    "value": 41148,
     "provenance": "measured",
     "source": "test-period delinquent snapshot"
   },
   "confident_quadrant": {
-    "value": 0.0248,
+    "value": 0.0167,
     "provenance": "measured",
     "source": "state.estimate_state over the queue"
   },
   "routes_to_diagnostic": {
-    "value": 0.9752,
+    "value": 0.9833,
     "provenance": "measured",
     "source": "state.estimate_state over the queue",
     "note": "willingness cannot be read from servicing data, so most accounts get the diagnostic question rather than a guessed strategy"
   },
   "median_confidence": {
-    "value": 0.179,
+    "value": 0.079,
     "provenance": "measured",
     "source": "state.estimate_state"
   },
   "quadrants": [
     {
       "quadrant": "unknown x will_pay",
-      "n": 20261,
-      "share": 0.3438
-    },
-    {
-      "quadrant": "can_pay x will_pay",
-      "n": 13932,
-      "share": 0.2364
+      "n": 13789,
+      "share": 0.3351
     },
     {
       "quadrant": "cannot_pay x will_pay",
-      "n": 11685,
-      "share": 0.1983
+      "n": 8304,
+      "share": 0.2018
+    },
+    {
+      "quadrant": "can_pay x will_pay",
+      "n": 7990,
+      "share": 0.1942
     },
     {
       "quadrant": "cannot_pay x will_not_pay",
-      "n": 5743,
-      "share": 0.0975
-    },
-    {
-      "quadrant": "unknown x will_not_pay",
-      "n": 3821,
-      "share": 0.0648
-    },
-    {
-      "quadrant": "can_pay x will_not_pay",
-      "n": 2997,
-      "share": 0.0509
+      "n": 3973,
+      "share": 0.0966
     },
     {
       "quadrant": "can_pay x unknown",
-      "n": 279,
-      "share": 0.0047
+      "n": 3428,
+      "share": 0.0833
+    },
+    {
+      "quadrant": "unknown x will_not_pay",
+      "n": 2013,
+      "share": 0.0489
+    },
+    {
+      "quadrant": "can_pay x will_not_pay",
+      "n": 830,
+      "share": 0.0202
     },
     {
       "quadrant": "unknown x unknown",
-      "n": 184,
-      "share": 0.0031
+      "n": 777,
+      "share": 0.0189
     },
     {
       "quadrant": "cannot_pay x unknown",
-      "n": 29,
-      "share": 0.0005
+      "n": 44,
+      "share": 0.0011
     }
   ],
   "strategies": {

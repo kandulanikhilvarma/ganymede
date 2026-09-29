@@ -41,10 +41,16 @@ def resolve(promise: Promise | None, paid: bool, amount_paid: float = 0.0,
     )
 
 
-def _paid_next_month(loan_id: str, panel: pl.DataFrame) -> tuple[bool, float]:
-    """Did this loan's delinquency improve after its last observed month?
-    Improvement (or return to current) is the payment proxy on this data."""
+def _paid_next_month(loan_id: str, panel: pl.DataFrame, month=None) -> tuple[bool, float]:
+    """Did this loan's delinquency improve in the month after `month`, the month
+    the conversation happened? Improvement (or return to current) is the payment
+    proxy on this data. With no month, falls back to the loan's last two rows.
+
+    It always used the last two rows, which scored a promise made in, say,
+    March against whatever the loan did at the end of its history (C-04)."""
     rows = panel.filter(pl.col("loan_id") == loan_id).sort("period_date")
+    if month is not None:
+        rows = rows.filter(pl.col("period_date") >= month).head(2)
     if rows.height < 2:
         return False, 0.0
     last_two = rows.tail(2)
@@ -59,11 +65,12 @@ def resolve_conversation(conv: dict, promise: Promise | None,
                          panel: pl.DataFrame) -> Outcome:
     """Resolve a generated conversation's promise against its seed loan's real
     subsequent panel behaviour."""
-    paid, amt = _paid_next_month(conv["borrower_id"], panel)
+    paid, amt = _paid_next_month(conv["borrower_id"], panel, conv.get("period_date"))
     return resolve(promise, paid, amt)
 
 
-def verify(conversations: list[dict], promises: list[Promise | None]) -> list[str]:
+def verify(conversations: list[dict],
+           promises: list[Promise | None]) -> tuple[list[str], list[Outcome]]:
     """Phase 6 gate: every promise resolves, no silent drops."""
     problems = []
     panel = pl.read_parquet(PANEL_PATH)
@@ -72,8 +79,6 @@ def verify(conversations: list[dict], promises: list[Promise | None]) -> list[st
         outcomes.append(resolve_conversation(conv, pr, panel))
     if len(outcomes) != len(conversations):
         problems.append(f"resolved {len(outcomes)} of {len(conversations)} — silent drop")
-    if any(o.promise_status not in set(PromiseStatus) for o in outcomes):
-        problems.append("an outcome has an invalid status")
     return problems, outcomes
 
 
@@ -82,12 +87,23 @@ def main() -> int:
     ap.add_argument("--verify", action="store_true")
     ap.add_argument("--n", type=int, default=12)
     args = ap.parse_args()
+    if not args.verify:                   # a bare run used to print nothing and pass
+        ap.print_help()
+        return 2
     if args.verify:
         from .coach.extract import extract_promise
         from .generate import generate_batch
+        from .coach.extract import ExtractionError
         convs = generate_batch(args.n)
-        promises = [extract_promise(c["transcript"], c["borrower_id"]) for c in convs]
+        promises, unreadable = [], []
+        for c in convs:
+            try:
+                promises.append(extract_promise(c["transcript"], c["borrower_id"]))
+            except ExtractionError as exc:
+                promises.append(None)
+                unreadable.append(f"{c['borrower_id']}: extractor reply unreadable ({exc})")
         problems, outcomes = verify(convs, promises)
+        problems = unreadable + problems
         from collections import Counter
         dist = Counter(o.promise_status.value for o in outcomes)
         print(f"  conversations: {len(convs)}  promises: {sum(p is not None for p in promises)}")

@@ -39,6 +39,7 @@ def generate_conversation(
     exposure: float,
     quadrant: tuple[Capacity, Willingness],
     engine: LLMEngine | None = None,
+    period_date=None,
 ) -> dict:
     engine = engine or get_engine()
     brief = _QUADRANT_BRIEF[quadrant]
@@ -55,6 +56,8 @@ def generate_conversation(
         "arrears_months": arrears_months,
         "exposure": exposure,
         "quadrant": f"{quadrant[0].value}|{quadrant[1].value}",
+        # the seed month: the call happens here, so the outcome is the month after
+        "period_date": period_date,
     }
 
 
@@ -75,6 +78,7 @@ def _seed_rows(n: int, seed: int = 7) -> list[dict]:
             "arrears_months": int(r["d"]),
             "exposure": float(r["upb"] or r["orig_upb"] or 100000),
             "quadrant": (cap, wil),
+            "period_date": r["period_date"],
         })
     return rows
 

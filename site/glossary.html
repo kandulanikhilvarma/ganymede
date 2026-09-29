@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Glossary · Ganymede</title>
+<meta name="theme-color" content="#0b111a">
 <meta name="description" content="The collections and credit-risk vocabulary this site uses: arrears, self-cure, promise to pay, roll curve, uplift, calibration, drift, propensity and the rest, defined plainly.">
 <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://ganymede-kandula.vercel.app/glossary">
@@ -15,10 +16,12 @@
 <meta property="og:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ganymede: predict the wobble, shape the call, keep the book.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Ganymede · glossary">
 <meta name="twitter:description" content="The collections and credit-risk vocabulary this site uses: arrears, self-cure, promise to pay, roll curve, uplift, calibration, drift, propensity and the rest, defined plainly.">
 <meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
+<meta name="twitter:image:alt" content="Ganymede: predict the wobble, shape the call, keep the book.">
 <!-- font-preload -->
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/geist-latin-19f9c925.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/fraunces-latin-7234ed86.woff2">
@@ -87,7 +90,7 @@
     Ganymede
   </a>
   <div class="navlinks">
-    <a href="index.html">Start</a>
+    <a href="index.html">Start here</a>
     <a href="system.html">How it works</a>
     <a href="evidence.html">Evidence</a>
     <a href="queue.html">Allocator</a>
@@ -124,7 +127,7 @@
   <div class="searchrow">
     <input type="search" id="q" placeholder="Filter. Try &ldquo;promise&rdquo; or &ldquo;drift&rdquo;"
            aria-label="Filter glossary terms" autocomplete="off">
-    <span class="count" id="count">—</span>
+    <span class="count" id="count" role="status">—</span>
   </div>
 
   <div id="entries"></div>
@@ -142,7 +145,7 @@
       <span>Ganymede</span>
     </div>
     <nav class="footnav" aria-label="Footer">
-      <a href="index.html">Start</a>
+      <a href="index.html">Start here</a>
       <a href="system.html">How it works</a>
       <a href="evidence.html">Evidence</a>
       <a href="queue.html">Allocator</a>
@@ -167,10 +170,21 @@ if (moonNode) ganymede(moonNode, { seed: 41, grooves: 26, craters: 14, phase: 0.
 
 const $ = id => document.getElementById(id);
 
-const terms = await fetch('data/glossary.json').then(r => r.json()).catch(() => ({}));
+// A failed load used to become an empty object, and the page then said
+// "Nothing matches that." Say what actually happened.
+let loadError = null;
+const terms = await fetch('data/glossary.json')
+  .then(r => { if (!r.ok) throw new Error(`glossary.json: ${r.status}`); return r.json(); })
+  .catch(err => { loadError = err; console.error(err); return {}; });
+if (loadError) {
+  const p = document.createElement('p');
+  p.className = 'load-error';
+  p.textContent = 'The glossary could not load. Reload the page to try again.';
+  $('entries').replaceChildren(p);
+}
 const list = Object.entries(terms).sort((a, b) => a[1].term.localeCompare(b[1].term));
 
-$('entries').replaceChildren(...list.map(([slug, t]) => {
+if (!loadError) $('entries').replaceChildren(...list.map(([slug, t]) => {
   const s = document.createElement('section');
   s.className = 'entry';
   s.id = slug;

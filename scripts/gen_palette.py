@@ -55,7 +55,7 @@ def contrast(fg: str, bg: str) -> float:
 
 
 def ramp(lightness: list[float], chroma: list[float], hue: list[float]) -> dict[int, str]:
-    return {s: oklch_to_hex(l, c, h) for s, l, c, h in zip(STEPS, lightness, chroma, hue)}
+    return {s: oklch_to_hex(lum, c, h) for s, lum, c, h in zip(STEPS, lightness, chroma, hue)}
 
 
 def _lerp(a: float, b: float, n: int = 11) -> list[float]:
@@ -85,7 +85,7 @@ RAMPS = {
                    _lerp(32.0, 24.0)),
     # Slate -- all structure. Warm paper at the light end, cool ink at the dark end,
     # which reconciles the two neutrals the old case/desk pages each had separately.
-    "slate": ramp([0.976, 0.951, 0.902, 0.826, 0.740, 0.652, 0.556, 0.452, 0.352, 0.248, 0.176],
+    "slate": ramp([0.976, 0.951, 0.902, 0.826, 0.740, 0.652, 0.530, 0.452, 0.352, 0.248, 0.176],
                   [0.004, 0.005, 0.006, 0.008, 0.010, 0.012, 0.014, 0.016, 0.018, 0.020, 0.020],
                   _lerp(80.0, 258.0)),
 }
@@ -112,6 +112,18 @@ GATES = [
     ("ice.400", "slate.950", 3.0, "focus ring / UI bound, dark"),
 ]
 
+# The same idea one layer up: pairs of *semantic* names the CSS actually puts
+# together, checked in both themes. The ramp gates above could all pass while
+# faint captions on a light surface sat at 4.07:1.
+SEMANTIC_GATES = [
+    ("faint", "ground", 4.5, "captions, eyebrows, table headers"),
+    ("faint", "surface", 4.5, "captions on cards"),
+    ("muted", "surface-2", 4.5, "secondary text on raised panels"),
+    ("signal", "signal-quiet", 4.5, "active nav, pressed segment, measured badge"),
+    ("field", "ground", 3.0, "form field boundary (1.4.11)"),
+    ("field", "surface", 3.0, "form field boundary on cards (1.4.11)"),
+]
+
 
 def resolve(ref: str) -> str:
     family, step = ref.split(".")
@@ -128,7 +140,23 @@ def check() -> list[str]:
     lums = [luminance(c) for c in RISK]
     if any(b >= a for a, b in zip(lums, lums[1:])):
         failures.append("risk ramp is not monotonically darkening -- it no longer encodes magnitude")
+    for theme, mapping in SEMANTIC.items():
+        for fg, bg, floor, why in SEMANTIC_GATES:
+            ratio = contrast(resolve(mapping[fg]), resolve(mapping[bg]))
+            if ratio < floor:
+                failures.append(f"{theme}: {fg} on {bg} = {ratio:.2f}:1, needs {floor}:1 ({why})")
+    for i, ratio in enumerate(contrast(on_risk(c), c) for c in RISK):
+        if ratio < 4.5:
+            failures.append(f"on-risk-{i * 10} = {ratio:.2f}:1, needs 4.5:1 (label on a risk cell)")
     return failures
+
+
+def on_risk(bg: str) -> str:
+    """Label colour for text sitting on a risk-ramp cell: whichever end of slate
+    reads better. Pages used a flat white, which is 1.9:1 on risk-30. Pure
+    white rather than slate.50 on the dark end: risk-60 needs the last 0.3."""
+    ink, paper = resolve("slate.950"), "#ffffff"
+    return ink if contrast(ink, bg) >= contrast(paper, bg) else paper
 
 
 # Semantic layer. Each name says what the colour is *for*; nothing in the site's
@@ -139,12 +167,12 @@ SEMANTIC = {
         "surface-3": "slate.300",
         "line": "slate.300", "line-strong": "slate.400",
         "text": "slate.900", "muted": "slate.700", "faint": "slate.600",
-        "signal": "ice.700", "signal-strong": "ice.800", "signal-quiet": "ice.200",
+        "signal": "ice.700", "signal-strong": "ice.800", "signal-quiet": "ice.100",
         "on-signal": "slate.50",
         "predict": "ember.800", "predict-quiet": "ember.200",
         "kept": "kept.700", "kept-quiet": "kept.200",
         "broken": "broken.700", "broken-quiet": "broken.200",
-        "focus": "ice.600",
+        "focus": "ice.600", "field": "slate.600",
     },
     "dark": {
         "ground": "slate.950", "surface": "slate.900", "surface-2": "slate.800",
@@ -156,7 +184,7 @@ SEMANTIC = {
         "predict": "ember.300", "predict-quiet": "ember.900",
         "kept": "kept.300", "kept-quiet": "kept.900",
         "broken": "broken.300", "broken-quiet": "broken.900",
-        "focus": "ice.400",
+        "focus": "ice.400", "field": "slate.600",
     },
 }
 
@@ -215,6 +243,9 @@ def emit() -> str:
     out.append("     never gets red/amber/green, which would invent categories from a scalar. */")
     for i, hexv in enumerate(RISK):
         out.append(f"  --risk-{i * 10}:{hexv};")
+    out.append("  /* label colour on each risk cell, picked for contrast */")
+    for i, hexv in enumerate(RISK):
+        out.append(f"  --on-risk-{i * 10}:{on_risk(hexv)};")
     out.append(STATIC)
     out.append("}")
     out.append("")
@@ -272,12 +303,13 @@ def main() -> int:
         if not OUT.exists() or OUT.read_text(encoding="utf-8") != css:
             print("tokens.css is stale -- run `python scripts/gen_palette.py`")
             return 1
-        print(f"palette OK: {len(GATES)} contrast gates pass, tokens.css current")
+        print(f"palette OK: {len(GATES) + 2 * len(SEMANTIC_GATES) + len(RISK)} contrast gates pass, "
+              "tokens.css current")
         return 0
 
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(css, encoding="utf-8")
-    print(f"wrote {OUT.relative_to(ROOT)} -- {len(GATES)} contrast gates pass")
+    print(f"wrote {OUT.relative_to(ROOT)} -- all contrast gates pass")
     for fg, bg, floor, why in GATES:
         print(f"  {contrast(resolve(fg), resolve(bg)):5.2f}:1  {fg:<12} on {bg:<12} ({why})")
     return 0

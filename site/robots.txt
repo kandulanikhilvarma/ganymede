@@ -1,5 +1,3 @@
 User-agent: *
 Allow: /
-Disallow: /design
-Disallow: /design.html
 Sitemap: https://ganymede-kandula.vercel.app/sitemap.xml

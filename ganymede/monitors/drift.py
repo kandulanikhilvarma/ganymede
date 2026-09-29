@@ -1,11 +1,11 @@
 """Drift monitors (I12). Static panel, live world — a model rots when the world
 moves under it. These watch input, score, and outcome distributions and flag a
-breach; the nightly eval runs them and exits non-zero on a flag.
+breach. `scripts/build_site_data.py` runs the rate check on every build and
+publishes the result; nothing schedules it yet.
 
 PSI (population stability index) is the standard measure of distribution shift
 between a reference window and a current one. Rule of thumb: <0.1 stable,
-0.1-0.25 moderate shift, >0.25 significant. The self-cure drift found in Phase 3
-(rate 0.60 -> 0.72) is exactly the kind of shift PSI on the outcome rate catches.
+0.1-0.25 moderate shift, >0.25 significant.
 """
 
 from __future__ import annotations
@@ -39,8 +39,7 @@ def check_drift(reference: np.ndarray, current: np.ndarray, name: str) -> dict:
 
 def check_rate_drift(reference: np.ndarray, current: np.ndarray, name: str) -> dict:
     """For a binary outcome, PSI underweights a base-rate shift. Watch the rate
-    directly — this is what catches the self-cure drift (0.60 -> 0.72) that PSI
-    on the 0/1 labels misses."""
+    directly: a base-rate move is what PSI on the 0/1 labels misses."""
     ref_rate = float(np.mean(reference))
     cur_rate = float(np.mean(current))
     delta = abs(cur_rate - ref_rate)

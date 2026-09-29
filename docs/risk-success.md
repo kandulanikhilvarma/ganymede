@@ -1,5 +1,9 @@
 # Risk Lens, success definition and Phase 3 results
 
+> **Correction, 2026-09-29.** The figures below were produced before defect D15
+> (forward labels leaking across loans) was fixed. Current figures are in
+> `site/data/*.json` and `docs/CASE.md`; see `docs/defects.md` D15.
+
 Defined before modelling, not fitted to the output. Each model is judged on the
 metric its product use actually needs, a probability an agent reads is judged
 on calibration; a ranking the allocator consumes is judged on discrimination.

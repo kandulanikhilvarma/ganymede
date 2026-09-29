@@ -25,9 +25,9 @@ below runs; nothing is a slide.
 |---|---|---|
 | 1 Foundation | schema, invariants-as-code, experiment arms | 21 tests, invariants green |
 | 2 Panel | 1.4M-row monthly borrower panel from Freddie Mac | verified: real dates, full roll curve, no leakage |
-| 3 Risk models | L1 trajectory, L2 self-cure, reason codes | L1 AUC 0.62 beats base Brier; L2 AUC 0.67 |
-| 4 Allocator | expected-value allocation under capacity | **+59% recovered value vs risk-ranking, half the contacts** |
-| 5 Borrower state | capacity x willingness, uncertainty output | 6/6 archetypes; 97.5% route to a diagnostic question |
+| 3 Risk models | L1 trajectory, L2 self-cure, reason codes | L1 AUC 0.66 beats base Brier; L2 AUC 0.76 |
+| 4 Allocator | expected-value allocation under capacity | **+72.5% recovered value vs risk-ranking, half the contacts** |
+| 5 Borrower state | capacity x willingness, uncertainty output | 6/6 archetypes; 98.3% route to a diagnostic question |
 | 6 Conversations | conditioned generation, PTP extractor | extractor **93.4%** on gold; loop closes, no drops |
 | 7 Coach Lens | two-tier hints, playbook, checklist | tier-1 0.04ms, tier-2 demotes at 4.5s |
 | 8 Evals | LLM judge, Krippendorff alpha, drift | judge **91.7%** agreement, under reliability ceiling |
@@ -42,11 +42,11 @@ below runs; nothing is a slide.
 
 The code is the smaller half. These five results are the case for the product.
 
-**Value-ranking beats risk-ranking by 59%, using fewer than half the contacts.**
+**Value-ranking beats risk-ranking by 72.5%, using fewer than half the contacts.**
 Conventional collections sorts by probability of default and works the top. The
 allocator maximises expected recovered value per agent-minute, Δ over self-cure,
-weighted by exposure, under capacity. On the test queue it recovered 865M vs
-544M for risk-ranking, with 4,243 contacts vs 8,839. Fewer conversations, more
+weighted by exposure, under capacity. On the test queue it recovered 602M vs
+349M for risk-ranking, with 2,962 contacts vs 6,172. Fewer conversations, more
 money, because it skips the self-curers and the tiny-exposure accounts that
 risk-ranking wastes minutes on. (Uplift is modelled, not measured, see limits.)
 
@@ -71,12 +71,12 @@ cannot fit that gap. So deterministic hints (promise-quality, compliance) render
 in under a millisecond and hit the live gap; LLM strategy hints are demoted to the
 next pause. Measured, not asserted.
 
-**Models drift, and the honest move is to catch it, not hide it.** Self-cure rate
-rose from 0.60 to 0.72 across the backtest window. The L2 ranking held; its
-absolute calibration lagged, because no model calibrates to a regime shift it
-never saw. This is exactly what the outcome loop and drift monitor exist for, 
-calibration recalibrates from recent outcomes while the ranking model stays
-stable.
+**Drift is measured, not assumed.** Self-cure rate moved from 0.59 to 0.52
+across the backtest window, inside the monitor's 0.10 alert band. An earlier
+build reported a rise from 0.60 to 0.72; that came from forward labels leaking
+across loan boundaries, now fixed and tested (see `docs/defects.md`, D15). The
+rate monitor recomputes the move on every build, because no model keeps its
+calibration through a regime it never saw.
 
 ---
 
@@ -123,7 +123,7 @@ history, who was reached, when, on what channel, with what result. Freddie Mac
 has none; the haessigDB calls and the sales transcript are conversations, not
 outcome-linked outreach logs. L3 waits for pilot data.
 
-**Measured uplift.** The allocator's 59% edge assumes an uplift shape from the
+**Measured uplift.** The allocator's 72.5% edge assumes an uplift shape from the
 literature (effect concentrated in the persuadable middle). The shape is
 defensible; the magnitude is not a promise. The randomised control arm is what
 turns modelled uplift into measured uplift.
@@ -153,8 +153,8 @@ Three things this project refused to fake, and would have been easy to:
   data; the code refuses to compute the number on synthetic records.
 - It does not report recovery lift, PTP-kept lift, or override rate. Those need a
   pilot; they are marked pending, not estimated.
-- It does not dress a regime-shift calibration miss as a model failure, nor hide
-  it as a pass. It reports the drift and points at the mechanism built to handle it.
+- It does not keep a published number once the code behind it is found wrong.
+  The label-window fix (D15) moved every headline figure, and they moved in the open.
 
 The measure of the work is not that every number is green. It is that every number
 is one you could stake a lending decision on, and where a number can't yet be

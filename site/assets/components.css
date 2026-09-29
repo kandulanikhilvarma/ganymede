@@ -62,7 +62,24 @@
 .btn-primary { background: var(--signal); color: var(--on-signal); border-color: var(--signal); }
 .btn-primary:hover { background: var(--signal-strong); border-color: var(--signal-strong); }
 .btn-danger { background: transparent; border-color: var(--broken); color: var(--broken); }
+.btn-danger:hover { background: var(--broken-quiet); }
+
+/* ---- the numbers behind a chart ------------------------------------------ */
+.datatable { margin-top: var(--s-3); font-size: var(--fs--1); }
+.datatable summary { cursor: pointer; color: var(--muted); font-family: var(--font-mono); font-size: var(--fs--2); }
+.datatable summary:hover { color: var(--text); }
+.datatable table { margin-top: var(--s-3); }
+.datatable caption { text-align: left; color: var(--faint); font-size: var(--fs--2); padding-bottom: var(--s-2); }
+.datatable td:not(:first-child), .datatable th:not(:first-child) { text-align: right; font-family: var(--font-mono); }
+
+/* ---- a figure whose data did not arrive ---------------------------------- */
+.load-error {
+  margin: 0; padding: var(--s-4); border: 1px dashed var(--line-strong); border-radius: var(--r-2);
+  color: var(--muted); font-size: var(--fs--1);
+}
 .btn[disabled] { opacity: .45; cursor: not-allowed; }
+/* A press reads as a press. One pixel, no transition, so reduced motion is moot. */
+.btn:active:not([disabled]), .seg button:active:not([disabled]), .themebtn:active { transform: translateY(1px); }
 
 /* ---- segmented control (experiment arm, depth switcher, speed) ---------- */
 .seg { display: inline-flex; border: 1px solid var(--line); border-radius: var(--r-2); overflow: hidden; }
@@ -74,6 +91,10 @@
 .seg button + button { border-left: 1px solid var(--line); }
 .seg button:hover { color: var(--text); }
 .seg button[aria-pressed="true"] { background: var(--signal-quiet); color: var(--signal); }
+.seg button[disabled] { color: var(--faint); cursor: not-allowed; }
+/* .seg clips its children for the rounded corners, which clipped the outer
+   focus ring too. Draw it inside instead. */
+.seg button:focus-visible { outline-offset: -3px; border-radius: 0; }
 
 /* ---- glossary term ----------------------------------------------------- */
 .term {
@@ -138,6 +159,7 @@ td.num, th.num { font-family: var(--font-mono); font-variant-numeric: tabular-nu
   border-radius: var(--r-2); padding: var(--s-2); display: inline-flex;
 }
 .themebtn svg { width: 16px; height: 16px; }
+.themebtn:hover { color: var(--text); border-color: var(--line-strong); }
 
 .navtoggle { display: none; }
 

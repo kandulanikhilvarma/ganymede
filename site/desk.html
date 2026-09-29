@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Agent desk · Ganymede</title>
+<meta name="theme-color" content="#0b111a">
 <meta name="description" content="Work a real scored collections queue: risk with reason codes, borrower state, live coaching hints against a measured latency budget, promise capture, override, and a permanent control arm.">
 <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://ganymede-kandula.vercel.app/desk">
@@ -15,10 +16,12 @@
 <meta property="og:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ganymede: predict the wobble, shape the call, keep the book.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Ganymede · agent desk">
 <meta name="twitter:description" content="Work a real scored collections queue: risk with reason codes, borrower state, live coaching hints against a measured latency budget, promise capture, override, and a permanent control arm.">
 <meta name="twitter:image" content="https://ganymede-kandula.vercel.app/assets/img/og.png">
+<meta name="twitter:image:alt" content="Ganymede: predict the wobble, shape the call, keep the book.">
 <!-- font-preload -->
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/geist-latin-19f9c925.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="assets/fonts/fraunces-latin-7234ed86.woff2">
@@ -71,7 +74,7 @@
   .qitem .sub { display: flex; align-items: center; gap: var(--s-2); margin-top: 5px; font-size: var(--fs--2); color: var(--muted); }
   .pchip {
     font-family: var(--font-mono); font-size: var(--fs-micro); padding: 1px 5px; border-radius: 3px;
-    color: #fff; font-weight: 500;
+    font-weight: 500;
   }
   .qitem .act { font-size: var(--fs-micro); font-family: var(--font-mono); color: var(--faint); }
   .qitem.skip .act { color: var(--faint); }
@@ -209,6 +212,9 @@
   dialog.help kbd { font-family: var(--font-mono); font-size: var(--fs--2); border: 1px solid var(--line-strong);
                     border-bottom-width: 2px; border-radius: 4px; padding: 1px 5px; }
   dialog.help table td { padding: 5px 8px 5px 0; border: 0; }
+  .keys-toggle { display: flex; gap: var(--s-2); align-items: center; margin-top: var(--s-4); font-size: var(--fs--1); }
+  .keys-toggle input { width: auto; }
+  .ov-error { margin: var(--s-1) 0 0; font-size: var(--fs--2); color: var(--broken); min-height: 1em; }
 
   /* ---- mobile ---- */
   .tabs { display: none; }
@@ -405,7 +411,8 @@
     <div class="panel">
       <h4>Override recommendation</h4>
       <label class="f" for="ovReason">Reason (required)</label>
-      <textarea id="ovReason" placeholder="Why are you departing from the recommendation?"></textarea>
+      <textarea id="ovReason" aria-describedby="ovError" placeholder="Why are you departing from the recommendation?"></textarea>
+      <p class="ov-error" id="ovError" role="status"></p>
       <div class="btn-row"><button class="btn btn-danger" id="override">Log override</button></div>
     </div>
 
@@ -439,13 +446,14 @@
     <tr><td><kbd>?</kbd></td><td>this dialog</td></tr>
     <tr><td><kbd>esc</kbd></td><td>close</td></tr>
   </table>
+  <label class="keys-toggle"><input type="checkbox" id="keysOn" checked> Single-key shortcuts on</label>
   <div class="btn-row"><button class="btn" id="helpClose">Close</button></div>
 </dialog>
 
 <script type="module" src="assets/js/site.js"></script>
 <script type="module">
 import { resolveFigures, val } from './assets/js/figures.js';
-import { loadData } from './assets/js/charts.js';
+import { loadData, loadFailed } from './assets/js/charts.js';
 
 resolveFigures();
 
@@ -477,7 +485,7 @@ function renderQueue() {
     const chip = b.querySelector('.pchip');
     chip.textContent = Math.round(a.p_worsen * 100);
     chip.style.background = riskColour(a.p_worsen);
-    chip.style.color = a.p_worsen >= 0.5 ? '#fff' : '#1a1508';
+    chip.style.color = `var(--on-risk-${Math.round(a.p_worsen * 10) * 10})`;
     chip.title = `p(worsen) ${a.p_worsen}`;
     b.addEventListener('click', () => select(i));
     return b;
@@ -581,6 +589,7 @@ function drawGauge(a) {
   const num = $('riskNum');
   let cur = 0;
   const target = p * 100;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { num.textContent = Math.round(target); return; }
   const tick = () => {
     cur += Math.max(1, (target - cur) * 0.18);
     if (cur >= target) cur = target;
@@ -744,9 +753,18 @@ $('markBroken').addEventListener('click', () => {
 });
 $('override').addEventListener('click', () => {
   const r = $('ovReason').value.trim();
-  if (!r) { $('ovReason').focus(); log('override', 'override blocked. A reason is required'); return; }
+  const box = $('ovReason');
+  if (!r) {
+    box.setAttribute('aria-invalid', 'true');
+    $('ovError').textContent = 'Write a reason first. An override without one is not logged.';
+    box.focus();
+    log('override', 'override blocked. A reason is required');
+    return;
+  }
+  box.removeAttribute('aria-invalid');
+  $('ovError').textContent = '';
   log('override', `override logged: "${r}"`);
-  $('ovReason').value = '';
+  box.value = '';
 });
 $('exportLog').addEventListener('click', () => {
   let arr = [];
@@ -792,9 +810,19 @@ document.querySelectorAll('[data-tab-btn]').forEach(b => b.addEventListener('cli
 const dlg = $('helpDlg');
 $('helpBtn').addEventListener('click', () => dlg.showModal());
 $('helpClose').addEventListener('click', () => dlg.close());
+// WCAG 2.1.4: single-character shortcuts need an off switch. The choice is kept
+// per browser. Space and arrows also stand down when a control has focus, so
+// Space still presses the focused button instead of toggling the replay.
+const keysBox = $('keysOn');
+try { keysBox.checked = localStorage.getItem('gm-desk-keys') !== 'off'; } catch {}
+keysBox.addEventListener('change', () => {
+  try { localStorage.setItem('gm-desk-keys', keysBox.checked ? 'on' : 'off'); } catch {}
+});
 addEventListener('keydown', e => {
+  if (!keysBox.checked || e.ctrlKey || e.metaKey || e.altKey) return;
   if (e.target.matches('input, textarea, select') || dlg.open) return;
   const k = e.key;
+  if ((k === ' ' || k === 'ArrowRight') && e.target.closest('button, a, [tabindex], [role="tab"]')) return;
   if (k === ' ') { e.preventDefault(); playing ? pause() : play(); }
   else if (k === 'ArrowRight') { e.preventDefault(); pause(); step(); }
   else if (k === 'j') select(current + 1);
@@ -817,7 +845,7 @@ Promise.all([loadData('desk'), loadData('audio'), loadData('coach')]).then(([d, 
   renderAccount();
   ptpQuality();
 }).catch(err => {
-  $('thread').innerHTML = `<p style="color:var(--broken)">Could not load desk data: ${err.message}</p>`;
+  loadFailed('thread')(err);
 });
 </script>
 </body>

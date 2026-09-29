@@ -2,7 +2,8 @@
 
 Scores field-level accuracy: promise-vs-no-promise, amount, due-date presence,
 and method. The extractor may not be used downstream until it clears the bar —
-enforced in tests/test_ptp.py, which fails the Phase 6 gate otherwise.
+enforced in tests/test_ptp_live.py (behind GANYMEDE_LIVE_LLM), which fails the
+Phase 6 gate otherwise.
 
 Date scoring is presence + exact match when the truth has a date; near-miss on
 resolving relative dates ("this Friday") is scored on presence so one calendar
@@ -16,7 +17,7 @@ from datetime import date
 from pathlib import Path
 
 from ..llm import LLMEngine, get_engine
-from .extract import extract_promise
+from .extract import ExtractionError, extract_promise
 
 GOLD = Path(__file__).parent / "ptp_gold.json"
 BAR = 0.80  # field-level accuracy the extractor must clear
@@ -56,10 +57,16 @@ def evaluate(engine: LLMEngine | None = None) -> dict:
     ref = date.fromisoformat(data["reference_date"])
     correct = total = 0
     has_correct = 0
+    parse_failures = 0
     per_case = []
     for c in data["cases"]:
-        pred = extract_promise(c["transcript"], c["id"], ref=ref, engine=engine)
-        checks = _fields(pred, c["truth"])
+        try:
+            pred = extract_promise(c["transcript"], c["id"], ref=ref, engine=engine)
+            checks = _fields(pred, c["truth"])
+        except ExtractionError:
+            # An unreadable reply scores every field wrong, and is counted.
+            parse_failures += 1
+            checks = [False] * len(_fields(None, c["truth"]))
         correct += sum(checks)
         total += len(checks)
         has_correct += int(checks[0])
@@ -68,6 +75,7 @@ def evaluate(engine: LLMEngine | None = None) -> dict:
         "field_accuracy": round(correct / total, 3),
         "has_promise_accuracy": round(has_correct / len(data["cases"]), 3),
         "n_cases": len(data["cases"]),
+        "parse_failures": parse_failures,
         "bar": BAR,
         "passes": correct / total >= BAR,
         "per_case": per_case,

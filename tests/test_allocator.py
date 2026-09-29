@@ -49,3 +49,43 @@ def test_allocate_respects_capacity():
     out = allocate(accounts, capacity_minutes=24)
     contacted = out.filter(pl.col("action") != "do_not_contact")
     assert contacted["minutes"].sum() <= 24
+
+
+def _accounts():
+    # Risk-ranking's favourite (high p_worsen, tiny exposure) against a large,
+    # persuadable account it ranks last. The allocator should take the large one.
+    return pl.DataFrame({
+        "idx": [0, 1, 2, 3, 4],
+        "loan_id": ["tiny-risky", "big-middle", "mid-a", "mid-b", "curer"],
+        "exposure": [1_000.0, 900_000.0, 50_000.0, 40_000.0, 800_000.0],
+        "p_worsen": [0.95, 0.20, 0.60, 0.55, 0.05],
+        "p_selfcure": [0.30, 0.50, 0.50, 0.45, 0.99],
+    }, schema_overrides={"idx": pl.UInt32})
+
+
+def test_risk_ranking_works_down_by_probability_within_capacity():
+    from ganymede.allocator import ACTION_MINUTES, _risk_ranking
+    cap = ACTION_MINUTES["plan_offer"] * 2
+    r = _risk_ranking(_accounts(), cap)
+    called = r.filter(pl.col("action") != "do_not_contact")["loan_id"].to_list()
+    assert called == ["tiny-risky", "mid-a"]
+
+
+def test_compare_allocator_beats_risk_ranking_at_scarce_capacity():
+    from ganymede.allocator import compare
+    # 0.6 -> 36 minutes: room for big-middle's restructure (25). Below 25 the
+    # greedy fill drops an account whose best action does not fit rather than
+    # falling back to a cheaper one (C-11, parked as a modelling decision).
+    r = compare(_accounts(), capacity_frac=0.6)
+    assert r["allocator_value"] > r["risk_ranking_value"]
+    assert r["lift_pct"] > 0
+    assert r["allocator_contacts"] <= r["risk_contacts"] + 1
+
+
+def test_compare_lift_is_null_not_infinity_when_baseline_recovers_nothing():
+    import json
+
+    from ganymede.allocator import compare
+    zero = _accounts().with_columns(pl.lit(1.0).alias("exposure"))
+    r = compare(zero, capacity_frac=0.4)
+    json.dumps(r, allow_nan=False)      # Infinity would raise here

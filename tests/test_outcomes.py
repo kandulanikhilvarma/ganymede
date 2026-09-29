@@ -35,3 +35,40 @@ def test_every_status_is_valid():
                           (False, 0, _promise()), (True, 10, _promise(200))]:
         o = resolve(pr, paid=paid, amount_paid=amt)
         assert o.promise_status in set(PromiseStatus)
+
+
+def _loan(delinq):
+    import polars as pl
+    from datetime import date
+    return pl.DataFrame({
+        "loan_id": ["L"] * len(delinq),
+        "period_date": [date(2025, m + 1, 1) for m in range(len(delinq))],
+        "delinq": delinq,
+        "upb": [1000.0 - 50 * m for m in range(len(delinq))],
+    })
+
+
+def test_outcome_reads_the_month_after_the_call_not_the_last_month():
+    from datetime import date
+
+    from ganymede.outcomes import _paid_next_month
+    # Cures right after a March call (2 -> 0), then worsens at the end of history.
+    panel = _loan([1, 2, 2, 0, 1, 3])
+    assert _paid_next_month("L", panel, date(2025, 3, 1))[0] is True
+    assert _paid_next_month("L", panel)[0] is False          # last two rows: 1 -> 3
+
+
+def test_generated_conversation_carries_its_seed_month():
+    from datetime import date
+
+    from ganymede.generate import generate_conversation
+    from ganymede.llm import LLMEngine
+    from ganymede.schema import Capacity, Willingness
+
+    class Echo(LLMEngine):
+        def complete(self, role, prompt, **kw):
+            return "AGENT: hi"
+
+    conv = generate_conversation("L", 2, 1000.0, (Capacity.CAN_PAY, Willingness.WILL_PAY),
+                                 engine=Echo(), period_date=date(2025, 3, 1))
+    assert conv["period_date"] == date(2025, 3, 1)

@@ -23,8 +23,6 @@ _IDENTITY = re.compile(r"\b(speaking|yes,? this is|that's me|yes it is)\b", re.I
 
 def checklist_hint(transcript_so_far: str, promise: Promise | None) -> Hint | None:
     """Return the first unmet checkpoint as a deterministic hint, or None."""
-    t = transcript_so_far.lower()
-
     # 1. Identity not yet confirmed — must happen before discussing the debt.
     if not _IDENTITY.search(transcript_so_far):
         return Hint(text="Confirm you're speaking to the account holder before discussing the balance.",

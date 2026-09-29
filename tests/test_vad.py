@@ -39,3 +39,35 @@ def test_budget_is_measured_not_none():
     from ganymede.config import LATENCY_BUDGET_MS, require_latency_budget
     assert LATENCY_BUDGET_MS is not None
     assert require_latency_budget() == 300
+
+
+def test_silent_file_reports_no_gaps_not_zero_ms(tmp_path):
+    import wave
+
+    import numpy as np
+
+    from ganymede.audio.vad import analyse
+    path = tmp_path / "silence.wav"
+    with wave.open(str(path), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(16000)
+        w.writeframes(np.zeros(16000, dtype=np.int16).tobytes())
+    r = analyse(str(path))
+    assert r["n_gaps"] == 0 and r["gap_p50_ms"] is None
+
+
+def test_non_16_bit_audio_is_refused(tmp_path):
+    import wave
+
+    import pytest
+
+    from ganymede.audio.vad import load_wav_mono16k
+    path = tmp_path / "eight.wav"
+    with wave.open(str(path), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(1)
+        w.setframerate(16000)
+        w.writeframes(bytes(1600))
+    with pytest.raises(ValueError, match="16-bit"):
+        load_wav_mono16k(str(path))

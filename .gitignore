@@ -6,6 +6,8 @@ __pycache__/
 venv/
 .pytest_cache/
 .ruff_cache/
+.coverage
+coverage.xml
 
 # Secrets
 .env
@@ -28,3 +30,8 @@ node_modules/
 # Personal task materials — not for the public repo
 *.pdf
 extracted.txt
+
+# Enhance-run artifacts too heavy for the repo (screenshots, raw Lighthouse)
+.enhance/screens/
+.enhance/lighthouse/
+.enhance/rebuild.log

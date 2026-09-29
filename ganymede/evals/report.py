@@ -1,7 +1,7 @@
 """`python -m ganymede.evals.report` — the Phase 8 gate.
 
-Runs the judge on the gold set, pulls the risk backtest, checks self-cure drift,
-and prints the full metric table. Writes reports/eval-YYYY-MM-DD.md. Exits
+Runs the judge on the gold set, pulls the risk backtest, and prints the full
+metric table. (Drift is published by scripts/build_site_data.py, not checked here.) Writes reports/eval-YYYY-MM-DD.md. Exits
 non-zero if a gate metric misses or the judge exceeds its reliability ceiling
 (the SCHUFA-style "agreeing with itself, not with judgment" failure).
 """
@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import argparse
 from datetime import date
-from pathlib import Path
 
 from ..config import REPORTS
 from .judge import evaluate as judge_eval
@@ -50,6 +49,9 @@ def main() -> int:
     ap.add_argument("--report", action="store_true")
     ap.add_argument("--no-risk", action="store_true")
     args = ap.parse_args()
+    if not args.report:                   # a bare run used to print nothing and pass
+        ap.print_help()
+        return 2
     if args.report:
         result = run(with_risk=not args.no_risk)
         text = _fmt(result)

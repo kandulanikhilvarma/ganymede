@@ -167,18 +167,15 @@ def backtest() -> list[dict]:
     x, y, w = _to_xy(test_df, "y_worsen")
     results.append(_metrics(y, predict(b1, i1, test_df), w, "L1_trajectory"))
 
-    # L2 self-cure: currently-delinquent only. Self-cure rate drifts sharply
-    # (train 0.60 -> test 0.72), so static calibration from train cannot track
-    # it — no honestly-trained model could. Evaluate the way production runs:
-    # split test in time, recalibrate on the earlier half (recent outcomes),
-    # score the later half. The booster never sees the eval rows.
+    # L2 self-cure: currently-delinquent only, scored with the calibration it
+    # learned on train. The self-cure rate moves between the two windows; how far
+    # is measured by monitors.drift.check_rate_drift, not asserted here.
+    # `_recalibrate` (recent-half recalibration) exists but is not wired in.
     tr_dq = train_df.filter(pl.col("d") >= 1)
     te_dq = test_df.filter(pl.col("d") >= 1)
     b2, i2 = train(tr_dq, "y_selfcure")
     x, y, w = _to_xy(te_dq, "y_selfcure")
-    r = _metrics(y, predict(b2, i2, te_dq), w, "L2_selfcure")
-    r["note"] = "self-cure rate drifts 0.60->0.72 (Phase 8 monitor recalibrates)"
-    results.append(r)
+    results.append(_metrics(y, predict(b2, i2, te_dq), w, "L2_selfcure"))
 
     return results
 
@@ -202,8 +199,15 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--backtest", action="store_true")
     args = ap.parse_args()
+    if not args.backtest:                 # a bare run used to print nothing and pass
+        ap.print_help()
+        return 2
     if args.backtest:
-        results = backtest()
+        try:
+            results = backtest()
+        except FileNotFoundError as exc:
+            print(exc)
+            return 2
         print(f"{'model':16} {'base':>7} {'auc':>7} {'brier':>9} {'brier_base':>11} {'gate':>6}  pass")
         ok = True
         for r in results:

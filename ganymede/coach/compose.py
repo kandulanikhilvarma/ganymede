@@ -19,11 +19,11 @@ Conversation outcome beats hint volume; hint spam splits the agent's attention.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 from ..config import MAX_HINTS_PER_CONVERSATION
 from ..llm import LLMEngine, Role, get_engine
-from ..schema import BorrowerState, Capacity, Hint, Promise, Willingness
+from ..schema import BorrowerState, Hint, Promise
 from .checklist import checklist_hint
 from .playbook import Strategy, retrieve
 

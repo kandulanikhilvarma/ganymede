@@ -46,6 +46,15 @@ button { cursor: pointer; }
 }
 :focus:not(:focus-visible) { outline: none; }
 
+/* Field boundaries use --field, which gen_palette gates at 3:1 (WCAG 1.4.11).
+   --line, which pages used, sat near 1.7:1. */
+input:not([type="range"]):not([type="checkbox"]):not([type="radio"]), select, textarea {
+  border-color: var(--field);
+}
+
+/* The moon is drawn after a deferred module runs; reserve its square first. */
+#moon { aspect-ratio: 1; }
+
 .skip {
   position: absolute; left: var(--s-3); top: calc(-1 * var(--s-12)); z-index: 100;
   background: var(--signal); color: var(--on-signal);

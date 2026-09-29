@@ -9,25 +9,25 @@
   "rows": [
     {
       "label": "L1 trajectory AUC",
-      "value": 0.6218,
+      "value": 0.6594,
       "provenance": "backtested",
       "source": "risk.backtest()"
     },
     {
       "label": "L1 Brier vs base",
-      "value": "0.21145 vs 0.2184",
+      "value": "0.21427 vs 0.23099",
       "provenance": "backtested",
       "source": "risk.backtest()"
     },
     {
       "label": "L2 self-cure AUC",
-      "value": 0.6742,
+      "value": 0.7594,
       "provenance": "backtested",
       "source": "risk.backtest()"
     },
     {
       "label": "Recovered value vs risk-ranking",
-      "value": 59.1,
+      "value": 72.5,
       "provenance": "simulated",
       "source": "allocator.compare at 15% capacity",
       "unit": "%",
@@ -35,7 +35,7 @@
     },
     {
       "label": "Contacts used (allocator vs risk-ranking)",
-      "value": "4243 vs 8839",
+      "value": "2962 vs 6172",
       "provenance": "simulated",
       "source": "allocator.compare at 15% capacity"
     },
@@ -73,7 +73,7 @@
     },
     {
       "label": "Accounts routed to a diagnostic question",
-      "value": 0.9752,
+      "value": 0.9833,
       "provenance": "measured",
       "source": "state.estimate_state over the queue",
       "note": "willingness cannot be read from servicing data, so most accounts get the diagnostic question rather than a guessed strategy"
@@ -94,7 +94,7 @@
     },
     {
       "label": "Self-cure rate, train to test",
-      "value": "0.6032 to 0.7165",
+      "value": "0.5933 to 0.5171",
       "provenance": "measured",
       "source": "monitors.drift.check_rate_drift"
     },

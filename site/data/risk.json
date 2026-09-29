@@ -2,22 +2,22 @@
   "models": {
     "L1_trajectory": {
       "auc": {
-        "value": 0.6218,
+        "value": 0.6594,
         "provenance": "backtested",
         "source": "risk.backtest()"
       },
       "brier": {
-        "value": 0.21145,
+        "value": 0.21427,
         "provenance": "backtested",
         "source": "risk.backtest()"
       },
       "brier_base": {
-        "value": 0.2184,
+        "value": 0.23099,
         "provenance": "backtested",
         "source": "risk.backtest()"
       },
       "base_rate": {
-        "value": 0.3222,
+        "value": 0.3621,
         "provenance": "measured",
         "source": "held-out split"
       },
@@ -30,94 +30,94 @@
         {
           "bin_lo": 0.0,
           "bin_hi": 0.1,
-          "predicted": 0.0683,
-          "observed": 0.1467,
-          "n": 34363
+          "predicted": 0.0592,
+          "observed": 0.0792,
+          "n": 16965
         },
         {
           "bin_lo": 0.1,
           "bin_hi": 0.2,
-          "predicted": 0.1542,
-          "observed": 0.2125,
-          "n": 147707
+          "predicted": 0.1568,
+          "observed": 0.217,
+          "n": 97103
         },
         {
           "bin_lo": 0.2,
           "bin_hi": 0.3,
-          "predicted": 0.2577,
-          "observed": 0.332,
-          "n": 271656
+          "predicted": 0.257,
+          "observed": 0.3668,
+          "n": 174524
         },
         {
           "bin_lo": 0.3,
           "bin_hi": 0.4,
-          "predicted": 0.3426,
-          "observed": 0.3153,
-          "n": 105081
+          "predicted": 0.341,
+          "observed": 0.3773,
+          "n": 73613
         },
         {
           "bin_lo": 0.4,
           "bin_hi": 0.5,
-          "predicted": 0.4546,
-          "observed": 0.3492,
-          "n": 37741
+          "predicted": 0.459,
+          "observed": 0.4471,
+          "n": 24446
         },
         {
           "bin_lo": 0.5,
           "bin_hi": 0.6,
-          "predicted": 0.5312,
-          "observed": 0.4231,
-          "n": 27952
+          "predicted": 0.557,
+          "observed": 0.5621,
+          "n": 12529
         },
         {
           "bin_lo": 0.6,
           "bin_hi": 0.7,
-          "predicted": 0.6657,
-          "observed": 0.5189,
-          "n": 13881
+          "predicted": 0.6705,
+          "observed": 0.6391,
+          "n": 8044
         },
         {
           "bin_lo": 0.7,
           "bin_hi": 0.8,
-          "predicted": 0.7155,
-          "observed": 0.565,
-          "n": 8965
+          "predicted": 0.7268,
+          "observed": 0.7096,
+          "n": 5624
         },
         {
           "bin_lo": 0.8,
           "bin_hi": 0.9,
-          "predicted": 0.8345,
-          "observed": 0.69,
-          "n": 24110
+          "predicted": 0.8364,
+          "observed": 0.8461,
+          "n": 12136
         },
         {
           "bin_lo": 0.9,
           "bin_hi": 1.0,
-          "predicted": 0.9111,
-          "observed": 0.7704,
-          "n": 6010
+          "predicted": 0.917,
+          "observed": 0.9074,
+          "n": 4257
         }
       ],
       "note": null
     },
     "L2_selfcure": {
       "auc": {
-        "value": 0.6742,
+        "value": 0.7594,
         "provenance": "backtested",
         "source": "risk.backtest()"
       },
       "brier": {
-        "value": 0.2379,
+        "value": 0.19876,
         "provenance": "backtested",
         "source": "risk.backtest()"
       },
       "brier_base": {
-        "value": 0.20311,
+        "value": 0.24971,
         "provenance": "backtested",
         "source": "risk.backtest()"
       },
       "base_rate": {
-        "value": 0.7165,
+        "value": 0.5171,
         "provenance": "measured",
         "source": "held-out split"
       },
@@ -130,94 +130,94 @@
         {
           "bin_lo": 0.0,
           "bin_hi": 0.1,
-          "predicted": 0.0,
-          "observed": 0.3714,
-          "n": 35
+          "predicted": 0.0714,
+          "observed": 0.0653,
+          "n": 3795
         },
         {
           "bin_lo": 0.1,
           "bin_hi": 0.2,
-          "predicted": 0.1268,
-          "observed": 0.5042,
-          "n": 9401
+          "predicted": 0.1373,
+          "observed": 0.1247,
+          "n": 2888
         },
         {
           "bin_lo": 0.2,
           "bin_hi": 0.3,
-          "predicted": 0.2406,
-          "observed": 0.5632,
-          "n": 25495
+          "predicted": 0.2268,
+          "observed": 0.2471,
+          "n": 13138
         },
         {
           "bin_lo": 0.3,
           "bin_hi": 0.4,
-          "predicted": 0.3598,
-          "observed": 0.6319,
-          "n": 24540
+          "predicted": 0.3405,
+          "observed": 0.3615,
+          "n": 14901
         },
         {
           "bin_lo": 0.4,
           "bin_hi": 0.5,
-          "predicted": 0.4498,
-          "observed": 0.6916,
-          "n": 24929
+          "predicted": 0.4334,
+          "observed": 0.4552,
+          "n": 12288
         },
         {
           "bin_lo": 0.5,
           "bin_hi": 0.6,
-          "predicted": 0.5656,
-          "observed": 0.7358,
-          "n": 19404
+          "predicted": 0.5669,
+          "observed": 0.5789,
+          "n": 16553
         },
         {
           "bin_lo": 0.6,
           "bin_hi": 0.7,
-          "predicted": 0.6277,
-          "observed": 0.7751,
-          "n": 14204
+          "predicted": 0.6647,
+          "observed": 0.6542,
+          "n": 10035
         },
         {
           "bin_lo": 0.7,
           "bin_hi": 0.8,
-          "predicted": 0.7337,
-          "observed": 0.8194,
-          "n": 28824
+          "predicted": 0.7458,
+          "observed": 0.7345,
+          "n": 14389
         },
         {
           "bin_lo": 0.8,
           "bin_hi": 0.9,
-          "predicted": 0.844,
-          "observed": 0.9026,
-          "n": 12571
+          "predicted": 0.8399,
+          "observed": 0.8379,
+          "n": 4356
         },
         {
           "bin_lo": 0.9,
           "bin_hi": 1.0,
-          "predicted": 0.9548,
-          "observed": 0.9605,
-          "n": 8631
+          "predicted": 0.9435,
+          "observed": 0.9224,
+          "n": 6289
         }
       ],
-      "note": "self-cure rate drifts 0.60->0.72 (Phase 8 monitor recalibrates)"
+      "note": null
     }
   },
   "split_cutoff": "2025-07-01",
   "drift": {
     "self_cure_train": {
-      "value": 0.6032,
+      "value": 0.5933,
       "provenance": "measured",
       "source": "train split"
     },
     "self_cure_test": {
-      "value": 0.7165,
+      "value": 0.5171,
       "provenance": "measured",
       "source": "test split"
     },
     "rate_alert_threshold": 0.1,
     "psi_alert_threshold": 0.25,
-    "alert": true,
+    "alert": false,
     "psi_p_worsen_feature": {
-      "value": 0.1058,
+      "value": 0.0827,
       "provenance": "measured",
       "source": "monitors.drift.psi on delinquency bucket"
     },
@@ -229,128 +229,113 @@
       },
       {
         "month": "2024-03",
-        "rate": 0.9065,
-        "n": 310
+        "rate": 0.9052,
+        "n": 306
       },
       {
         "month": "2024-04",
-        "rate": 0.8606,
-        "n": 710
+        "rate": 0.8584,
+        "n": 699
       },
       {
         "month": "2024-05",
-        "rate": 0.827,
-        "n": 1191
+        "rate": 0.8242,
+        "n": 1172
       },
       {
         "month": "2024-06",
-        "rate": 0.7946,
-        "n": 1899
+        "rate": 0.7909,
+        "n": 1865
       },
       {
         "month": "2024-07",
-        "rate": 0.7457,
-        "n": 2446
+        "rate": 0.7393,
+        "n": 2386
       },
       {
         "month": "2024-08",
-        "rate": 0.6731,
-        "n": 2830
+        "rate": 0.6658,
+        "n": 2768
       },
       {
         "month": "2024-09",
-        "rate": 0.6553,
-        "n": 3684
+        "rate": 0.6479,
+        "n": 3607
       },
       {
         "month": "2024-10",
-        "rate": 0.6241,
-        "n": 4946
+        "rate": 0.6146,
+        "n": 4823
       },
       {
         "month": "2024-11",
-        "rate": 0.6457,
-        "n": 6731
+        "rate": 0.6379,
+        "n": 6587
       },
       {
         "month": "2024-12",
-        "rate": 0.644,
-        "n": 7615
+        "rate": 0.6379,
+        "n": 7486
       },
       {
         "month": "2025-01",
-        "rate": 0.5917,
-        "n": 7416
+        "rate": 0.5832,
+        "n": 7265
       },
       {
         "month": "2025-02",
-        "rate": 0.6178,
-        "n": 9139
+        "rate": 0.6087,
+        "n": 8927
       },
       {
         "month": "2025-03",
-        "rate": 0.5675,
-        "n": 8960
+        "rate": 0.5559,
+        "n": 8726
       },
       {
         "month": "2025-04",
-        "rate": 0.5477,
-        "n": 9572
+        "rate": 0.5341,
+        "n": 9291
       },
       {
         "month": "2025-05",
-        "rate": 0.5298,
-        "n": 10396
+        "rate": 0.5154,
+        "n": 10087
       },
       {
         "month": "2025-06",
-        "rate": 0.5372,
-        "n": 11919
+        "rate": 0.5238,
+        "n": 11584
       },
       {
         "month": "2025-07",
-        "rate": 0.5164,
-        "n": 12437
+        "rate": 0.503,
+        "n": 12101
       },
       {
         "month": "2025-08",
-        "rate": 0.5293,
-        "n": 14796
+        "rate": 0.5134,
+        "n": 14313
       },
       {
         "month": "2025-09",
-        "rate": 0.5096,
-        "n": 15414
+        "rate": 0.4943,
+        "n": 14947
       },
       {
         "month": "2025-10",
-        "rate": 0.4966,
-        "n": 16414
+        "rate": 0.4814,
+        "n": 15931
       },
       {
         "month": "2025-11",
-        "rate": 0.5763,
-        "n": 21711
+        "rate": 0.5632,
+        "n": 21062
       },
       {
         "month": "2025-12",
-        "rate": 0.5381,
-        "n": 20851
-      },
-      {
-        "month": "2026-01",
-        "rate": 1.0,
-        "n": 21134
-      },
-      {
-        "month": "2026-02",
-        "rate": 1.0,
-        "n": 23591
-      },
-      {
-        "month": "2026-03",
-        "rate": 1.0,
-        "n": 21686
+        "rate": 0.525,
+        "n": 20278
       }
     ]
   }

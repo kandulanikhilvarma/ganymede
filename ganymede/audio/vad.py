@@ -7,8 +7,8 @@ waiting for a transcript.
 Implementation is an energy VAD with hangover smoothing: no torch, no C
 extension, runs anywhere. It is a deliberate stand-in for silero-VAD, which is
 more robust on noisy telephony but drags in torch for what is, at Phase 0, a
-gap-measurement job. The VADEngine interface keeps the swap to silero a
-one-class change, exactly as ASREngine does for Whisper.
+gap-measurement job. Swapping in silero means replacing `speech_frames`, which
+is the only function that decides what counts as speech.
 
 The number Phase 0 needs is the distribution of INTER-TURN gaps — the silences
 between one speaker stopping and the next starting. That silence is the window a
@@ -35,13 +35,17 @@ class Segment:
 
 
 def load_wav_mono16k(path: str) -> tuple[np.ndarray, int]:
-    w = wave.open(path, "rb")
-    sr = w.getframerate()
-    n = w.getnframes()
-    raw = w.readframes(n)
+    with wave.open(path, "rb") as w:
+        if w.getsampwidth() != 2:
+            # int16 is the only width decoded here; anything else would be read
+            # as noise without complaint. Transcode first (see config / README).
+            raise ValueError(f"{path}: {8 * w.getsampwidth()}-bit audio, expected 16-bit PCM")
+        sr = w.getframerate()
+        channels = w.getnchannels()
+        raw = w.readframes(w.getnframes())
     samples = np.frombuffer(raw, dtype=np.int16).astype(np.float32)
-    if w.getnchannels() == 2:
-        samples = samples.reshape(-1, 2).mean(axis=1)
+    if channels > 1:
+        samples = samples.reshape(-1, channels).mean(axis=1)
     return samples, sr
 
 
@@ -108,15 +112,19 @@ def analyse(path: str) -> dict:
     mask = speech_frames(samples, sr)
     segs = segments(mask)
     gaps = inter_turn_gaps(segs)
-    g = np.array(gaps) if gaps else np.array([0.0])
+    # No gaps means no turn boundaries were found, not that they were 0 ms wide.
+    g = np.array(gaps)
+
+    def ms(q: float) -> int | None:
+        return int(np.percentile(g, q) * 1000) if gaps else None
     speech_s = sum(s.end_s - s.start_s for s in segs)
     return {
         "duration_s": round(len(samples) / sr, 1),
         "speech_s": round(speech_s, 1),
         "n_segments": len(segs),
         "n_gaps": len(gaps),
-        "gap_p50_ms": int(np.percentile(g, 50) * 1000),
-        "gap_p25_ms": int(np.percentile(g, 25) * 1000),
-        "gap_p10_ms": int(np.percentile(g, 10) * 1000),
-        "gap_mean_ms": int(g.mean() * 1000),
+        "gap_p50_ms": ms(50),
+        "gap_p25_ms": ms(25),
+        "gap_p10_ms": ms(10),
+        "gap_mean_ms": int(g.mean() * 1000) if gaps else None,
     }

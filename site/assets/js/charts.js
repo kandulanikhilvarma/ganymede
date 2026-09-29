@@ -237,8 +237,42 @@ export function badge(record) {
   return span;
 }
 
-export async function loadData(name) {
-  const res = await fetch(`data/${name}.json`);
-  if (!res.ok) throw new Error(`${name}.json: ${res.status}`);
-  return res.json();
+// One fetch per file per page: figures.js already caches, and a separate
+// uncached path here fetched panel, allocator, risk and audio twice on index.
+// Callers only filter/map the result, never mutate it, so sharing is safe.
+export { loadFile as loadData } from './figures.js';
+
+/* The numbers behind a chart, as a table under a disclosure. SVG point titles
+   only reach a mouse; this reaches a keyboard, a phone and a screen reader,
+   and it is the same data the chart drew, not a copy. */
+export function dataTable(caption, head, rows) {
+  const d = document.createElement('details');
+  d.className = 'datatable';
+  const s = document.createElement('summary');
+  s.textContent = 'Show the numbers';
+  const wrap = document.createElement('div');
+  wrap.className = 'scroll-x';
+  const t = document.createElement('table');
+  const cap = t.createCaption();
+  cap.textContent = caption;
+  const hr = t.createTHead().insertRow();
+  head.forEach(h => { const th = document.createElement('th'); th.scope = 'col'; th.textContent = h; hr.appendChild(th); });
+  const body = t.createTBody();
+  rows.forEach(r => { const tr = body.insertRow(); r.forEach(v => { tr.insertCell().textContent = String(v); }); });
+  wrap.appendChild(t);
+  d.append(s, wrap);
+  return d;
+}
+
+/* A chart whose data failed to load says so, instead of leaving a blank box. */
+export function loadFailed(node) {
+  return err => {
+    console.error(err);
+    const target = typeof node === 'string' ? document.getElementById(node) : node;
+    if (!target) return;
+    const p = document.createElement('p');
+    p.className = 'load-error';
+    p.textContent = 'This figure could not load its data. Reload the page to try again.';
+    target.replaceChildren(p);
+  };
 }
