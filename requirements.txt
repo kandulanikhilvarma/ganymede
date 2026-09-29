@@ -2,7 +2,7 @@
 pydantic>=2.6
 polars>=1.21
 lightgbm>=4.3
-scikit-learn>=1.4
+scikit-learn>=1.9.1
 numpy>=1.26
 
 # LLM (OpenRouter via OpenAI-compatible client)
