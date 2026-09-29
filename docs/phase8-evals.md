@@ -1,5 +1,9 @@
 # Phase 8, evals
 
+> **Correction, 2026-09-29.** The figures below were produced before defect D15
+> (forward labels leaking across loans) was fixed. Current figures are in
+> `site/data/*.json` and `docs/CASE.md`; see `docs/defects.md` D15.
+
 One command prints the metric table and writes a dated report. What is measurable
 now is measured; what needs the randomised pilot is marked pending, never faked.
 

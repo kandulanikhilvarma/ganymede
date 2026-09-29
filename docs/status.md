@@ -1,5 +1,9 @@
 # Phase status
 
+> **Correction, 2026-09-29.** The figures below were produced before defect D15
+> (forward labels leaking across loans) was fixed. Current figures are in
+> `site/data/*.json` and `docs/CASE.md`; see `docs/defects.md` D15.
+
 Strictly sequential. A phase starts only when the previous gate is green.
 
 | # | Phase | State | Gate | Result |

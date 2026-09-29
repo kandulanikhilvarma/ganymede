@@ -1,5 +1,9 @@
 # Allocator. Phase 4 result
 
+> **Correction, 2026-09-29.** The figures below were produced before defect D15
+> (forward labels leaking across loans) was fixed. Current figures are in
+> `site/data/*.json` and `docs/CASE.md`; see `docs/defects.md` D15.
+
 The D9 fix, quantified. Conventional collections sorts by probability of default
 and works the top of the list. The allocator maximises expected recovered value
 per agent-minute under a capacity constraint, subtracting self-cure (I10) and

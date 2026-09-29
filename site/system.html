@@ -372,7 +372,7 @@ const INVARIANTS = [
   ['I9', 'Accounts are ranked by expected value, never by probability', '<code>allocator.py</code> is the only queue producer. No sort-by-score path exists anywhere in the package.'],
   ['I10', '"Do not contact" is a first-class action with money attached', 'It is in the action enum with a value in the objective, and self-cure precision is tracked. Silence has to earn its place, and frequently does.'],
   ['I11', 'Conversation outcome outranks hint usefulness, and hints per conversation are capped', 'A rate limiter in <code>compose.py</code>; <code>metrics.py</code> reports outcome first. Hint spam splits the agent\'s attention while a person is mid-sentence.'],
-  ['I12', 'Input, score and outcome distributions are monitored', '<code>monitors/drift.py</code> exits non-zero on breach. The self-cure regime shift is exactly what this caught.'],
+  ['I12', 'Input, score and outcome distributions are monitored', '<code>monitors/drift.py</code> computes PSI and rate drift. Every site build publishes the rate check with its alert flag; nothing schedules it yet.'],
   ['I13', 'No timing feature is derived from a dataset without calendar dates', '<code>panel.py</code> tags each source with <code>has_calendar_dates</code>; <code>features.py</code> raises if a timing feature reads a source tagged false.'],
   ['I14', 'The riskiest open assumption is tested in the current phase, not a later one', 'Phase order is reviewed at every gate, and a phase cannot start while an earlier phase\'s assumption is untested. This is why the latency spike came before the coaching layer.'],
 ];

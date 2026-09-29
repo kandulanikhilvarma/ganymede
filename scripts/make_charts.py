@@ -3,19 +3,23 @@
 Four figures, one visual system: off-white ground, teal accent, amber for the
 risk/warning series, IBM-Plex-style mono for numerals. Emphasized endpoints, a
 faint grid, no chartjunk. Everything derives from real backtest / simulation /
-VAD output — no invented numbers.
+VAD output. The allocator and drift figures read the same `site/data/*.json` the
+site renders, so the README cannot disagree with it.
 """
 
 from __future__ import annotations
 
+import json
+import sys
 from pathlib import Path
 
-import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
 import numpy as np
-import polars as pl
 
-OUT = Path(__file__).resolve().parent.parent / "docs" / "img"
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))          # run from a checkout without `pip install -e .`
+OUT = ROOT / "docs" / "img"
+DATA = ROOT / "site" / "data"
 OUT.mkdir(parents=True, exist_ok=True)
 
 INK = "#1a1f2b"; MUTED = "#5c6675"; LINE = "#dfe3ea"; GROUND = "#f7f6f2"
@@ -29,6 +33,10 @@ plt.rcParams.update({
     "axes.grid": True, "grid.color": LINE, "grid.linewidth": 0.8,
     "axes.spines.top": False, "axes.spines.right": False,
 })
+
+
+def _data(name: str) -> dict:
+    return json.loads((DATA / f"{name}.json").read_text(encoding="utf-8"))
 
 
 def _save(fig, name):
@@ -65,16 +73,21 @@ def reliability():
 def allocator():
     fig, (a1, a2) = plt.subplots(1, 2, figsize=(8.2, 4.2))
     labels = ["Risk-\nranking", "Allocator"]
-    vals = [543.6, 865.1]; contacts = [8839, 4243]
+    a = _data("allocator")
+    at = next(p for p in a["frontier"] if p["capacity_frac"] == a["default_capacity_frac"])
+    vals = [at["risk_ranking_value"] / 1e6, at["allocator_value"] / 1e6]
+    contacts = [at["risk_contacts"], at["allocator_contacts"]]
     b1 = a1.bar(labels, vals, color=[MUTED, TEAL], width=0.6)
     a1.set_title("Recovered value (M)", fontweight="bold", loc="left", fontsize=13)
     a1.bar_label(b1, fmt="%.0f", padding=4, color=INK, fontweight="bold")
-    a1.set_ylim(0, 1000); a1.grid(axis="x", visible=False)
+    a1.set_ylim(0, max(vals) * 1.18); a1.grid(axis="x", visible=False)
     b2 = a2.bar(labels, contacts, color=[MUTED, TEAL], width=0.6)
     a2.set_title("Contacts spent", fontweight="bold", loc="left", fontsize=13)
     a2.bar_label(b2, fmt="%d", padding=4, color=INK, fontweight="bold")
-    a2.set_ylim(0, 10000); a2.grid(axis="x", visible=False)
-    fig.suptitle("+59% recovered value with half the contacts", fontsize=14,
+    a2.set_ylim(0, max(contacts) * 1.18); a2.grid(axis="x", visible=False)
+    share = at["allocator_contacts"] / at["risk_contacts"]
+    fig.suptitle(f"+{at['lift_pct']:.0f}% recovered value with {share:.0%} of the contacts",
+                 fontsize=14,
                  fontweight="bold", x=0.02, ha="left", color=INK)
     _save(fig, "allocator.png")
 
@@ -99,12 +112,16 @@ def gap_hist():
 
 
 def selfcure_drift():
+    d = _data("risk")["drift"]
+    rates = [d["self_cure_train"]["value"], d["self_cure_test"]["value"]]
     fig, ax = plt.subplots(figsize=(5.4, 4.2))
-    bars = ax.bar(["train\n(≤2025-06)", "test\n(≥2025-07)"], [0.60, 0.72],
+    bars = ax.bar(["train\n(≤2025-06)", "test\n(≥2025-07)"], rates,
                   color=[MUTED, AMBER], width=0.55)
     ax.bar_label(bars, fmt="%.2f", padding=4, color=INK, fontweight="bold")
     ax.set_ylim(0, 1); ax.set_ylabel("self-cure rate")
-    ax.set_title("The drift the monitor exists to catch", fontweight="bold", loc="left")
+    verdict = "past" if d["alert"] else "inside"
+    ax.set_title(f"Self-cure moves {verdict} the {d['rate_alert_threshold']:.2f} alert band",
+                 fontweight="bold", loc="left")
     ax.grid(axis="x", visible=False)
     _save(fig, "selfcure_drift.png")
 

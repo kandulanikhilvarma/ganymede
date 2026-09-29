@@ -145,7 +145,7 @@ def compare(accounts: pl.DataFrame, capacity_frac: float, lam: float = LAMBDA_HA
         "capacity_frac": round(capacity_frac, 4),
         "accounts": accounts.height, "capacity_minutes": capacity,
         "allocator_value": round(v_alloc, 1), "risk_ranking_value": round(v_risk, 1),
-        "lift_pct": round(100 * (v_alloc - v_risk) / abs(v_risk), 1) if v_risk else float("inf"),
+        "lift_pct": round(100 * (v_alloc - v_risk) / abs(v_risk), 1) if v_risk else None,
         "allocator_contacts": alloc.filter(pl.col("action") != "do_not_contact").height,
         "risk_contacts": risk.filter(pl.col("action") != "do_not_contact").height,
     }
