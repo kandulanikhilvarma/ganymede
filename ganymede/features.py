@@ -34,20 +34,29 @@ def build_features(panel: pl.DataFrame | None = None) -> pl.DataFrame:
         pl.col("delinq").is_null().cast(pl.Int8).alias("delinq_unknown"),
     ])
 
-    g = pl.col("d").over("loan_id")
-    upb = pl.col("upb").over("loan_id")
+    # The window goes last. `.over()` first and `.shift()` after runs the shift
+    # across the whole sorted frame, so one loan's last rows read the next loan's
+    # first months as their future.
+    d, upb = pl.col("d"), pl.col("upb")
+
+    def per_loan(e: pl.Expr) -> pl.Expr:
+        return e.over("loan_id")
+
+    fwd = [per_loan(d.shift(-i)) for i in range(1, FORWARD + 1)]
 
     feats = p.with_columns([
         # trailing trajectory
-        (pl.col("d") - g.shift(TRAIL)).alias("delinq_trend_3m"),
-        g.rolling_max(window_size=TRAIL, min_periods=1).alias("delinq_max_3m"),
-        (g.rolling_sum(window_size=TRAIL, min_periods=1) > 0).cast(pl.Int8).alias("any_delinq_3m"),
+        (d - per_loan(d.shift(TRAIL))).alias("delinq_trend_3m"),
+        per_loan(d.rolling_max(window_size=TRAIL, min_samples=1)).alias("delinq_max_3m"),
+        (per_loan(d.rolling_sum(window_size=TRAIL, min_samples=1)) > 0)
+        .cast(pl.Int8).alias("any_delinq_3m"),
         # paydown velocity: negative UPB change is healthy; ~0 while owing is stress
-        (upb - upb.shift(TRAIL)).alias("upb_change_3m"),
+        (upb - per_loan(upb.shift(TRAIL))).alias("upb_change_3m"),
         # forward labels
-        g.shift(-1).alias("d_next1"),
-        pl.max_horizontal([g.shift(-i) for i in range(1, FORWARD + 1)]).alias("d_fwd_max"),
-        pl.min_horizontal([g.shift(-i) for i in range(1, FORWARD + 1)]).alias("d_fwd_min"),
+        fwd[0].alias("d_next1"),
+        pl.max_horizontal(fwd).alias("d_fwd_max"),
+        pl.min_horizontal(fwd).alias("d_fwd_min"),
+        fwd[-1].is_not_null().alias("_full_fwd"),
     ])
 
     # cross-signal: delinquency rising AND paydown stalled in the same window
@@ -60,9 +69,9 @@ def build_features(panel: pl.DataFrame | None = None) -> pl.DataFrame:
         (pl.col("d_fwd_min") == 0).cast(pl.Int8).alias("y_selfcure"),
     ])
 
-    # drop rows without a full forward window (label undefined)
-    feats = feats.filter(pl.col("d_fwd_max").is_not_null())
-    return feats
+    # drop rows without a full forward window (label undefined). max_horizontal
+    # skips nulls, so d_fwd_max alone would keep rows with one or two months left.
+    return feats.filter(pl.col("_full_fwd")).drop("_full_fwd")
 
 
 FEATURE_COLS = [
